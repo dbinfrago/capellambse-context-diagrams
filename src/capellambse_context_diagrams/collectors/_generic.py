@@ -136,6 +136,7 @@ def exchange_data_collector(
     params.pop("transparent_background", False)
     _ = params.pop("font_family", "Open Sans")
     _ = params.pop("font_size", 12)
+    _ = params.pop("params", None)
 
     render_adj: dict[str, t.Any] = {}
     for name, value in params.items():

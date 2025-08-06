@@ -423,6 +423,14 @@ class ContextDiagram(m.AbstractDiagram):
             return m.DiagramType.UNKNOWN
 
     @property
+    def default_render_parameters(self) -> dict[str, t.Any]:
+        return self._default_render_parameters
+
+    @default_render_parameters.setter
+    def default_render_parameters(self, params: dict[str, t.Any]) -> None:
+        self._default_render_parameters = params
+
+    @property
     def nodes(self) -> m.MixedElementList:
         """Return a list of all nodes visible in this diagram.
 
@@ -430,7 +438,11 @@ class ContextDiagram(m.AbstractDiagram):
         --------
         [`nodes`][capellambse.model.diagram.AbstractDiagram.nodes]
         """
-        base = self._render if hasattr(self, "_render") else self.render(None)
+        base = (
+            self._render
+            if hasattr(self, "_render")
+            else self.render(None, params=self._default_render_parameters)
+        )
         allids = {
             e.uuid.split(":")[-1].split("_")[0]
             for e in base

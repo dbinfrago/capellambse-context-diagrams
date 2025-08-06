@@ -549,3 +549,42 @@ def test_pvmt_styling_shorthand_equivalence(model: capellambse.MelodyModel):
         == len(list_shorthand)
         == len(string_shorthand)
     )
+
+
+def test_nodes_property_with_default_render_parameters(
+    model: capellambse.MelodyModel,
+):
+    diagram = model.la.all_components.by_uuid(
+        TEST_PVMT_STYLING_UUID
+    ).context_diagram
+    diagram.default_render_parameters |= {
+        "mode": "BLACKBOX",
+        "include_external_context": False,
+        "display_derived_interfaces": False,
+        "pvmt_styling": {
+            "children_coloring": True,
+            "value_groups": ["Test.Kind.Color"],
+        },
+    }
+    expected_uuids = {
+        "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
+        "efe61abb-2628-4065-9d54-89628027ea72",
+        "eefa305b-36c4-4797-96ef-2cb1d96ca409",
+        "59e22812-772b-4c00-868f-b70f240b01e2",
+        "46ec33df-8b98-47db-be0c-9a692c7f852e",
+        "2e1e8eca-acb5-464e-8c3b-77286d4b506c",
+        "73801908-6c04-4dbc-b648-1744e13e10df",
+        "789f8316-17cf-4c32-a66f-354fe111c40e",
+        "cb68eaf1-89ac-4259-8618-a1322bc17850",
+        "8ea5bc8b-8344-4f86-b8a7-dff291807ad0",
+        "d53fa277-f0aa-4498-b6cc-b8b2cf2504a8",
+        "e6f4d7ae-4358-4933-ab33-959ddf99479b",
+        "6aca8c81-6d6e-4bbc-84df-f564f57e2fc9",
+        "2dd292ce-3de1-4a86-8848-e9900d1f9c86",
+        "3d1a8880-c71d-46f7-bd16-57b06e460c68",
+        "c350bc4b-a3f9-4819-a6ab-fa00e08615c2",
+    }
+
+    nodes = diagram.nodes
+
+    assert set(nodes.by_uuid) == expected_uuids
