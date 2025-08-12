@@ -6,7 +6,7 @@
 # Derived diagram elements
 
 With capellambse-context-diagrams
-[`v0.2.36`](https://github.com/DSD-DBS/capellambse-context-diagrams/releases/tag/v0.2.36)
+[`v0.2.36`](https://github.com/dbinfrago/capellambse-context-diagrams/releases/tag/v0.2.36)
 a separate context is built. The elements are derived from the diagram target,
 i.e. the system of interest on which `context_diagram` was called on. The
 render parameter to enable this feature is called `display_derived_interfaces`

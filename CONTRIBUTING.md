@@ -5,7 +5,7 @@
 
 # Introduction
 
-First off, thank you for considering contributing to capellambse-context-diagrams. It's people like you that make capellambse-context-diagrams and therefore [capellambse](https://github.com/DSD-DBS/py-capellambse) such great tools.
+First off, thank you for considering contributing to capellambse-context-diagrams. It's people like you that make capellambse-context-diagrams and therefore [capellambse](https://github.com/dbinfrago/py-capellambse) such great tools.
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
@@ -85,7 +85,7 @@ Example:
 ### Feature requests
 
 Feature requests are welcome. But take a moment to find out whether your idea
-fits with the scope and aims of the project. You might want to check if your feature is already on the [menue](https://github.com/DSD-DBS/capellambse-context-diagrams/projects?type=beta).
+fits with the scope and aims of the project. You might want to check if your feature is already on the [menue](https://github.com/dbinfrago/capellambse-context-diagrams/projects?type=beta).
 
 A frequently appearing kind of requested feature is to add `.context_diagram` to more ModelObjects. Please check if the class-type of your requested ModelObject is not [already implemented](https://capellambse-context-diagrams.readthedocs.io/#features). Then it is important to describe how the context of this specific ModelObject is formed and how it shall be collected. There are 3 stages in building context diagrams:
 

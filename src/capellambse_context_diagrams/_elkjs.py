@@ -355,7 +355,7 @@ class ELKManager:
 
         log.debug("Downloading elk.js helper binary")
         self.binary_path.parent.mkdir(parents=True, exist_ok=True)
-        url = f"https://github.com/DSD-DBS/capellambse-context-diagrams/releases/download/v{self.runtime_version}/{self.binary_name}"
+        url = f"https://github.com/dbinfrago/capellambse-context-diagrams/releases/download/v{self.runtime_version}/{self.binary_name}"
         response = requests.get(url)
         response.raise_for_status()
         with open(self.binary_path, "wb") as f:

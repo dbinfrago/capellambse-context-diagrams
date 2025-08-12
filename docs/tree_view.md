@@ -5,7 +5,7 @@
 
 # Tree View Diagram
 
-With release [`v0.5.35`](https://github.com/DSD-DBS/py-capellambse/releases/tag/v0.5.35) of [py-capellambse](https://github.com/DSD-DBS/py-capellambse) you can access the
+With release [`v0.5.35`](https://github.com/dbinfrago/py-capellambse/releases/tag/v0.5.35) of [py-capellambse](https://github.com/dbinfrago/py-capellambse) you can access the
 `.tree_view` on [`Class`][capellambse.metamodel.information.Class]
 objects. A tree view diagram shows a tree made from all properties of the
 parent class.
