@@ -38,7 +38,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DSD-DBS/capellambse-context-diagrams"
+Homepage = "https://github.com/dbinfrago/capellambse-context-diagrams"
 Documentation = "https://capellambse-context-diagrams.readthedocs.io"
 
 [project.entry-points."capellambse.model_extensions"]

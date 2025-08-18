@@ -5,7 +5,7 @@
 
 # Context Diagram extension for capellambse
 
-This is a pluggable extension for [py-capellambse](https://github.com/DSD-DBS/py-capellambse)
+This is a pluggable extension for [py-capellambse](https://github.com/dbinfrago/py-capellambse)
 that extends the [`AbstractDiagram`][capellambse.model.diagram.AbstractDiagram]
 base class with [`ContextDiagram`s][capellambse_context_diagrams.context.ContextDiagram] that are layouted by [elkjs'](https://github.com/kieler/elkjs) Layered algorithm.
 
