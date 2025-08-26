@@ -134,20 +134,26 @@ def exchange_data_collector(
     # Remove simple render parameters from params
     no_edgelabels: bool = params.pop("no_edgelabels", False)
     params.pop("transparent_background", False)
+    params.pop("context_groups", False)
     _ = params.pop("font_family", "Open Sans")
     _ = params.pop("font_size", 12)
     _ = params.pop("params", None)
 
+    invalid_params = [
+        name for name in params if name not in filters.RENDER_ADJUSTERS
+    ]
+    if invalid_params:
+        logger.warning(
+            "There are no render parameter solvers labelled: %s "
+            "in filters.RENDER_ADJUSTERS",
+            invalid_params,
+        )
+        for name in invalid_params:
+            params.pop(name)
+
     render_adj: dict[str, t.Any] = {}
     for name, value in params.items():
-        try:
-            filters.RENDER_ADJUSTERS[name](value, data.exchange, render_adj)
-        except KeyError:
-            logger.exception(
-                "There is no render parameter solver labelled: '%s' "
-                "in filters.RENDER_ADJUSTERS",
-                name,
-            )
+        filters.RENDER_ADJUSTERS[name](value, data.exchange, render_adj)
 
     data.elkdata.edges.append(
         _elkjs.ELKInputEdge(
