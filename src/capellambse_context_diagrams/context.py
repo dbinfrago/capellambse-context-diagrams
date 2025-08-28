@@ -283,6 +283,8 @@ class ContextDiagram(m.AbstractDiagram):
     * port_label_position: Position of the port labels. See
       [`PORT_LABEL_POSITION`][capellambse_context_diagrams.context._elkjs.PORT_LABEL_POSITION].
     * transparent_background: Make the background transparent.
+    * context_groups: Render context UUID groups in the class attribute
+      of every context element when an SVG is rendered.
     * display_unused_ports: Display ports that are not connected to an
       edge.
     * edge_direction: Reroute direction of edges.
@@ -321,6 +323,7 @@ class ContextDiagram(m.AbstractDiagram):
     _display_port_labels: bool
     _port_label_position: _elkjs.PORT_LABEL_POSITION
     _transparent_background: bool
+    _context_groups: bool
     _display_unused_ports: bool
     _edge_direction: enums.EDGE_DIRECTION
     _mode: enums.MODE
@@ -366,6 +369,7 @@ class ContextDiagram(m.AbstractDiagram):
             "port_label_position": _elkjs.PORT_LABEL_POSITION.OUTSIDE,
             "display_unused_ports": False,
             "transparent_background": False,
+            "context_groups": False,
             "edge_direction": enums.EDGE_DIRECTION.SMART,
             "mode": enums.MODE.WHITEBOX,
             "display_actor_relation": False,
@@ -531,7 +535,9 @@ class ContextDiagram(m.AbstractDiagram):
         is_legend: bool = params.get("is_legend", False)
         add_context(layout, is_legend)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     @property
@@ -617,7 +623,9 @@ class InterfaceContextDiagram(ContextDiagram):
         is_legend: bool = params.get("is_legend", False)
         add_context(layout, is_legend)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     def _find_node_in_layout(
@@ -907,7 +915,9 @@ class RealizationViewDiagram(ContextDiagram):
             )
         self._add_layer_labels(layout)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     def _add_layer_labels(self, layout: _elkjs.ELKOutputData) -> None:
