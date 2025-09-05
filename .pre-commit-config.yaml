@@ -6,7 +6,7 @@ default_stages: [pre-commit, pre-merge-commit]
 minimum_pre_commit_version: 3.2.0
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -36,7 +36,7 @@ repos:
         pass_filenames: false
         args: [src/capellambse_context_diagrams, tests]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.2
+    rev: v0.12.12
     hooks:
       - id: ruff-format
         types_or: [python, pyi, jupyter]
@@ -81,11 +81,11 @@ repos:
           - --comment-style
           - "/*| *| */"
   - repo: https://github.com/fsfe/reuse-tool
-    rev: v5.0.2
+    rev: v5.1.0
     hooks:
       - id: reuse-lint-file
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: v9.19.0
+    rev: v9.22.0
     hooks:
       - id: commitlint
         stages: [commit-msg]
