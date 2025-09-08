@@ -6298,6 +6298,28 @@ The predator is far away</bodies>
                 id="635f5858-5887-4343-ba62-234fae4c5970" name="BNode 1" nature="NODE">
               <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
                   id="5688a250-3a46-40b2-ac01-b3a672e0f907" name="PP 1"/>
+              <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="71af6cba-504c-4a7b-a242-9a316da9f216"
+                  name="BNode Child 1" abstractType="#b58d14d4-b579-441d-8e6c-89e823cf96f4"/>
+              <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="6d08347f-73e5-4b5c-857a-03b733e6d0e2"
+                  name="BNode Child 2" abstractType="#a30343f9-e904-4dc9-81b3-f6f231f6b26b"/>
+              <ownedPhysicalLinks xsi:type="org.polarsys.capella.core.data.cs:PhysicalLink"
+                  id="1d88ef13-2030-4ef9-a400-07d9376ada4b" name="BNode Child 1_to_BNode Child 2"
+                  linkEnds="#bc62c6fe-e2ee-4499-adf3-04121cfa6f8e #6b570a0d-84a9-484c-9578-d7503cb256df"/>
+              <ownedPhysicalLinks xsi:type="org.polarsys.capella.core.data.cs:PhysicalLink"
+                  id="ee8d7a20-5d56-4f4f-81c5-890aef2e5efa" name="BNode Child 2_to_BNode 1"
+                  linkEnds="#bc4bc49d-2f4c-46d2-8a40-8f8c78e1fd1c #5688a250-3a46-40b2-ac01-b3a672e0f907"/>
+              <ownedPhysicalComponents xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
+                  id="b58d14d4-b579-441d-8e6c-89e823cf96f4" name="BNode Child 1" nature="NODE">
+                <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
+                    id="bc62c6fe-e2ee-4499-adf3-04121cfa6f8e" name="PP 1"/>
+              </ownedPhysicalComponents>
+              <ownedPhysicalComponents xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
+                  id="a30343f9-e904-4dc9-81b3-f6f231f6b26b" name="BNode Child 2" nature="NODE">
+                <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
+                    id="6b570a0d-84a9-484c-9578-d7503cb256df" name="PP 1"/>
+                <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
+                    id="bc4bc49d-2f4c-46d2-8a40-8f8c78e1fd1c" name="PP 2"/>
+              </ownedPhysicalComponents>
             </ownedPhysicalComponents>
             <ownedPhysicalComponents xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
                 id="7a17e2e8-c0cd-4313-b39d-f78f31873772" name="BNode 2" nature="NODE">
@@ -6341,6 +6363,15 @@ The predator is far away</bodies>
                 id="aa723351-32cb-44ab-a7ef-6319a1fbdaac" name="RBNode 1" nature="NODE">
               <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
                   id="503d11cb-ebe7-40d9-93c0-e6e7813873cd" name="PP 1"/>
+              <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="8e554c83-e462-406d-801c-139de273d196"
+                  name="RB Child Node" abstractType="#0151135d-3d83-46f6-b4f3-2a0ff89a21eb"/>
+              <ownedPhysicalLinks xsi:type="org.polarsys.capella.core.data.cs:PhysicalLink"
+                  id="2c21a404-b5ae-4e83-ab64-bb9e33586a65" name="RB to Child" linkEnds="#503d11cb-ebe7-40d9-93c0-e6e7813873cd #08366ba5-bc26-4218-8e59-e2420edbe279"/>
+              <ownedPhysicalComponents xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
+                  id="0151135d-3d83-46f6-b4f3-2a0ff89a21eb" name="RB Child Node" nature="NODE">
+                <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:PhysicalPort"
+                    id="08366ba5-bc26-4218-8e59-e2420edbe279" name="PP 1"/>
+              </ownedPhysicalComponents>
             </ownedPhysicalComponents>
             <ownedPhysicalComponents xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
                 id="5db3cb8f-36bd-4f99-870b-f27272cae9df" name="RBNode 2" nature="NODE">

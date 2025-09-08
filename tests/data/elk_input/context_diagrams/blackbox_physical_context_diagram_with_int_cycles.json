@@ -138,7 +138,7 @@
                 }
             ],
             "width": 109,
-            "height": 72.0
+            "height": 100.0
         }
     ],
     "edges": [
@@ -176,6 +176,44 @@
                         "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
                     },
                     "width": 123,
+                    "height": 12
+                }
+            ]
+        },
+        {
+            "id": "__Derived-PhysicalLink:ee8d7a20-5d56-4f4f-81c5-890aef2e5efa",
+            "sources": [
+                "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+            ],
+            "targets": [
+                "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+            ],
+            "labels": [
+                {
+                    "text": "BNode Child 2_to_BNode 1",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 148,
+                    "height": 12
+                }
+            ]
+        },
+        {
+            "id": "__Derived-PhysicalLink:1d88ef13-2030-4ef9-a400-07d9376ada4b",
+            "sources": [
+                "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+            ],
+            "targets": [
+                "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+            ],
+            "labels": [
+                {
+                    "text": "BNode Child 1_to_BNode Child 2",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 178,
                     "height": 12
                 }
             ]
