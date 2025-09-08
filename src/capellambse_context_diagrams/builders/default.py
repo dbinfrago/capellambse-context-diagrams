@@ -584,6 +584,16 @@ class DiagramBuilder:
         target_valid = (
             target_depth is not None and target_depth <= self.max_depth
         )
+
+        if (
+            source_depth is not None
+            and target_depth is not None
+            and (
+                source_depth > self.max_depth or target_depth > self.max_depth
+            )
+        ):
+            return None
+
         if not source_valid and not target_valid:
             return None
 
