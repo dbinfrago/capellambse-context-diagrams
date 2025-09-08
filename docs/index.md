@@ -354,7 +354,7 @@ The `GREYBOX` view mode provides a hybrid approach between WHITEBOX and BLACKBOX
 
 Additional render parameters for `GREYBOX` mode are offered via:
 
--   ??? example "include_external_context=True"
+-   ??? example "restrict_external_depth=False"
 
           ``` py
           import capellambse
@@ -364,13 +364,13 @@ Additional render parameters for `GREYBOX` mode are offered via:
           diagram = obj.context_diagram.render(
               "svgdiagram",
               mode="GREYBOX",
-              include_external_context=True,
+              restrict_external_depth=False,
           )
           diagram.save(pretty=True)
           ```
           <figure markdown>
-              <img src="assets/images/ContextDiagram of Box-greybox_with_external_context.svg" width="1000000">
-              <figcaption>Context diagram of Box PhysicalComponent with GREYBOX mode and External Context display</figcaption>
+              <img src="assets/images/ContextDiagram of Box-greybox_without_restrict_external_depth.svg" width="1000000">
+              <figcaption>Context diagram of Box PhysicalComponent with GREYBOX mode and restrict external depth display</figcaption>
           </figure>
 
 #### Blackbox

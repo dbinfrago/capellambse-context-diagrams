@@ -306,6 +306,9 @@ class ContextDiagram(m.AbstractDiagram):
       either the box of interest or a child with itself or a child.
       Only useful with ``BLACKBOX`` mode and
       ``display_cyclic_relations`` turned on.
+    * restrict_external_depth: In GREYBOX mode, restrict external
+      components to the same depth as max_depth. This prevents showing
+      deeply nested children from external components.
     * pvmt_styling: Style the diagram according to the PVMT group
       applied to the diagram elements.
 
@@ -336,6 +339,7 @@ class ContextDiagram(m.AbstractDiagram):
     _display_functional_parent_relation: bool
     _display_internal_relations: bool
     _display_cyclic_relations: bool
+    _restrict_external_depth: bool
     _pvmt_styling: dict[str, t.Any] | None
 
     _collect: cabc.Callable[[ContextDiagram], cabc.Iterator[m.ModelElement]]
@@ -381,6 +385,7 @@ class ContextDiagram(m.AbstractDiagram):
             "display_functional_parent_relation": False,
             "display_internal_relations": True,
             "display_cyclic_relations": False,
+            "restrict_external_depth": True,
             "pvmt_styling": None,
         }
         if not _generic.DIAGRAM_TYPE_TO_CONNECTOR_NAMES.get(self.type, ()):

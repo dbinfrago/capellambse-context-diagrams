@@ -11,6 +11,308 @@
     },
     "children": [
         {
+            "id": "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
+            "children": [
+                {
+                    "id": "e456876f-a01d-44f8-b1b2-429dab94f698",
+                    "children": [
+                        {
+                            "id": "a951f1f4-e6ec-441c-b89c-33a59066740b",
+                            "labels": [
+                                {
+                                    "text": "InnerInnerSysChild",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 118,
+                                    "height": 12
+                                }
+                            ],
+                            "ports": [
+                                {
+                                    "id": "d5b8df51-757f-46e8-be8c-7b0bd9b00456",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                }
+                            ],
+                            "width": 124,
+                            "height": 36
+                        }
+                    ],
+                    "labels": [
+                        {
+                            "text": "InnerSysChild",
+                            "layoutOptions": {
+                                "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
+                            },
+                            "width": 93,
+                            "height": 12
+                        }
+                    ],
+                    "ports": [
+                        {
+                            "id": "7608e831-578d-4b98-97eb-9ffc6eb18306",
+                            "layoutOptions": {
+                                "borderOffset": -8
+                            },
+                            "width": 10,
+                            "height": 10
+                        }
+                    ],
+                    "width": 99,
+                    "height": 36
+                },
+                {
+                    "id": "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
+                    "children": [
+                        {
+                            "id": "eca84d5c-fdcd-4cbe-90d5-7d00a256c62b",
+                            "labels": [
+                                {
+                                    "text": "System",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 58,
+                                    "height": 12
+                                }
+                            ],
+                            "ports": [
+                                {
+                                    "id": "eb8760d4-dde4-4127-b8f9-135d1e121d60",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "1b978e1e-1368-44a2-a9e6-12818614b23e",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "71668729-4774-4362-85b6-4b744b8c7ee2",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "3e6349c7-e178-415e-aed1-33ec65ad5b82",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "481ec8fb-4950-476d-97f6-75add6470660",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "31776546-d520-45ed-8f3a-be89752ff0f3",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                },
+                                {
+                                    "id": "04de6fea-fed8-47b0-b6db-8fc2b7b77d6a",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                }
+                            ],
+                            "width": 79,
+                            "height": 105.0
+                        },
+                        {
+                            "id": "76507132-5cc6-40cd-9da5-7917a723c5cc",
+                            "labels": [
+                                {
+                                    "text": "SideSystem",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 78,
+                                    "height": 12
+                                }
+                            ],
+                            "ports": [
+                                {
+                                    "id": "a7d55ed4-0f29-45cd-9a01-3fa5c3516157",
+                                    "layoutOptions": {
+                                        "borderOffset": -8
+                                    },
+                                    "width": 10,
+                                    "height": 10
+                                }
+                            ],
+                            "width": 84,
+                            "height": 36
+                        }
+                    ],
+                    "edges": [
+                        {
+                            "id": "__Derived-ComponentExchange:0bad1c8b-b8fb-4fb7-8433-e1de8bff018e",
+                            "sources": [
+                                "eb8760d4-dde4-4127-b8f9-135d1e121d60"
+                            ],
+                            "targets": [
+                                "76507132-5cc6-40cd-9da5-7917a723c5cc"
+                            ],
+                            "labels": [
+                                {
+                                    "text": "S to SSCC",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 73,
+                                    "height": 12
+                                }
+                            ]
+                        },
+                        {
+                            "id": "__Derived-ComponentExchange:3e66b559-eea0-40af-b18c-0328ee10add7",
+                            "sources": [
+                                "1b978e1e-1368-44a2-a9e6-12818614b23e"
+                            ],
+                            "targets": [
+                                "eca84d5c-fdcd-4cbe-90d5-7d00a256c62b"
+                            ],
+                            "labels": [
+                                {
+                                    "text": "Sys Interface",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 93,
+                                    "height": 12
+                                }
+                            ]
+                        },
+                        {
+                            "id": "7340aa47-4a72-4aea-97c6-f759d9732abf",
+                            "sources": [
+                                "3e6349c7-e178-415e-aed1-33ec65ad5b82"
+                            ],
+                            "targets": [
+                                "a7d55ed4-0f29-45cd-9a01-3fa5c3516157"
+                            ],
+                            "labels": [
+                                {
+                                    "text": "System to SideSystem",
+                                    "layoutOptions": {
+                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                                    },
+                                    "width": 128,
+                                    "height": 12
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": [
+                        {
+                            "text": "SysParent",
+                            "layoutOptions": {
+                                "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
+                            },
+                            "width": 73,
+                            "height": 12
+                        }
+                    ],
+                    "width": 79,
+                    "height": 36
+                }
+            ],
+            "edges": [
+                {
+                    "id": "da1370c7-278f-42f8-b933-c57a27e43f2e",
+                    "sources": [
+                        "71668729-4774-4362-85b6-4b744b8c7ee2"
+                    ],
+                    "targets": [
+                        "7608e831-578d-4b98-97eb-9ffc6eb18306"
+                    ],
+                    "labels": [
+                        {
+                            "text": "Seeable interface",
+                            "layoutOptions": {
+                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                            },
+                            "width": 113,
+                            "height": 12
+                        }
+                    ]
+                },
+                {
+                    "id": "__Derived-ComponentExchange:f71323c5-cd0f-4865-9005-c5b545f990a0",
+                    "sources": [
+                        "481ec8fb-4950-476d-97f6-75add6470660"
+                    ],
+                    "targets": [
+                        "a951f1f4-e6ec-441c-b89c-33a59066740b"
+                    ],
+                    "labels": [
+                        {
+                            "text": "System to InnerInnerInnerChild",
+                            "layoutOptions": {
+                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                            },
+                            "width": 178,
+                            "height": 12
+                        }
+                    ]
+                },
+                {
+                    "id": "dae5570d-24dd-4433-a3da-df481c480835",
+                    "sources": [
+                        "31776546-d520-45ed-8f3a-be89752ff0f3"
+                    ],
+                    "targets": [
+                        "d5b8df51-757f-46e8-be8c-7b0bd9b00456"
+                    ],
+                    "labels": [
+                        {
+                            "text": "Show external depth",
+                            "layoutOptions": {
+                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                            },
+                            "width": 123,
+                            "height": 12
+                        }
+                    ]
+                }
+            ],
+            "labels": [
+                {
+                    "text": "Hogwarts",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
+                    },
+                    "width": 68,
+                    "height": 12
+                }
+            ],
+            "width": 74,
+            "height": 36
+        },
+        {
             "id": "0a841a82-9fab-4eb5-b8f8-2e3ce6fee869",
             "labels": [
                 {
@@ -33,219 +335,6 @@
                 }
             ],
             "width": 69,
-            "height": 36
-        },
-        {
-            "id": "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
-            "children": [
-                {
-                    "id": "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
-                    "children": [
-                        {
-                            "id": "eca84d5c-fdcd-4cbe-90d5-7d00a256c62b",
-                            "children": [
-                                {
-                                    "id": "2069b6e3-40f2-4bd7-b16e-900e23bd8d19",
-                                    "labels": [
-                                        {
-                                            "text": "SysChild 2",
-                                            "layoutOptions": {
-                                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                            },
-                                            "width": 78,
-                                            "height": 12
-                                        }
-                                    ],
-                                    "ports": [
-                                        {
-                                            "id": "3d560581-2804-4b72-bbdf-f86038e9a69b",
-                                            "layoutOptions": {
-                                                "borderOffset": -8
-                                            },
-                                            "width": 10,
-                                            "height": 10
-                                        }
-                                    ],
-                                    "width": 84,
-                                    "height": 36
-                                },
-                                {
-                                    "id": "de3d9413-5576-4841-bef0-e2e890a5ec22",
-                                    "labels": [
-                                        {
-                                            "text": "SysChild3",
-                                            "layoutOptions": {
-                                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                            },
-                                            "width": 73,
-                                            "height": 12
-                                        }
-                                    ],
-                                    "ports": [
-                                        {
-                                            "id": "5ca1c86d-c76b-4514-b060-0b161a7d688e",
-                                            "layoutOptions": {
-                                                "borderOffset": -8
-                                            },
-                                            "width": 10,
-                                            "height": 10
-                                        }
-                                    ],
-                                    "width": 79,
-                                    "height": 36
-                                }
-                            ],
-                            "edges": [
-                                {
-                                    "id": "3e66b559-eea0-40af-b18c-0328ee10add7",
-                                    "sources": [
-                                        "5ca1c86d-c76b-4514-b060-0b161a7d688e"
-                                    ],
-                                    "targets": [
-                                        "1b978e1e-1368-44a2-a9e6-12818614b23e"
-                                    ],
-                                    "labels": [
-                                        {
-                                            "text": "Sys Interface",
-                                            "layoutOptions": {
-                                                "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                            },
-                                            "width": 93,
-                                            "height": 12
-                                        }
-                                    ]
-                                }
-                            ],
-                            "labels": [
-                                {
-                                    "text": "System",
-                                    "layoutOptions": {
-                                        "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
-                                    },
-                                    "width": 58,
-                                    "height": 12
-                                }
-                            ],
-                            "ports": [
-                                {
-                                    "id": "71668729-4774-4362-85b6-4b744b8c7ee2",
-                                    "layoutOptions": {
-                                        "borderOffset": -8
-                                    },
-                                    "width": 10,
-                                    "height": 10
-                                },
-                                {
-                                    "id": "1b978e1e-1368-44a2-a9e6-12818614b23e",
-                                    "layoutOptions": {
-                                        "borderOffset": -8
-                                    },
-                                    "width": 10,
-                                    "height": 10
-                                },
-                                {
-                                    "id": "04de6fea-fed8-47b0-b6db-8fc2b7b77d6a",
-                                    "layoutOptions": {
-                                        "borderOffset": -8
-                                    },
-                                    "width": 10,
-                                    "height": 10
-                                }
-                            ],
-                            "width": 79,
-                            "height": 42.0
-                        },
-                        {
-                            "id": "e456876f-a01d-44f8-b1b2-429dab94f698",
-                            "labels": [
-                                {
-                                    "text": "InnerSysChild",
-                                    "layoutOptions": {
-                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                    },
-                                    "width": 93,
-                                    "height": 12
-                                }
-                            ],
-                            "ports": [
-                                {
-                                    "id": "7608e831-578d-4b98-97eb-9ffc6eb18306",
-                                    "layoutOptions": {
-                                        "borderOffset": -8
-                                    },
-                                    "width": 10,
-                                    "height": 10
-                                }
-                            ],
-                            "width": 99,
-                            "height": 36
-                        }
-                    ],
-                    "edges": [
-                        {
-                            "id": "ef969bb0-8b88-4a60-82eb-9984dfe85e87",
-                            "sources": [
-                                "3d560581-2804-4b72-bbdf-f86038e9a69b"
-                            ],
-                            "targets": [
-                                "7608e831-578d-4b98-97eb-9ffc6eb18306"
-                            ],
-                            "labels": [
-                                {
-                                    "text": "Inner Interface",
-                                    "layoutOptions": {
-                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                    },
-                                    "width": 103,
-                                    "height": 12
-                                }
-                            ]
-                        },
-                        {
-                            "id": "da1370c7-278f-42f8-b933-c57a27e43f2e",
-                            "sources": [
-                                "71668729-4774-4362-85b6-4b744b8c7ee2"
-                            ],
-                            "targets": [
-                                "7608e831-578d-4b98-97eb-9ffc6eb18306"
-                            ],
-                            "labels": [
-                                {
-                                    "text": "Seeable interface",
-                                    "layoutOptions": {
-                                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
-                                    },
-                                    "width": 113,
-                                    "height": 12
-                                }
-                            ]
-                        }
-                    ],
-                    "labels": [
-                        {
-                            "text": "SysParent",
-                            "layoutOptions": {
-                                "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
-                            },
-                            "width": 73,
-                            "height": 12
-                        }
-                    ],
-                    "width": 79,
-                    "height": 36
-                }
-            ],
-            "labels": [
-                {
-                    "text": "Hogwarts",
-                    "layoutOptions": {
-                        "nodeLabels.placement": "INSIDE, V_TOP, H_CENTER"
-                    },
-                    "width": 68,
-                    "height": 12
-                }
-            ],
-            "width": 74,
             "height": 36
         }
     ],

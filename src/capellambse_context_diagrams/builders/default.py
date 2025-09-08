@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import copy
 import dataclasses
+import sys
 import typing as t
 
 import capellambse.model as m
@@ -123,7 +124,7 @@ class DiagramBuilder:
             self.edge_owners: dict[str, str] = {}
             self.common_owners: set[str] = set()
 
-        self.max_depth: int = 999
+        self.max_depth: int = sys.maxsize
         if self.diagram._mode == enums.MODE.GREYBOX:
             self.max_depth = 1
 
@@ -563,47 +564,112 @@ class DiagramBuilder:
         if edge_data is None:
             edge_data = self._collect_edge_data(edge_obj)
 
-        source_depth: int | None = None
-        if self.boxable_target.uuid in set(edge_data.source.owners):
-            source_depth = self._calculate_depth_to_boxable_target(
-                edge_data.source.owner
-            )
-
-        target_depth: int | None = None
-        if self.boxable_target.uuid in set(edge_data.target.owners):
-            target_depth = self._calculate_depth_to_boxable_target(
-                edge_data.target.owner
-            )
-
-        if source_depth is None and target_depth is None:
-            return None
-
-        source_valid = (
-            source_depth is not None and source_depth <= self.max_depth
-        )
-        target_valid = (
-            target_depth is not None and target_depth <= self.max_depth
-        )
-
-        if (
-            source_depth is not None
-            and target_depth is not None
-            and (
-                source_depth > self.max_depth or target_depth > self.max_depth
-            )
+        source_depth = self._get_element_depth(edge_data.source)
+        target_depth = self._get_element_depth(edge_data.target)
+        if (source_depth is None or source_depth > self.max_depth) and (
+            target_depth is None or target_depth > self.max_depth
         ):
             return None
 
-        if not source_valid and not target_valid:
-            return None
+        src_override, tgt_override = self._determine_edge_overrides(
+            edge_data, source_depth, target_depth
+        )
+        if src_override or tgt_override:
+            self._apply_internal_adjustment(
+                edge_data,
+                src_override or edge_data.source.owner,
+                tgt_override or edge_data.target.owner,
+                type(edge_obj).__name__,
+            )
 
         return self._update_edge(edge_data)
 
-    def _calculate_depth_to_boxable_target(
-        self, element: m.ModelElement
+    def _get_element_depth(self, element_data: ConnectorData) -> int | None:
+        """Get the depth of an element relative to the boxable target.
+
+        Returns None if the element is not within the boxable target's
+        hierarchy.
+        """
+        if self.boxable_target.uuid not in set(element_data.owners):
+            return None
+        return self._calculate_depth_to_target(
+            element_data.owner, self.boxable_target
+        )
+
+    def _determine_edge_overrides(
+        self,
+        edge_data: EdgeData,
+        source_depth: int | None,
+        target_depth: int | None,
+    ) -> tuple[m.ModelElement | None, m.ModelElement | None]:
+        """Determine which edge endpoints need to be overridden."""
+        external_depth_limit = (
+            self.max_depth
+            if self.diagram._restrict_external_depth
+            else sys.maxsize
+        )
+
+        src_override = self._get_override(
+            edge_data.source, source_depth, external_depth_limit
+        )
+        tgt_override = self._get_override(
+            edge_data.target, target_depth, external_depth_limit
+        )
+        return src_override, tgt_override
+
+    def _get_override(
+        self, data: ConnectorData, depth: int | None, external_depth_limit: int
+    ) -> m.ModelElement | None:
+        """Determine if the connector data needs an override element."""
+        if depth is None:  # is external
+            equivalent_target = self._find_equivalent_level_target(data.owner)
+            recalculated_depth = self._calculate_depth_to_target(
+                data.owner, equivalent_target
+            )
+            if recalculated_depth > external_depth_limit:
+                equivalent_owners = list(
+                    _generic.get_all_owners(equivalent_target)
+                )
+                return get_top_uncommon_owner(data.owner, equivalent_owners)
+            return data.owner
+        if depth > self.max_depth:  # is too deep
+            return self._find_equivalent_level_target(data.owner)
+        return None
+
+    def _find_equivalent_level_target(
+        self, external_element: m.ModelElement
+    ) -> m.ModelElement:
+        """Find the target at the same hierarchical level as reference.
+
+        Finds the component that is at the same relative depth from a
+        common ancestor as the boxeable element, which allows proper
+        depth comparison for external components in greybox mode.
+        """
+        external_owners = list(_generic.get_all_owners(external_element))
+        common_ancestor = None
+        for ext_owner in external_owners:
+            if ext_owner in set(self.diagram_target_owners):
+                common_ancestor = ext_owner
+                break
+
+        if common_ancestor is None:
+            return external_element
+
+        external_path_element = external_element
+        while (
+            hasattr(external_path_element, "owner")
+            and external_path_element.owner
+            and external_path_element.owner.uuid != common_ancestor
+        ):
+            external_path_element = external_path_element.owner
+
+        return external_path_element
+
+    def _calculate_depth_to_target(
+        self, element: m.ModelElement, target: m.ModelElement
     ) -> int:
-        """Calculate depth from element to noi in ownership hierarchy."""
-        if element.uuid == self.boxable_target.uuid:
+        """Calculate depth from element to target in hierarchy."""
+        if element.uuid == target.uuid:
             return 0
 
         depth = 0
@@ -611,10 +677,10 @@ class DiagramBuilder:
         while current and hasattr(current, "owner") and current.owner:
             depth += 1
             current = current.owner
-            if current.uuid == self.boxable_target.uuid:
+            if current.uuid == target.uuid:
                 return depth
 
-        return 999
+        return sys.maxsize
 
     def _make_blackbox_target(self, obj: m.ModelElement) -> None:
         edge_data = self._collect_edge_data(obj)

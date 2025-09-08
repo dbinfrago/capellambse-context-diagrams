@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import collections.abc as cabc
+import sys
 
 import capellambse.model as m
 import typing_extensions as te
@@ -265,7 +266,7 @@ def make_owner_boxes(
     make_box_func: cabc.Callable,
     boxes: dict[str, _elkjs.ELKInputChild],
     boxes_to_delete: set[str],
-    max_depth: int = 999,
+    max_depth: int = sys.maxsize,
 ) -> str:
     """Create owner boxes for all owners of ``obj``."""
     current = obj
