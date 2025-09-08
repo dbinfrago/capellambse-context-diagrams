@@ -380,6 +380,18 @@ TEST_CONTEXT_SET = [
         ),
         id="LogicalComponent PVMT with children styling ContextDiagram",
     ),
+    pytest.param(
+        (
+            "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
+            "greybox_context_diagram.json",
+            {
+                "mode": "GREYBOX",
+                "display_derived_interfaces": False,
+                "include_external_context": False,
+            },
+        ),
+        id="LogicalComponent GREYBOX ContextDiagram",
+    ),
 ]
 
 TEST_CONTEXT_DATA_ROOT = TEST_ELK_INPUT_ROOT / "context_diagrams"

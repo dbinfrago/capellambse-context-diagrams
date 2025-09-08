@@ -106,9 +106,11 @@ class DiagramBuilder:
         self.boxable_target = _get_boxeable_target(self.diagram)
         self.data = _makers.make_diagram(diagram)
         self.params = params
+
         self.boxes: dict[str, _elkjs.ELKInputChild] = {}
         self.edges: dict[str, _elkjs.ELKInputEdge] = {}
         self.ports: dict[str, _elkjs.ELKInputPort] = {}
+
         self.boxes_to_delete: set[str] = set()
         self.edges_to_flip: dict[str, dict[bool, set[str]]] = {}
         self.min_heights: dict[str, dict[str, float]] = {}
@@ -120,6 +122,10 @@ class DiagramBuilder:
         if self.diagram._display_parent_relation:
             self.edge_owners: dict[str, str] = {}
             self.common_owners: set[str] = set()
+
+        self.max_depth: int = 999
+        if self.diagram._mode == enums.MODE.GREYBOX:
+            self.max_depth = 1
 
         if self.diagram._edge_direction in {
             enums.EDGE_DIRECTION.RIGHT,
@@ -144,6 +150,8 @@ class DiagramBuilder:
                 self._make_blackbox_target(elem)
             elif self.diagram._mode == enums.MODE.WHITEBOX:
                 self._make_whitebox_target(elem)
+            elif self.diagram._mode == enums.MODE.GREYBOX:
+                self._make_greybox_target(elem)
 
         self._flip_edges()
         self._resolve_parent_relationship()
@@ -178,17 +186,20 @@ class DiagramBuilder:
             or self.diagram._display_functional_parent_relation
         ):
             current = self.boxable_target
+            depth: int = 0
             while (
                 current
                 and self.common_owners
                 and getattr(current, "owner", None) is not None
                 and not isinstance(current.owner, _makers.PackageTypes)
+                and depth < self.max_depth
             ):
                 self.common_owners.discard(current.uuid)
                 current = _makers.make_owner_box(
                     current, self._make_box, self.boxes, self.boxes_to_delete
                 )
                 self.common_owners.discard(current.uuid)
+                depth += 1
             for edge_uuid, box_uuid in self.edge_owners.items():
                 if box := self.boxes.get(box_uuid):
                     box.edges.append(self.edges.pop(edge_uuid))
@@ -294,6 +305,7 @@ class DiagramBuilder:
                     self._make_box,
                     self.boxes,
                     self.boxes_to_delete,
+                    self.max_depth,
                 )
             )
         return box
@@ -515,6 +527,9 @@ class DiagramBuilder:
         if edge_data is None:
             edge_data = self._collect_edge_data(edge_obj)
 
+        return self._update_edge(edge_data)
+
+    def _update_edge(self, edge_data: EdgeData) -> _elkjs.ELKInputEdge | None:
         if (
             (not _is_edge(self.target) and not _is_port(self.target))
             and not self._is_inside_noi(edge_data.source.owner)
@@ -530,6 +545,66 @@ class DiagramBuilder:
         if _is_edge(obj):
             return self._make_edge_and_ports(obj)
         return self._make_box(obj)
+
+    def _make_greybox_target(
+        self, obj: m.ModelElement
+    ) -> _elkjs.ELKInputChild | _elkjs.ELKInputEdge | None:
+        if _is_edge(obj):
+            return self._make_greybox_edge_and_ports(obj)
+        return self._make_box(obj)
+
+    def _make_greybox_edge_and_ports(
+        self, edge_obj: m.ModelElement, edge_data: EdgeData | None = None
+    ) -> _elkjs.ELKInputEdge | None:
+        """Make edge and ports for GREYBOX mode with depth filtering."""
+        if self.edges.get(edge_obj.uuid):
+            return None
+
+        if edge_data is None:
+            edge_data = self._collect_edge_data(edge_obj)
+
+        source_depth: int | None = None
+        if self.boxable_target.uuid in set(edge_data.source.owners):
+            source_depth = self._calculate_depth_to_boxable_target(
+                edge_data.source.owner
+            )
+
+        target_depth: int | None = None
+        if self.boxable_target.uuid in set(edge_data.target.owners):
+            target_depth = self._calculate_depth_to_boxable_target(
+                edge_data.target.owner
+            )
+
+        if source_depth is None and target_depth is None:
+            return None
+
+        source_valid = (
+            source_depth is not None and source_depth <= self.max_depth
+        )
+        target_valid = (
+            target_depth is not None and target_depth <= self.max_depth
+        )
+        if not source_valid and not target_valid:
+            return None
+
+        return self._update_edge(edge_data)
+
+    def _calculate_depth_to_boxable_target(
+        self, element: m.ModelElement
+    ) -> int:
+        """Calculate depth from element to noi in ownership hierarchy."""
+        if element.uuid == self.boxable_target.uuid:
+            return 0
+
+        depth = 0
+        current = element
+        while current and hasattr(current, "owner") and current.owner:
+            depth += 1
+            current = current.owner
+            if current.uuid == self.boxable_target.uuid:
+                return depth
+
+        return 999
 
     def _make_blackbox_target(self, obj: m.ModelElement) -> None:
         edge_data = self._collect_edge_data(obj)
