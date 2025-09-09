@@ -60,13 +60,13 @@ dev = [
 ]
 
 docs = [
-  "mkdocs-material",
-  "mkdocstrings[python]>=0.18",
-  "pytkdocs[numpy-style]>=0.5.0",
-  "mkdocs-gen-files",
-  "mkdocs-literate-nav",
-  "mkdocs-section-index",
-  "mkdocs-autorefs",
+  "mkdocs-material>=9.6.19",
+  "mkdocstrings[python]>=0.30.0",
+  "pytkdocs[numpy-style]>=0.16.5",
+  "mkdocs-gen-files>=0.5.0",
+  "mkdocs-literate-nav>=0.6.2",
+  "mkdocs-section-index>=0.3.10",
+  "mkdocs-autorefs>=1.4.3",
 ]
 
 [tool.coverage.run]

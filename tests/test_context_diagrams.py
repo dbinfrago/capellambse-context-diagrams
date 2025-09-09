@@ -380,6 +380,18 @@ TEST_CONTEXT_SET = [
         ),
         id="LogicalComponent PVMT with children styling ContextDiagram",
     ),
+    pytest.param(
+        (
+            "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
+            "greybox_context_diagram.json",
+            {
+                "mode": "GREYBOX",
+                "display_derived_interfaces": False,
+                "include_external_context": False,
+            },
+        ),
+        id="LogicalComponent GREYBOX ContextDiagram",
+    ),
 ]
 
 TEST_CONTEXT_DATA_ROOT = TEST_ELK_INPUT_ROOT / "context_diagrams"
@@ -475,10 +487,10 @@ def test_context_diagram_hide_direct_children(
 ):
     obj = model.by_uuid("eca84d5c-fdcd-4cbe-90d5-7d00a256c62b")
     expected_hidden_uuids = {
-        "6a557565-c9d4-4216-8e9e-03539c0e6095",
-        "32483de8-abd5-4e50-811b-407fad44defa",
-        "727b7d69-3cd2-45cc-b423-1e7b93c83f5b",
-        "3e66b559-eea0-40af-b18c-0328ee10add7",
+        "1508c5e1-b895-4287-9711-d2e803c82358",  # SysChild 1
+        "2069b6e3-40f2-4bd7-b16e-900e23bd8d19",  # SysChild 2
+        "de3d9413-5576-4841-bef0-e2e890a5ec22",  # SysChild3
+        "3e66b559-eea0-40af-b18c-0328ee10add7",  # Sys Interface
         "1b978e1e-1368-44a2-a9e6-12818614b23e",  # Port
     }
 

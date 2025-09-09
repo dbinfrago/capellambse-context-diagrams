@@ -102,8 +102,6 @@ def write_test_data_file(
     This is a helper function to write test data to files in case the
     expected test data changed.
     """
-    import json
-
     if isinstance(data, list):
         data_dump = {
             "edges": [edge.model_dump(exclude_defaults=True) for edge in data]
@@ -127,8 +125,6 @@ def write_layout_test_data_file(
     This is a helper function to write test data to files in case the
     expected test data changed.
     """
-    import json
-
     if isinstance(data, list):
         data_dump = {
             "edges": [

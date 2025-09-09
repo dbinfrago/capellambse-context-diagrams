@@ -333,6 +333,46 @@ Additional render parameters for `WHITEBOX` mode are offered via:
               <figcaption>Context diagram of Box PhysicalComponent with WHITEBOX mode and External Context display</figcaption>
           </figure>
 
+#### Greybox
+
+The `GREYBOX` view mode provides a hybrid approach between WHITEBOX and BLACKBOX modes. It collects the target context and its children's context, but limits parent relationship resolution to the first level only. This provides more detail than BLACKBOX while maintaining better performance than full WHITEBOX mode for complex hierarchies.
+
+!!! example "GREYBOX view mode"
+
+    ``` py
+    import capellambse
+
+    model = capellambse.MelodyModel("tests/data/ContextDiagram.aird")
+    obj = model.by_uuid("309296b1-cf37-45d7-b0f3-f7bc00422a59")
+    diagram = obj.context_diagram.render("svgdiagram", mode="GREYBOX")
+    diagram.save(pretty=True)
+    ```
+    <figure markdown>
+        <img src="assets/images/ContextDiagram of Box-greybox.svg" width="1000000">
+        <figcaption>Context diagram of Box PhysicalComponent with GREYBOX mode</figcaption>
+    </figure>
+
+Additional render parameters for `GREYBOX` mode are offered via:
+
+-   ??? example "restrict_external_depth=False"
+
+          ``` py
+          import capellambse
+
+          model = capellambse.MelodyModel("tests/data/ContextDiagram.aird")
+          obj = model.by_uuid("309296b1-cf37-45d7-b0f3-f7bc00422a59")
+          diagram = obj.context_diagram.render(
+              "svgdiagram",
+              mode="GREYBOX",
+              restrict_external_depth=False,
+          )
+          diagram.save(pretty=True)
+          ```
+          <figure markdown>
+              <img src="assets/images/ContextDiagram of Box-greybox_without_restrict_external_depth.svg" width="1000000">
+              <figcaption>Context diagram of Box PhysicalComponent with GREYBOX mode and restrict external depth display</figcaption>
+          </figure>
+
 #### Blackbox
 
 This render parameter conceals internal details to provide a streamlined
@@ -412,6 +452,7 @@ even cyclic internal relations are offered via:
               <img src="assets/images/ContextDiagram of Box-blackbox_with_external_context.svg" width="1000000">
               <figcaption>Context diagram of Box PhysicalComponent with BLACKBOX mode and External Context display</figcaption>
           </figure>
+
 ---
 
 See the code [reference][capellambse_context_diagrams] section for understanding the underlying

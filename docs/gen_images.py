@@ -246,6 +246,15 @@ def generate_modes_pc_image():
             "include_external_context": False,
             "edge_direction": "RIGHT",
         },
+        "greybox": {
+            "mode": "GREYBOX",
+            "edge_direction": "NONE",
+        },
+        "greybox_without_restrict_external_depth": {
+            "mode": "GREYBOX",
+            "restrict_external_depth": False,
+            "edge_direction": "NONE",
+        },
         "whitebox": {
             "mode": "WHITEBOX",
             "include_external_context": False,
