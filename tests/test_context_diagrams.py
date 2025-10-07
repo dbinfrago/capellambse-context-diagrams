@@ -392,6 +392,20 @@ TEST_CONTEXT_SET = [
         ),
         id="LogicalComponent GREYBOX ContextDiagram",
     ),
+    pytest.param(
+        (
+            TEST_PVMT_STYLING_UUID,
+            "child_shadow_context_diagram.json",
+            {
+                "pvmt_styling": {
+                    "children_coloring": True,
+                    "value_groups": ["Test.Kind.Color"],
+                },
+                "child_shadow": True,
+            },
+        ),
+        id="LogicalComponent white shadow for children ContextDiagram",
+    ),
 ]
 
 TEST_CONTEXT_DATA_ROOT = TEST_ELK_INPUT_ROOT / "context_diagrams"
