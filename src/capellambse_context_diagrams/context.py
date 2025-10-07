@@ -311,6 +311,8 @@ class ContextDiagram(m.AbstractDiagram):
       deeply nested children from external components.
     * pvmt_styling: Style the diagram according to the PVMT group
       applied to the diagram elements.
+    * child_shadow: Add a white background box (5px padding, 50%
+      opacity) behind elements that have a parent box.
 
     The following properties are used by the internal builders:
 
@@ -341,6 +343,7 @@ class ContextDiagram(m.AbstractDiagram):
     _display_cyclic_relations: bool
     _restrict_external_depth: bool
     _pvmt_styling: dict[str, t.Any] | None
+    _child_shadow: bool
 
     _collect: cabc.Callable[[ContextDiagram], cabc.Iterator[m.ModelElement]]
     _is_portless: bool
@@ -387,6 +390,7 @@ class ContextDiagram(m.AbstractDiagram):
             "display_cyclic_relations": False,
             "restrict_external_depth": True,
             "pvmt_styling": None,
+            "child_shadow": False,
         }
         if not _generic.DIAGRAM_TYPE_TO_CONNECTOR_NAMES.get(self.type, ()):
             render_params |= {
