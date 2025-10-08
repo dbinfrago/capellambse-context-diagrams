@@ -316,6 +316,24 @@ def generate_pvmt_styling_images():
         )
 
 
+def generate_child_shadow_image():
+    diag = model.by_uuid(pvmt_styling_uuid).context_diagram
+    filename = f"{dest / diag.name!s} with child shadow.svg"
+    with mkdocs_gen_files.open(filename, "w") as fd:
+        print(
+            diag.render(
+                "svg",
+                pvmt_styling={
+                    "value_groups": ["Test.Kind.Color"],
+                    "children_coloring": True,
+                },
+                child_shadow=True,
+                transparent_background=False,
+            ),
+            file=fd,
+        )
+
+
 generate_index_images()
 generate_hierarchy_image()
 generate_symbol_images()
@@ -348,3 +366,4 @@ generate_cable_tree_image()
 generate_modes_pc_image()
 generate_functional_chain_with_params_image()
 generate_pvmt_styling_images()
+generate_child_shadow_image()

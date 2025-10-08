@@ -235,3 +235,31 @@ The following PVMT properties are automatically mapped to CSS styling:
         <img src="../../assets/images/ContextDiagram of PVMTOwner with children coloring.svg" width="1000000">
         <figcaption>Context diagram with PVMT styling and children coloring</figcaption>
     </figure>
+
+# Child Shadow
+
+Render white shadow boxes underneath children boxes to increase contrast against the parent
+boxes.
+
+??? example "Child Shadow Example"
+
+    ``` py
+    import capellambse
+
+    model = capellambse.MelodyModel("tests/data/ContextDiagram.aird")
+    obj = model.by_uuid("789f8316-17cf-4c32-a66f-354fe111c40e")
+
+    diagram = obj.context_diagram.render(
+        "svgdiagram",
+        pvmt_styling={
+            "value_groups": ["Test.Kind.Color"],
+            "children_coloring": False
+        },
+        child_shadow=True,
+    )
+    diagram.save(pretty=True)
+    ```
+    <figure markdown>
+        <img src="../../assets/images/ContextDiagram of PVMTOwner with child shadow.svg" width="1000000">
+        <figcaption>Context diagram with PVMT styling and child shadows applied</figcaption>
+    </figure>
