@@ -109,6 +109,38 @@ class DiagramSerializer:
         self._pvmt_cache.clear()
         return self.diagram
 
+    def _make_shadow_box(
+        self,
+        box: cdiagram.Box,
+        padding: float = 5.0,
+    ) -> cdiagram.Box:
+        """Create a white shadow box behind the given box.
+
+        Parameters
+        ----------
+        box
+            The original box to create a shadow for
+        padding
+            Padding in pixels on each side (default: 5px)
+
+        Returns
+        -------
+        cdiagram.Box
+            A white box with 50% opacity positioned behind the original
+            box
+        """
+        return cdiagram.Box(
+            pos=box.pos - (padding, padding),
+            size=box.size + (padding * 2, padding * 2),
+            styleclass="shadow",
+            styleoverrides={
+                "fill": "white",
+                "fill-opacity": "0.5",
+                "stroke": "white",
+                "rx": "3",
+            },
+        )
+
     def _apply_pvmt_styling(
         self,
         uuid: str,
@@ -207,6 +239,16 @@ class DiagramSerializer:
                 context=getattr(child, "context", {}),
             )
             element.JSON_TYPE = box_type
+
+            if (
+                self._diagram._child_shadow
+                and parent is not None
+                and not is_port
+            ):
+                shadow_box = self._make_shadow_box(element)
+                shadow_box.JSON_TYPE = box_type
+                self.diagram.add_element(shadow_box)
+
             self.diagram.add_element(element)
             self._cache[uuid] = element
         elif child.type == "edge":
