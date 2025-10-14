@@ -15,7 +15,7 @@ import type {
   SGraphSchema,
   Point,
   Dimension,
-} from "npm:sprotty@^0.8.0";
+} from "npm:sprotty@^1.4.0";
 import {
   ElkShape,
   ElkNode,
