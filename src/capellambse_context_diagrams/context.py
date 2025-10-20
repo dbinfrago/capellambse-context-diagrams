@@ -1111,6 +1111,9 @@ class ELKDiagram(ContextDiagram):
         default_render_parameters = {
             "include_port_allocations": True,
             "hide_elements": set(),
+            "pvmt_styling": None,
+            "display_port_labels": False,
+            "display_symbols_as_boxes": False,
         } | default_render_parameters
         super().__init__(
             class_,
