@@ -21,14 +21,13 @@ from capellambse import helpers
 from capellambse import model as m
 
 from . import _elkjs, enums, filters, serializers, styling
-from .builders import dataflow, fchain, interface
+from .builders import dataflow, diagram_view, fchain, interface
 from .builders import default as db
 from .collectors import (
     _generic,
     cable_tree,
     dataflow_view,
     default,
-    diagram_view,
     exchanges,
     portless,
     realization_view,
@@ -485,7 +484,7 @@ class ContextDiagram(m.AbstractDiagram):
         self._default_render_parameters = params
 
     @property
-    def nodes(self) -> m.MixedElementList:
+    def nodes(self) -> m.ElementList:
         """Return a list of all nodes visible in this diagram.
 
         See Also
@@ -520,7 +519,7 @@ class ContextDiagram(m.AbstractDiagram):
                 raise
 
             elems.append(elem._element)
-        return m.MixedElementList(self._model, elems, m.ModelElement)
+        return m.ElementList(self._model, elems, m.ModelElement)
 
     def elk_input_data(self, params: dict[str, t.Any]) -> CollectorOutputData:
         """Return the collected ELK input data."""
@@ -1119,11 +1118,11 @@ class ELKDiagram(ContextDiagram):
             render_styles=render_styles,
             default_render_parameters=default_render_parameters,
         )
-        self.collector = diagram_view.collect_from_diagram
+
+        self.builder = diagram_view.build_from_diagram  # type: ignore[assignment]
         self.target: m.Diagram = obj  # type: ignore[assignment]
 
-        # self.__port_allocations = [] # noqa: ERA001
-        self.__nodes: m.MixedElementList | None = None
+        self.__nodes: m.ElementList | None = None
 
     @property
     def uuid(self) -> str:
@@ -1133,10 +1132,10 @@ class ELKDiagram(ContextDiagram):
     @property
     def name(self) -> str:
         """Returns the diagram name."""
-        return f"ELK layout of {self.target.name.replace('/', '- or -')}"
+        return f"ELK Layout of {self.target.name.replace('/', '- or -')}"
 
     @property
-    def nodes(self) -> m.MixedElementList:
+    def nodes(self) -> m.ElementList:
         """Return a list of all nodes visible in this diagram."""
         if not self.__nodes:
             self.__nodes = super().nodes

@@ -285,3 +285,14 @@ def make_owner_boxes(
         )
         depth += 1
     return current.uuid
+
+
+def adjust_box_height_for_ports(box: _elkjs.ELKInputChild) -> None:
+    """Adjust box height based on number of ports.
+
+    Parameters
+    ----------
+    box
+        The box to adjust.
+    """
+    box.height = (PORT_SIZE + 2 * PORT_PADDING) * (len(box.ports) + 1)

@@ -21,7 +21,7 @@ import typing as t
 import capellambse.model as m
 from capellambse.metamodel import fa
 
-from .. import _elkjs, context, enums
+from .. import _elkjs, context, enums, helpers
 from ..collectors import _generic, portless
 from . import _makers, derived
 
@@ -54,16 +54,6 @@ def _is_edge(obj: m.ModelElement) -> bool:
         return False
 
 
-def _is_port(obj: m.ModelElement) -> bool:
-    return type(obj).__name__.endswith("Port")
-
-
-def _is_functional_chain(obj: m.ModelElement) -> bool:
-    return type(obj).__name__.endswith(
-        ("FunctionalChain", "OperationalProcess")
-    )
-
-
 def get_top_uncommon_owner(
     src: m.ModelElement, tgt_owners: list[str]
 ) -> m.ModelElement:
@@ -80,9 +70,9 @@ def get_top_uncommon_owner(
 
 
 def _get_boxeable_target(diagram: context.ContextDiagram) -> m.ModelElement:
-    if _is_port(diagram.target):
+    if helpers.is_port(diagram.target):
         return diagram.target.owner
-    if _is_functional_chain(diagram.target):
+    if helpers.is_functional_chain(diagram.target):
         return diagram.target
     try:
         src, _ = portless.collect_exchange_endpoints(diagram.target)
@@ -169,7 +159,7 @@ class DiagramBuilder:
         return self._get_data()
 
     def _handle_boxeable_target(self) -> None:
-        if _is_port(self.target):
+        if helpers.is_port(self.target):
             port = self._make_port_and_owner("right", self.target)
             self._update_min_heights(self.boxable_target.uuid, "left", port)
         elif not _is_edge(self.target):
@@ -532,7 +522,7 @@ class DiagramBuilder:
 
     def _update_edge(self, edge_data: EdgeData) -> _elkjs.ELKInputEdge | None:
         if (
-            (not _is_edge(self.target) and not _is_port(self.target))
+            (not _is_edge(self.target) and not helpers.is_port(self.target))
             and not self._is_inside_noi(edge_data.source.owner)
             and not self._is_inside_noi(edge_data.target.owner)
             and not self.diagram._include_external_context
