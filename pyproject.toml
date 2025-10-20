@@ -31,13 +31,14 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "capellambse>=0.6.6,<0.7",
+  "capellambse>=0.7.10,<0.8",
+  "platformdirs>=4.3.7",
   "typing_extensions",
-  "pydantic>=2.7.3",
+  "pydantic>=2.8.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/DSD-DBS/capellambse-context-diagrams"
+Homepage = "https://github.com/dbinfrago/capellambse-context-diagrams"
 Documentation = "https://capellambse-context-diagrams.readthedocs.io"
 
 [project.entry-points."capellambse.model_extensions"]
@@ -47,22 +48,25 @@ context_diagrams = "capellambse_context_diagrams:init"
 dev = [
   "coverage>=7.6.9",
   "ipykernel>=6.29.5",
+  "mypy==1.16.1",
   "pre-commit>=4.0.1",
   "pylsp-mypy>=0.6.9",
-  "pytest>=8.3.3",
+  "pytest>=8.3.4",
+  "pytest-xdist>=3.7.0",
   "python-lsp-server>=1.12.0",
   "requests-mock>=1.12.1",
   "ruff>=0.8.2",
+  "types-requests>=2.32.4.20250611",
 ]
 
 docs = [
-  "mkdocs-material",
-  "mkdocstrings[python]>=0.18",
-  "pytkdocs[numpy-style]>=0.5.0",
-  "mkdocs-gen-files",
-  "mkdocs-literate-nav",
-  "mkdocs-section-index",
-  "mkdocs-autorefs",
+  "mkdocs-material>=9.6.19",
+  "mkdocstrings[python]>=0.30.0",
+  "pytkdocs[numpy-style]>=0.16.5",
+  "mkdocs-gen-files>=0.5.0",
+  "mkdocs-literate-nav>=0.6.2",
+  "mkdocs-section-index>=0.3.10",
+  "mkdocs-autorefs>=1.4.3",
 ]
 
 [tool.coverage.run]
@@ -140,7 +144,7 @@ extend-select = [
   "UP",     # pyupgrade
   "YTT",    # flake8-2020
 ]
-extend-ignore = [
+ignore = [
   "D1",      # Missing docstring in _
   "D201",    # No blank lines allowed before function docstring  # auto-formatting
   "D202",    # No blank lines allowed after function docstring  # auto-formatting

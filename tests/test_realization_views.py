@@ -7,7 +7,7 @@ import typing as t
 import capellambse
 import pytest
 
-from .conftest import (  # type: ignore[import-untyped]
+from .conftest import (  # type: ignore[import-not-found]
     TEST_ELK_INPUT_ROOT,
     TEST_ELK_LAYOUT_ROOT,
     compare_elk_input_data,
@@ -22,12 +22,7 @@ TEST_FNC_UUID = "beaf5ba4-8fa9-4342-911f-0266bb29be45"
 TEST_CMP_UUID = "b9f9a83c-fb02-44f7-9123-9d86326de5f1"
 TEST_REALIZATION_SET = [
     pytest.param(
-        (
-            TEST_FNC_UUID,
-            "fnc_realization_view.json",
-            {"display_symbols_as_boxes": True},
-        ),
-        id="Function",
+        (TEST_FNC_UUID, "fnc_realization_view.json", {}), id="Function"
     ),
     pytest.param(
         (TEST_CMP_UUID, "cmp_realization_view.json", {}), id="Component"
@@ -43,11 +38,8 @@ def test_collecting(
     expected_edges_file = TEST_REALIZATION_DATA_ROOT / (
         file_path.stem + "_edges.json"
     )
-    expected_edges = expected_edges_file.read_text(encoding="utf8")
-
-    def extra_assert(edges, expected_edges) -> bool:
-        edges_list = [edge.model_dump(exclude_defaults=True) for edge in edges]
-        return json.loads(expected_edges) == {"edges": edges_list}
+    expected_text = expected_edges_file.read_text(encoding="utf8")
+    expected_edges = json.loads(expected_text)["edges"]
 
     (result, edges), expected = generic_collecting_test(
         model,
@@ -56,8 +48,10 @@ def test_collecting(
         "realization_view",
     )
 
-    assert compare_elk_input_data(result, expected)
-    assert extra_assert(edges, expected_edges)
+    compare_elk_input_data(result, expected)
+
+    actual_edges = [edge.model_dump(exclude_defaults=True) for edge in edges]
+    assert actual_edges == expected_edges
 
 
 @pytest.mark.parametrize("params", TEST_REALIZATION_SET)

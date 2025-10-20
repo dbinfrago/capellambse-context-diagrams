@@ -1,0 +1,594 @@
+{
+    "id": "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c_context",
+    "type": "graph",
+    "children": [
+        {
+            "id": "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
+            "position": {
+                "x": 237,
+                "y": 12
+            },
+            "size": {
+                "width": 798,
+                "height": 213
+            },
+            "type": "node",
+            "children": [
+                {
+                    "id": "e456876f-a01d-44f8-b1b2-429dab94f698",
+                    "position": {
+                        "x": 627,
+                        "y": 98.83333333333336
+                    },
+                    "size": {
+                        "width": 159,
+                        "height": 83.33333333333333
+                    },
+                    "type": "node",
+                    "children": [
+                        {
+                            "id": "a951f1f4-e6ec-441c-b89c-33a59066740b",
+                            "position": {
+                                "x": 22,
+                                "y": 29
+                            },
+                            "size": {
+                                "width": 124,
+                                "height": 36
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "d5b8df51-757f-46e8-be8c-7b0bd9b00456",
+                                    "position": {
+                                        "x": -2,
+                                        "y": 17.333333333333332
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "position": {
+                                        "x": 7,
+                                        "y": 12
+                                    },
+                                    "size": {
+                                        "width": 118,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "InnerInnerSysChild"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "7608e831-578d-4b98-97eb-9ffc6eb18306",
+                            "position": {
+                                "x": -2,
+                                "y": 61.33333333333333
+                            },
+                            "size": {
+                                "width": 10,
+                                "height": 10
+                            },
+                            "type": "port"
+                        },
+                        {
+                            "position": {
+                                "x": 37,
+                                "y": 5
+                            },
+                            "size": {
+                                "width": 93,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "InnerSysChild"
+                        }
+                    ]
+                },
+                {
+                    "id": "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
+                    "position": {
+                        "x": 17,
+                        "y": 29
+                    },
+                    "size": {
+                        "width": 372,
+                        "height": 172
+                    },
+                    "type": "node",
+                    "children": [
+                        {
+                            "id": "eca84d5c-fdcd-4cbe-90d5-7d00a256c62b",
+                            "position": {
+                                "x": 19,
+                                "y": 55
+                            },
+                            "size": {
+                                "width": 79,
+                                "height": 105
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "eb8760d4-dde4-4127-b8f9-135d1e121d60",
+                                    "position": {
+                                        "x": 71,
+                                        "y": 15.833333333333334
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "1b978e1e-1368-44a2-a9e6-12818614b23e",
+                                    "position": {
+                                        "x": 25.666666666666668,
+                                        "y": -2
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "71668729-4774-4362-85b6-4b744b8c7ee2",
+                                    "position": {
+                                        "x": 71,
+                                        "y": 87.16666666666669
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "3e6349c7-e178-415e-aed1-33ec65ad5b82",
+                                    "position": {
+                                        "x": 71,
+                                        "y": 33.66666666666667
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "481ec8fb-4950-476d-97f6-75add6470660",
+                                    "position": {
+                                        "x": 71,
+                                        "y": 51.50000000000001
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "31776546-d520-45ed-8f3a-be89752ff0f3",
+                                    "position": {
+                                        "x": 71,
+                                        "y": 69.33333333333334
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "04de6fea-fed8-47b0-b6db-8fc2b7b77d6a",
+                                    "position": {
+                                        "x": -2,
+                                        "y": 51.5
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "position": {
+                                        "x": 10.5,
+                                        "y": 50.5
+                                    },
+                                    "size": {
+                                        "width": 58,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "System"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "76507132-5cc6-40cd-9da5-7917a723c5cc",
+                            "position": {
+                                "x": 275,
+                                "y": 67.16666666666667
+                            },
+                            "size": {
+                                "width": 84,
+                                "height": 36
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "a7d55ed4-0f29-45cd-9a01-3fa5c3516157",
+                                    "position": {
+                                        "x": -2,
+                                        "y": 17.333333333333332
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "position": {
+                                        "x": 7,
+                                        "y": 12
+                                    },
+                                    "size": {
+                                        "width": 78,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "SideSystem"
+                                }
+                            ]
+                        },
+                        {
+                            "position": {
+                                "x": 149.5,
+                                "y": 5
+                            },
+                            "size": {
+                                "width": 73,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "SysParent"
+                        },
+                        {
+                            "id": "__Derived-ComponentExchange:0bad1c8b-b8fb-4fb7-8433-e1de8bff018e",
+                            "type": "edge",
+                            "sourceId": "eb8760d4-dde4-4127-b8f9-135d1e121d60",
+                            "targetId": "76507132-5cc6-40cd-9da5-7917a723c5cc",
+                            "routingPoints": [
+                                {
+                                    "x": 100,
+                                    "y": 75.83333333333334
+                                },
+                                {
+                                    "x": 275,
+                                    "y": 75.83333333333334
+                                }
+                            ],
+                            "children": [
+                                {
+                                    "position": {
+                                        "x": 152.5,
+                                        "y": 60.833333333333336
+                                    },
+                                    "size": {
+                                        "width": 73,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "S to SSCC"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "__Derived-ComponentExchange:3e66b559-eea0-40af-b18c-0328ee10add7",
+                            "type": "edge",
+                            "sourceId": "1b978e1e-1368-44a2-a9e6-12818614b23e",
+                            "targetId": "eca84d5c-fdcd-4cbe-90d5-7d00a256c62b",
+                            "routingPoints": [
+                                {
+                                    "x": 49.66666666666667,
+                                    "y": 53
+                                },
+                                {
+                                    "x": 49.66666666666667,
+                                    "y": 43
+                                },
+                                {
+                                    "x": 72.33333333333334,
+                                    "y": 43
+                                },
+                                {
+                                    "x": 72.33333333333334,
+                                    "y": 55
+                                }
+                            ],
+                            "children": [
+                                {
+                                    "position": {
+                                        "x": 12,
+                                        "y": 29
+                                    },
+                                    "size": {
+                                        "width": 93,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "Sys Interface"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "7340aa47-4a72-4aea-97c6-f759d9732abf",
+                            "type": "edge",
+                            "sourceId": "3e6349c7-e178-415e-aed1-33ec65ad5b82",
+                            "targetId": "a7d55ed4-0f29-45cd-9a01-3fa5c3516157",
+                            "routingPoints": [
+                                {
+                                    "x": 100,
+                                    "y": 93.66666666666667
+                                },
+                                {
+                                    "x": 263,
+                                    "y": 93.66666666666667
+                                },
+                                {
+                                    "x": 263,
+                                    "y": 89.5
+                                },
+                                {
+                                    "x": 273,
+                                    "y": 89.5
+                                }
+                            ],
+                            "children": [
+                                {
+                                    "position": {
+                                        "x": 125,
+                                        "y": 96.66666666666667
+                                    },
+                                    "size": {
+                                        "width": 128,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "System to SideSystem"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "position": {
+                        "x": 365,
+                        "y": 5
+                    },
+                    "size": {
+                        "width": 68,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Hogwarts"
+                },
+                {
+                    "id": "da1370c7-278f-42f8-b933-c57a27e43f2e",
+                    "type": "edge",
+                    "sourceId": "71668729-4774-4362-85b6-4b744b8c7ee2",
+                    "targetId": "7608e831-578d-4b98-97eb-9ffc6eb18306",
+                    "routingPoints": [
+                        {
+                            "x": 117,
+                            "y": 176.16666666666669
+                        },
+                        {
+                            "x": 612,
+                            "y": 176.16666666666669
+                        },
+                        {
+                            "x": 612,
+                            "y": 165.16666666666669
+                        },
+                        {
+                            "x": 625,
+                            "y": 165.16666666666669
+                        }
+                    ],
+                    "children": [
+                        {
+                            "position": {
+                                "x": 456.5,
+                                "y": 179.16666666666669
+                            },
+                            "size": {
+                                "width": 113,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "Seeable interface"
+                        }
+                    ]
+                },
+                {
+                    "id": "__Derived-ComponentExchange:f71323c5-cd0f-4865-9005-c5b545f990a0",
+                    "type": "edge",
+                    "sourceId": "481ec8fb-4950-476d-97f6-75add6470660",
+                    "targetId": "a951f1f4-e6ec-441c-b89c-33a59066740b",
+                    "routingPoints": [
+                        {
+                            "x": 117,
+                            "y": 140.5
+                        },
+                        {
+                            "x": 132,
+                            "y": 140.5
+                        },
+                        {
+                            "x": 132,
+                            "y": 148.66666666666669
+                        },
+                        {
+                            "x": 404,
+                            "y": 148.66666666666669
+                        },
+                        {
+                            "x": 404,
+                            "y": 124.16666666666669
+                        },
+                        {
+                            "x": 612,
+                            "y": 124.16666666666669
+                        },
+                        {
+                            "x": 612,
+                            "y": 136.50000000000003
+                        },
+                        {
+                            "x": 649,
+                            "y": 136.50000000000003
+                        }
+                    ],
+                    "children": [
+                        {
+                            "position": {
+                                "x": 424,
+                                "y": 127.16666666666669
+                            },
+                            "size": {
+                                "width": 178,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "System to InnerInnerInnerChild"
+                        }
+                    ]
+                },
+                {
+                    "id": "dae5570d-24dd-4433-a3da-df481c480835",
+                    "type": "edge",
+                    "sourceId": "31776546-d520-45ed-8f3a-be89752ff0f3",
+                    "targetId": "d5b8df51-757f-46e8-be8c-7b0bd9b00456",
+                    "routingPoints": [
+                        {
+                            "x": 117,
+                            "y": 158.33333333333334
+                        },
+                        {
+                            "x": 132,
+                            "y": 158.33333333333334
+                        },
+                        {
+                            "x": 132,
+                            "y": 159.66666666666669
+                        },
+                        {
+                            "x": 414,
+                            "y": 159.66666666666669
+                        },
+                        {
+                            "x": 414,
+                            "y": 150.16666666666669
+                        },
+                        {
+                            "x": 647,
+                            "y": 150.16666666666669
+                        }
+                    ],
+                    "children": [
+                        {
+                            "position": {
+                                "x": 451.5,
+                                "y": 153.16666666666669
+                            },
+                            "size": {
+                                "width": 123,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "Show external depth"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "0a841a82-9fab-4eb5-b8f8-2e3ce6fee869",
+            "position": {
+                "x": 13,
+                "y": 134.5
+            },
+            "size": {
+                "width": 69,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "id": "1dab7666-e8bd-4f63-820b-7bcd7a6eac6e",
+                    "position": {
+                        "x": 61,
+                        "y": 13
+                    },
+                    "size": {
+                        "width": 10,
+                        "height": 10
+                    },
+                    "type": "port"
+                },
+                {
+                    "position": {
+                        "x": -1,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 63,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Actor 3"
+                }
+            ]
+        },
+        {
+            "id": "18531e86-1c7f-4ebb-ba9f-d39733e38dc1",
+            "type": "edge",
+            "sourceId": "1dab7666-e8bd-4f63-820b-7bcd7a6eac6e",
+            "targetId": "04de6fea-fed8-47b0-b6db-8fc2b7b77d6a",
+            "routingPoints": [
+                {
+                    "x": 84,
+                    "y": 152.5
+                },
+                {
+                    "x": 271,
+                    "y": 152.5
+                }
+            ],
+            "children": [
+                {
+                    "position": {
+                        "x": 104,
+                        "y": 155.5
+                    },
+                    "size": {
+                        "width": 108,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Direct Interface"
+                }
+            ]
+        }
+    ]
+}

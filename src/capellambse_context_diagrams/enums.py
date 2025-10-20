@@ -14,13 +14,17 @@ class MODE(enum.Enum):
     Attributes
     ----------
     WHITEBOX
-        Collect target context and it's children's context.
+        Collect target context and its children's context.
     BLACKBOX
         Collect target context only.
+    GREYBOX
+        Collect target context and its children's context, but limit
+        parent relationship resolution to first level only.
     """
 
     WHITEBOX = enum.auto()
     BLACKBOX = enum.auto()
+    GREYBOX = enum.auto()
 
 
 @m.stringy_enum

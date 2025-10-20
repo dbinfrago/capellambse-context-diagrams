@@ -13,7 +13,7 @@ import math
 import typing as t
 
 import capellambse.model as m
-from capellambse.metamodel import information, modeltypes
+from capellambse.metamodel import information
 
 from .. import _elkjs, context
 from ..builders import _makers
@@ -47,6 +47,11 @@ class ClassProcessor:
 
         self._edge_count: dict[str, int] = collections.defaultdict(int)
 
+        self._associations: dict[str, str] = {}
+        for assoc in self.diagram.target._model.search("Association"):
+            for role in assoc.roles:
+                self._associations[role.uuid] = assoc.uuid
+
         self._set_layout_options()
         assert isinstance(diagram.target, information.Class)
         self._set_data_types_and_labels(self.data.children[0], diagram.target)
@@ -62,15 +67,15 @@ class ClassProcessor:
             assert cls.prop is not None
             self._process_box(cls.target, cls.partition)
 
-            if cls.prop.association is not None:
-                edge_id = cls.prop.association.uuid
-            else:
+            edge_id = self._associations.get(cls.prop.uuid)
+            if edge_id is None:
                 logger.warning(
                     "No Association found for %s set on 'navigable_members'",
                     cls.prop._short_repr_(),
                 )
-                if cls.prop.kind != modeltypes.AggregationKind.UNSET:
-                    styleclass = cls.prop.kind.name.capitalize()
+                aggregation_kind = cls.prop.aggregation_kind
+                if aggregation_kind != information.AggregationKind.UNSET:
+                    styleclass = aggregation_kind.name.capitalize()
                 else:
                     styleclass = "Association"
 
@@ -222,7 +227,7 @@ def process_property(
         logger.debug("Ignoring property without type: %s", prop._short_repr_())
         return
 
-    if not prop.type.xtype.endswith("Class") or prop.type.is_primitive:
+    if not isinstance(prop.type, information.Class) or prop.type.is_primitive:
         logger.debug("Ignoring non-class property: %s", prop._short_repr_())
         return
 
@@ -311,6 +316,7 @@ def get_all_classes(
 
     if sub == "ALL" or (sub == "ROOT" and partition == 1):
         for cls in root.sub:
+            assert isinstance(cls, information.Class)
             if cls.is_primitive:
                 continue
 
@@ -355,6 +361,7 @@ def _make_class_info(
         multiplicity = (start, end)
         target = prop.type
 
+    assert target is None or isinstance(target, information.Class)
     return ClassInfo(
         source=source,
         target=target,

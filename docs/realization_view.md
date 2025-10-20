@@ -6,8 +6,8 @@
 # Realization View Diagram
 
 With release
-[`v0.5.42`](https://github.com/DSD-DBS/py-capellambse/releases/tag/v0.5.42) of
-[py-capellambse](https://github.com/DSD-DBS/py-capellambse) you can access the
+[`v0.5.42`](https://github.com/dbinfrago/py-capellambse/releases/tag/v0.5.42) of
+[py-capellambse](https://github.com/dbinfrago/py-capellambse) you can access the
 `.realization_view` on a Component or Function from any layer. A realization
 view diagram reveals the realization map that the layers of your model
 implement currently. The diagram elements are collected from the

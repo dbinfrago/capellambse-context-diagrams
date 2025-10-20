@@ -41,6 +41,7 @@ CONTEXT_DIAGRAM_CLASSES: list[SupportedContextClass] = [
             "display_symbols_as_boxes": True,
             "display_parent_relation": True,
             "display_derived_interfaces": True,
+            "include_external_context": True,
             "render_styles": styling.BLUE_ACTOR_FNCS,
         },
     ),
@@ -59,6 +60,7 @@ CONTEXT_DIAGRAM_CLASSES: list[SupportedContextClass] = [
         {
             "display_symbols_as_boxes": True,
             "display_parent_relation": True,
+            "include_external_context": True,
             "display_derived_interfaces": True,
             "render_styles": styling.BLUE_ACTOR_FNCS,
         },
@@ -79,6 +81,7 @@ CONTEXT_DIAGRAM_CLASSES: list[SupportedContextClass] = [
             "display_parent_relation": True,
             "display_port_labels": True,
             "display_derived_interfaces": True,
+            "include_external_context": True,
             "hide_context_owner": True,
             "edge_direction": enums.EDGE_DIRECTION.RIGHT,
         },
@@ -137,7 +140,24 @@ REALIZATION_VIEW_CLASSES: list[SupportedContextClass] = [
 ]
 DATAFLOW_CLASSES: list[SupportedContextClass] = [
     (oa.OperationalCapability, DiagramType.OAIB, {}),  # portless
-    (sa.Capability, DiagramType.SDFB, {}),  # default
+    (sa.Capability, DiagramType.SDFB, {}),
+    (la.CapabilityRealization, DiagramType.LDFB, {}),
+]
+FUNCTIONAL_CHAIN_CONTEXT_CLASSES: list[SupportedInterfaceContextClass] = [
+    (
+        fa.FunctionalChain,
+        {
+            sa.SystemAnalysis: DiagramType.SAB.value,
+            la.LogicalArchitecture: DiagramType.LAB.value,
+            pa.PhysicalArchitecture: DiagramType.PAB.value,
+        },
+        {},
+    ),
+    (
+        oa.OperationalProcess,
+        {oa.OperationalAnalysis: DiagramType.OAB.value},
+        {},
+    ),
 ]
 DIAGRAM_LAYOUT_PARAMS: dict[DiagramType, DefaultRenderParams] = {
     m.DiagramType.SAB: {"display_symbols_as_boxes": True},

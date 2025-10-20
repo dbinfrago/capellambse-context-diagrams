@@ -21,7 +21,7 @@ from capellambse import helpers
 from capellambse import model as m
 
 from . import _elkjs, enums, filters, serializers, styling
-from .builders import dataflow, interface
+from .builders import dataflow, fchain, interface
 from .builders import default as db
 from .collectors import (
     _generic,
@@ -108,7 +108,7 @@ class InterfaceContextAccessor(ContextAccessor):
         diagclass: dict[type[m.ModelElement], str],
         render_params: dict[str, t.Any] | None = None,
     ) -> None:
-        self.__dgclasses = diagclass
+        self._dgclasses = diagclass
         self._default_render_params = render_params or {}
 
     def __get__(  # type: ignore
@@ -120,7 +120,7 @@ class InterfaceContextAccessor(ContextAccessor):
             return self
         assert isinstance(obj, m.ModelElement)
         assert isinstance(obj.parent, m.ModelElement)
-        self._dgcls = self.__dgclasses[obj.parent.__class__]
+        self._dgcls = self._dgclasses[obj.parent.__class__]
         return self._get(obj, InterfaceContextDiagram)
 
 
@@ -261,6 +261,22 @@ class DiagramLayoutAccessor(m.Accessor):
         return new_diagram
 
 
+class FunctionalChainContextAccessor(InterfaceContextAccessor):
+    """Provides access to the functional chain view diagrams."""
+
+    def __get__(  # type: ignore
+        self, obj: m.T | None, objtype: type | None = None
+    ) -> m.Accessor | ContextDiagram:
+        """Make a ContextDiagram for the given model object."""
+        del objtype
+        if obj is None:  # pragma: no cover
+            return self
+        assert isinstance(obj, m.ModelElement)
+        assert isinstance(obj.layer, m.ModelElement)
+        self._dgcls = self._dgclasses[obj.layer.__class__]
+        return self._get(obj, FunctionalChainContextDiagram)
+
+
 class ContextDiagram(m.AbstractDiagram):
     """An automatically generated context diagram.
 
@@ -308,6 +324,8 @@ class ContextDiagram(m.AbstractDiagram):
     * port_label_position: Position of the port labels. See
       [`PORT_LABEL_POSITION`][capellambse_context_diagrams.context._elkjs.PORT_LABEL_POSITION].
     * transparent_background: Make the background transparent.
+    * context_groups: Render context UUID groups in the class attribute
+      of every context element when an SVG is rendered.
     * display_unused_ports: Display ports that are not connected to an
       edge.
     * edge_direction: Reroute direction of edges.
@@ -329,6 +347,13 @@ class ContextDiagram(m.AbstractDiagram):
       either the box of interest or a child with itself or a child.
       Only useful with ``BLACKBOX`` mode and
       ``display_cyclic_relations`` turned on.
+    * restrict_external_depth: In GREYBOX mode, restrict external
+      components to the same depth as max_depth. This prevents showing
+      deeply nested children from external components.
+    * pvmt_styling: Style the diagram according to the PVMT group
+      applied to the diagram elements.
+    * child_shadow: Add a white background box (5px padding, 50%
+      opacity) behind elements that have a parent box.
 
     The following properties are used by the internal builders:
 
@@ -344,6 +369,7 @@ class ContextDiagram(m.AbstractDiagram):
     _display_port_labels: bool
     _port_label_position: _elkjs.PORT_LABEL_POSITION
     _transparent_background: bool
+    _context_groups: bool
     _display_unused_ports: bool
     _edge_direction: enums.EDGE_DIRECTION
     _mode: enums.MODE
@@ -356,9 +382,14 @@ class ContextDiagram(m.AbstractDiagram):
     _display_functional_parent_relation: bool
     _display_internal_relations: bool
     _display_cyclic_relations: bool
+    _restrict_external_depth: bool
+    _pvmt_styling: dict[str, t.Any] | None
+    _child_shadow: bool
 
     _collect: cabc.Callable[[ContextDiagram], cabc.Iterator[m.ModelElement]]
     _is_portless: bool
+
+    target: m.ModelElement
 
     def __init__(
         self,
@@ -369,7 +400,7 @@ class ContextDiagram(m.AbstractDiagram):
         default_render_parameters: dict[str, t.Any],
     ) -> None:
         super().__init__(obj._model)
-        self.target = obj  # type: ignore[misc,assignment]
+        self.target = obj  # type: ignore[assignment]
         self.styleclass = class_
 
         self.render_styles = render_styles or {}
@@ -386,6 +417,7 @@ class ContextDiagram(m.AbstractDiagram):
             "port_label_position": _elkjs.PORT_LABEL_POSITION.OUTSIDE,
             "display_unused_ports": False,
             "transparent_background": False,
+            "context_groups": False,
             "edge_direction": enums.EDGE_DIRECTION.SMART,
             "mode": enums.MODE.WHITEBOX,
             "display_actor_relation": False,
@@ -397,6 +429,9 @@ class ContextDiagram(m.AbstractDiagram):
             "display_functional_parent_relation": False,
             "display_internal_relations": True,
             "display_cyclic_relations": False,
+            "restrict_external_depth": True,
+            "pvmt_styling": None,
+            "child_shadow": False,
         }
         if not _generic.DIAGRAM_TYPE_TO_CONNECTOR_NAMES.get(self.type, ()):
             render_params |= {
@@ -429,7 +464,8 @@ class ContextDiagram(m.AbstractDiagram):
     @property
     def name(self) -> str:
         """Returns the diagram name."""
-        return f"Context of {self.target.name.replace('/', '- or -')}"
+        class_ = self.__class__.__name__
+        return f"{class_} of {self.target.name.replace('/', '- or -')}"
 
     @property
     def type(self) -> m.DiagramType:
@@ -441,16 +477,47 @@ class ContextDiagram(m.AbstractDiagram):
             return m.DiagramType.UNKNOWN
 
     @property
+    def default_render_parameters(self) -> dict[str, t.Any]:
+        return self._default_render_parameters
+
+    @default_render_parameters.setter
+    def default_render_parameters(self, params: dict[str, t.Any]) -> None:
+        self._default_render_parameters = params
+
+    @property
     def nodes(self) -> m.MixedElementList:
-        """Return a list of all nodes visible in this diagram."""
-        allids = {e.uuid for e in self.render(None) if not e.hidden}
+        """Return a list of all nodes visible in this diagram.
+
+        See Also
+        --------
+        [`nodes`][capellambse.model.diagram.AbstractDiagram.nodes]
+        """
+        base = (
+            self._render
+            if hasattr(self, "_render")
+            else self.render(None, params=self._default_render_parameters)
+        )
+        allids = {
+            e.uuid.split(":")[-1].split("_")[0]
+            for e in base
+            if not e.hidden and e.uuid is not None
+        }
         elems = []
         for elemid in allids:
             assert elemid is not None
             try:
                 elem = self._model.by_uuid(elemid)
-            except (KeyError, ValueError):
+            except KeyError:
                 continue
+            except ValueError as err:
+                if (
+                    isinstance(err.args, tuple)
+                    and len(err.args) == 1
+                    and isinstance(err.args[0], str)
+                    and err.args[0].startswith("Malformed link:")
+                ):
+                    continue
+                raise
 
             elems.append(elem._element)
         return m.MixedElementList(self._model, elems, m.ModelElement)
@@ -458,6 +525,11 @@ class ContextDiagram(m.AbstractDiagram):
     def elk_input_data(self, params: dict[str, t.Any]) -> CollectorOutputData:
         """Return the collected ELK input data."""
         params = self._default_render_parameters | params
+        if "pvmt_styling" in params:
+            params["pvmt_styling"] = styling.normalize_pvmt_styling(
+                params["pvmt_styling"]  # type: ignore[arg-type]
+            )
+
         for param_name in self._default_render_parameters:
             setattr(self, f"_{param_name}", params.pop(param_name))
 
@@ -513,7 +585,9 @@ class ContextDiagram(m.AbstractDiagram):
         is_legend: bool = params.get("is_legend", False)
         add_context(layout, is_legend)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     @property
@@ -589,28 +663,43 @@ class InterfaceContextDiagram(ContextDiagram):
         data = self.elk_input_data(params)
         assert not isinstance(data, tuple)
         layout = try_to_layout(data)
-        if self._include_interface and self._include_port_allocations:
+        if (
+            self._include_interface
+            and self._include_port_allocations
+            and not self._hide_functions
+        ):
             self._add_port_allocations(layout)
 
         is_legend: bool = params.get("is_legend", False)
         add_context(layout, is_legend)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     def _find_node_in_layout(
-        self, layout: _elkjs.ELKOutputData, uuid: str
-    ) -> _elkjs.ELKOutputNode:
+        self,
+        layout: _elkjs.ELKOutputData | _elkjs.ELKOutputNode,
+        uuid: str,
+        ref: cdiagram.Vector2D | None = None,
+    ) -> tuple[_elkjs.ELKOutputNode, cdiagram.Vector2D]:
+        if ref is None:
+            ref = cdiagram.Vector2D(0, 0)
+
         for node in layout.children:
             if node.type != "node":
                 continue
 
+            current_ref = cdiagram.Vector2D(
+                ref.x + node.position.x, ref.y + node.position.y
+            )
             if node.id == uuid:
-                return node
-            for child in node.children:
-                if child.id == uuid:
-                    assert child.type == "node"
-                    return child
+                return node, current_ref
+            try:
+                return self._find_node_in_layout(node, uuid, ref=current_ref)
+            except ValueError:
+                pass
 
         raise ValueError(f"Node with id {uuid!r} doesn't exist in layout.")
 
@@ -618,27 +707,28 @@ class InterfaceContextDiagram(ContextDiagram):
         uuids = (self.target.source.owner.uuid, self.target.target.owner.uuid)
         port_uuids = (self.target.source.uuid, self.target.target.uuid)
         for i, _ in enumerate(port_uuids):
-            node = self._find_node_in_layout(layout, uuids[i])
+            node, node_ref = self._find_node_in_layout(layout, uuids[i])
             assert isinstance(node, _elkjs.ELKOutputNode)
             port = next((p for p in node.children if p.id in port_uuids), None)
             assert isinstance(port, _elkjs.ELKOutputPort)
             if port is not None:
                 layout.children.extend(
-                    self._yield_port_allocations(node, port)
+                    self._yield_port_allocations(node, port, node_ref)
                 )
 
     def _yield_port_allocations(
-        self, node: _elkjs.ELKOutputNode, interface_port: _elkjs.ELKOutputPort
+        self,
+        node: _elkjs.ELKOutputNode,
+        interface_port: _elkjs.ELKOutputPort,
+        ref: cdiagram.Vector2D,
     ) -> cabc.Iterator[_elkjs.ELKOutputEdge]:
-        ref = cdiagram.Vector2D(node.position.x, node.position.y)
-        interface_middle = _calculate_middle(
-            interface_port.position, interface_port.size, node.position
-        )
         for position, port in _get_all_ports(node, ref=ref):
             if port == interface_port:
                 continue
-
             port_middle = _calculate_middle(position, port.size)
+            interface_middle = _calculate_middle(
+                interface_port.position, interface_port.size, ref
+            )
             styleclass = self.serializer.get_styleclass(port.id)
             if styleclass in {"FIP", "FOP"}:
                 yield _create_edge(
@@ -875,7 +965,9 @@ class RealizationViewDiagram(ContextDiagram):
             )
         self._add_layer_labels(layout)
         return self.serializer.make_diagram(
-            layout, transparent_background=self._transparent_background
+            layout,
+            transparent_background=self._transparent_background,
+            context_groups=self._context_groups,
         )
 
     def _add_layer_labels(self, layout: _elkjs.ELKOutputData) -> None:
@@ -917,7 +1009,7 @@ class DataFlowViewDiagram(ContextDiagram):
     ) -> None:
         default_render_parameters = {
             "display_symbols_as_boxes": True,
-            "display_parent_relation": False,
+            "display_parent_relation": True,
             "edge_direction": enums.EDGE_DIRECTION.NONE,
             "mode": enums.MODE.WHITEBOX,
             "collect": dataflow_view.collector,
@@ -988,7 +1080,7 @@ class PhysicalPortContextDiagram(ContextDiagram):
         default_render_parameters: dict[str, t.Any],
     ) -> None:
         default_render_parameters = {
-            "collect": default.port_context_collector,
+            "collect": default.physical_port_context_collector,
             "display_parent_relation": True,
             "edge_direction": enums.EDGE_DIRECTION.TREE,
             "display_port_labels": True,
@@ -1062,6 +1154,35 @@ class ELKDiagram(ContextDiagram):
         return self.serializer.make_diagram(
             layout, transparent_background=self._transparent_background
         )
+
+
+class FunctionalChainContextDiagram(ContextDiagram):
+    """A custom Context Diagram exclusively for FunctionalChains."""
+
+    def __init__(
+        self,
+        class_: str,
+        obj: m.ModelElement,
+        *,
+        render_styles: dict[str, styling.Styler] | None = None,
+        default_render_parameters: dict[str, t.Any],
+    ) -> None:
+        default_render_parameters = {
+            "display_symbols_as_boxes": True,
+            "display_parent_relation": True,
+            "edge_direction": enums.EDGE_DIRECTION.SMART,
+            "mode": enums.MODE.WHITEBOX,
+            "collect": default.functional_chain_collector,
+        } | default_render_parameters
+
+        super().__init__(
+            class_,
+            obj,
+            render_styles=render_styles,
+            default_render_parameters=default_render_parameters,
+        )
+
+        self.builder = fchain.builder
 
 
 def try_to_layout(data: _elkjs.ELKInputData) -> _elkjs.ELKOutputData:
@@ -1168,10 +1289,14 @@ def _get_all_ports(
             )
 
 
-def _calculate_middle(position, size, offset=None) -> _elkjs.ELKPoint:
+def _calculate_middle(
+    position: _elkjs.ELKPoint | cdiagram.Vector2D,
+    size: _elkjs.ELKSize,
+    offset: cdiagram.Vector2D | None = None,
+) -> _elkjs.ELKPoint:
     x = position.x + size.width / 2
     y = position.y + size.height / 2
-    if offset:
+    if offset is not None:
         x += offset.x
         y += offset.y
     return _elkjs.ELKPoint(x=x, y=y)

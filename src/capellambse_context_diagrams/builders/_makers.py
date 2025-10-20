@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import collections.abc as cabc
+import sys
 
 import capellambse.model as m
 import typing_extensions as te
@@ -267,16 +268,20 @@ def make_owner_boxes(
     make_box_func: cabc.Callable,
     boxes: dict[str, _elkjs.ELKInputChild],
     boxes_to_delete: set[str],
+    max_depth: int = sys.maxsize,
 ) -> str:
     """Create owner boxes for all owners of ``obj``."""
     current = obj
+    depth: int = 0
     while (
         current
         and current.uuid not in excluded
         and getattr(current, "owner", None) is not None
         and not isinstance(current.owner, PackageTypes)
+        and depth < max_depth
     ):
         current = make_owner_box(
             current, make_box_func, boxes, boxes_to_delete
         )
+        depth += 1
     return current.uuid

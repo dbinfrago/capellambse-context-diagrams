@@ -7,7 +7,7 @@ import capellambse
 import pytest
 
 # pylint: disable-next=relative-beyond-top-level, useless-suppression
-from .conftest import (  # type: ignore[import-untyped]
+from .conftest import (  # type: ignore[import-not-found]
     TEST_ELK_INPUT_ROOT,
     TEST_ELK_LAYOUT_ROOT,
     compare_elk_input_data,
@@ -23,7 +23,7 @@ TEST_SET = [
         (
             "5c55b11b-4911-40fb-9c4c-f1363dad846e",
             "full_cable_tree.json",
-            {"port_label_position": "OUTSIDE"},
+            {},
         ),
         id="Full Tree",
     ),
@@ -31,7 +31,7 @@ TEST_SET = [
         (
             "39e96ffc-2f32-41b9-b406-ba82c78fe451",
             "inside_cable_tree.json",
-            {"port_label_position": "OUTSIDE"},
+            {},
         ),
         id="Inside Tree",
     ),
@@ -39,7 +39,7 @@ TEST_SET = [
         (
             "6c607b75-504a-4d68-966b-0982fde3275e",
             "outside_cable_tree.json",
-            {"port_label_position": "OUTSIDE"},
+            {},
         ),
         id="Outside Tree",
     ),
@@ -54,7 +54,7 @@ def test_collecting(
         model, params, TEST_CABLE_TREE_DATA_ROOT, "cable_tree"
     )
 
-    assert compare_elk_input_data(result, expected)
+    compare_elk_input_data(result, expected)
 
 
 @pytest.mark.parametrize("params", TEST_SET)

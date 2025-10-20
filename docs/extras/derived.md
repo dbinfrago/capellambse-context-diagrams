@@ -6,7 +6,7 @@
 # Derived diagram elements
 
 With capellambse-context-diagrams
-[`v0.2.36`](https://github.com/DSD-DBS/capellambse-context-diagrams/releases/tag/v0.2.36)
+[`v0.2.36`](https://github.com/dbinfrago/capellambse-context-diagrams/releases/tag/v0.2.36)
 a separate context is built. The elements are derived from the diagram target,
 i.e. the system of interest on which `context_diagram` was called on. The
 render parameter to enable this feature is called `display_derived_interfaces`
@@ -27,11 +27,10 @@ and is available on:
     ).save(pretty=True)
     ```
     <figure markdown>
-        <img src="../../assets/images/Context of Center-derived.svg" width="1000000">
+        <img src="../../assets/images/ContextDiagram of Center-derived.svg" width="1000000">
         <figcaption>Context diagram of <b>Center</b> with derived context</figcaption>
     </figure>
 
-See [`the derivator
-functions`][capellambse_context_diagrams.builders.derived.DERIVATORS] to gain
+See [`the derivatorfunctions`][capellambse_context_diagrams.builders.derived.DERIVATORS] to gain
 an overview over all supported capellambse types and the logic to derive
 elements.

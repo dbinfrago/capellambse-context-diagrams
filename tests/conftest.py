@@ -102,8 +102,6 @@ def write_test_data_file(
     This is a helper function to write test data to files in case the
     expected test data changed.
     """
-    import json
-
     if isinstance(data, list):
         data_dump = {
             "edges": [edge.model_dump(exclude_defaults=True) for edge in data]
@@ -127,8 +125,6 @@ def write_layout_test_data_file(
     This is a helper function to write test data to files in case the
     expected test data changed.
     """
-    import json
-
     if isinstance(data, list):
         data_dump = {
             "edges": [
@@ -146,10 +142,10 @@ def write_layout_test_data_file(
 
 def compare_elk_input_data(
     data: _elkjs.ELKInputData, expected: _elkjs.ELKInputData
-) -> bool:
-    return data.model_dump(exclude_defaults=True) == expected.model_dump(
-        exclude_defaults=True
-    )
+) -> None:
+    data_dump = data.model_dump(exclude_defaults=True)
+    expected_dump = expected.model_dump(exclude_defaults=True)
+    assert data_dump == expected_dump
 
 
 @mock.patch("capellambse.helpers.extent_func", text_size_mocker)
@@ -254,8 +250,9 @@ def generic_serializing_test(
     """
     uuid, file_name, render_params = params
     obj = model.by_uuid(uuid)
-    diag = getattr(obj, diagram_attr)
-    for key, value in render_params.items():
+    diag: context.ContextDiagram = getattr(obj, diagram_attr)
+    attributes = diag._default_render_parameters | render_params
+    for key, value in attributes.items():
         setattr(diag, f"_{key}", value)
 
     layout_datastring = (layout_root / file_name).read_text(encoding="utf8")

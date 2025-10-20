@@ -30,6 +30,8 @@ general_context_diagram_uuids: dict[str, str] = {
     "Physical Behavior": "313f48f4-fb7e-47a8-b28a-76440932fcb9",
     "Maintain": "ee745644-07d7-40b9-ad7a-910dc8cbb805",
     "Physical Port": "c403d4f4-9633-42a2-a5d6-9e1df2655146",
+    "FunctionalChain": (fchain := "ec1ecf8b-d58b-4468-9742-6fdfd6cff702"),
+    "OperationalProcess": "bec38a21-cc4b-4c06-8acf-067bd5f44824",
 }
 interface_context_diagram_uuids: dict[str, str] = {
     "Left to right": "3ef23099-ce9a-4f7d-812f-935f47e7938d",
@@ -41,10 +43,15 @@ diagram_uuids = general_context_diagram_uuids | interface_context_diagram_uuids
 class_tree_uuid = "b7c7f442-377f-492c-90bf-331e66988bda"
 realization_fnc_uuid = "beaf5ba4-8fa9-4342-911f-0266bb29be45"
 realization_comp_uuid = "b9f9a83c-fb02-44f7-9123-9d86326de5f1"
-data_flow_uuid = "3b83b4ba-671a-4de8-9c07-a5c6b1d3c422"
+data_flow_uuids: dict[str, str] = {
+    "OperationalCapability": "3b83b4ba-671a-4de8-9c07-a5c6b1d3c422",
+    "Capability": "9390b7d5-598a-42db-bef8-23677e45ba06",
+    "CapabilityRealization": "72147e11-70df-499b-a339-b81722271f1a",
+}
 derived_uuid = "47c3130b-ec39-4365-a77a-5ab6365d1e2e"
 cable_tree_uuid = "5c55b11b-4911-40fb-9c4c-f1363dad846e"
 blackbox_node_uuid = "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+pvmt_styling_uuid = "789f8316-17cf-4c32-a66f-354fe111c40e"
 
 
 def generate_index_images() -> None:
@@ -167,12 +174,11 @@ def generate_realization_view_images() -> None:
                 )
 
 
-def generate_data_flow_image() -> None:
-    diag: context.DataFlowViewDiagram = model.by_uuid(
-        data_flow_uuid
-    ).data_flow_view
-    with mkdocs_gen_files.open(f"{dest / diag.name!s}.svg", "w") as fd:
-        print(diag.render("svg", transparent_background=False), file=fd)
+def generate_data_flow_images() -> None:
+    for uuid in data_flow_uuids.values():
+        diag: context.DataFlowViewDiagram = model.by_uuid(uuid).data_flow_view
+        with mkdocs_gen_files.open(f"{dest / diag.name!s}.svg", "w") as fd:
+            print(diag.render("svg", transparent_background=False), file=fd)
 
 
 def generate_derived_image() -> None:
@@ -220,11 +226,13 @@ def generate_modes_pc_image():
         "blackbox": {
             "mode": "BLACKBOX",
             "display_cyclic_relations": False,
+            "include_external_context": False,
             "edge_direction": "RIGHT",
         },
         "blackbox_without_internal_relations": {
             "mode": "BLACKBOX",
             "display_internal_relations": False,
+            "include_external_context": False,
             "edge_direction": "RIGHT",
         },
         "blackbox_with_external_context": {
@@ -235,14 +243,95 @@ def generate_modes_pc_image():
         "blackbox_with_internal_cycles": {
             "mode": "BLACKBOX",
             "display_cyclic_relations": True,
+            "include_external_context": False,
             "edge_direction": "RIGHT",
         },
-        "whitebox": {"mode": "WHITEBOX", "edge_direction": "NONE"},
+        "greybox": {
+            "mode": "GREYBOX",
+            "edge_direction": "NONE",
+        },
+        "greybox_without_restrict_external_depth": {
+            "mode": "GREYBOX",
+            "restrict_external_depth": False,
+            "edge_direction": "NONE",
+        },
+        "whitebox": {
+            "mode": "WHITEBOX",
+            "include_external_context": False,
+            "edge_direction": "NONE",
+        },
+        "whitebox_with_external_context": {
+            "mode": "WHITEBOX",
+            "include_external_context": True,
+            "edge_direction": "NONE",
+        },
     }
     for name, params in parameters.items():
         filename = f"{dest / diag.name!s}-{name}.svg"
         with mkdocs_gen_files.open(filename, "w") as fd:
             print(diag.render("svg", **params), file=fd)
+
+
+def generate_functional_chain_with_params_image():
+    params = {"display_parent_relation": False}
+    diag: context.FunctionalChainContextDiagram = model.by_uuid(
+        fchain
+    ).context_diagram
+    with mkdocs_gen_files.open(
+        f"{dest / diag.name!s}-without-component-allocation.svg", "w"
+    ) as fd:
+        print(
+            diag.render("svg", **params, transparent_background=False), file=fd
+        )
+
+
+def generate_pvmt_styling_images():
+    diag = model.by_uuid(pvmt_styling_uuid).context_diagram
+    filename = f"{dest / diag.name!s}.svg"
+    with mkdocs_gen_files.open(filename, "w") as fd:
+        print(
+            diag.render(
+                "svg",
+                pvmt_styling={
+                    "value_groups": ["Test.Kind.Color"],
+                    "children_coloring": False,
+                },
+                transparent_background=False,
+            ),
+            file=fd,
+        )
+
+    filename = f"{dest / diag.name!s} with children coloring.svg"
+    with mkdocs_gen_files.open(filename, "w") as fd:
+        print(
+            diag.render(
+                "svg",
+                pvmt_styling={
+                    "value_groups": ["Test.Kind.Color"],
+                    "children_coloring": True,
+                },
+                transparent_background=False,
+            ),
+            file=fd,
+        )
+
+
+def generate_child_shadow_image():
+    diag = model.by_uuid(pvmt_styling_uuid).context_diagram
+    filename = f"{dest / diag.name!s} with child shadow.svg"
+    with mkdocs_gen_files.open(filename, "w") as fd:
+        print(
+            diag.render(
+                "svg",
+                pvmt_styling={
+                    "value_groups": ["Test.Kind.Color"],
+                    "children_coloring": True,
+                },
+                child_shadow=True,
+                transparent_background=False,
+            ),
+            file=fd,
+        )
 
 
 generate_index_images()
@@ -269,9 +358,12 @@ generate_styling_image(
 generate_styling_image(wizard_uuid, {}, "no_styles")
 generate_class_tree_images()
 generate_realization_view_images()
-generate_data_flow_image()
+generate_data_flow_images()
 generate_derived_image()
 generate_interface_with_hide_functions_image()
 generate_interface_with_hide_interface_image()
 generate_cable_tree_image()
 generate_modes_pc_image()
+generate_functional_chain_with_params_image()
+generate_pvmt_styling_images()
+generate_child_shadow_image()

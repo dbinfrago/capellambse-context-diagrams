@@ -15,7 +15,6 @@ import typing as t
 
 import capellambse.model as m
 from capellambse.metamodel import cs, fa, interaction
-from capellambse.model import DiagramType as DT
 
 from .. import _elkjs, context, filters
 from ..builders import _makers
@@ -34,17 +33,17 @@ PHYSICAL_CONNECTOR_ATTR_NAMES = ("physical_ports",)
 """Attribute of PhysicalComponents for receiving connections."""
 CONNECTOR_ATTR_NAMES = ("ports", "inputs", "outputs")
 """Attribute of ModelElements for receiving connections."""
-DIAGRAM_TYPE_TO_CONNECTOR_NAMES: dict[DT, tuple[str, ...]] = {
-    DT.OAB: (),
-    DT.OAIB: (),
-    DT.OCB: (),
-    DT.MCB: (),
-    DT.SAB: CONNECTOR_ATTR_NAMES,
-    DT.SDFB: CONNECTOR_ATTR_NAMES,
-    DT.LAB: CONNECTOR_ATTR_NAMES,
-    DT.LDFB: CONNECTOR_ATTR_NAMES,
-    DT.PAB: CONNECTOR_ATTR_NAMES + PHYSICAL_CONNECTOR_ATTR_NAMES,
-    DT.PDFB: CONNECTOR_ATTR_NAMES + PHYSICAL_CONNECTOR_ATTR_NAMES,
+DIAGRAM_TYPE_TO_CONNECTOR_NAMES: dict[m.DiagramType, tuple[str, ...]] = {
+    m.DiagramType.OAB: (),
+    m.DiagramType.OAIB: (),
+    m.DiagramType.OCB: (),
+    m.DiagramType.MCB: (),
+    m.DiagramType.SAB: CONNECTOR_ATTR_NAMES,
+    m.DiagramType.SDFB: CONNECTOR_ATTR_NAMES,
+    m.DiagramType.LAB: CONNECTOR_ATTR_NAMES,
+    m.DiagramType.LDFB: CONNECTOR_ATTR_NAMES,
+    m.DiagramType.PAB: CONNECTOR_ATTR_NAMES + PHYSICAL_CONNECTOR_ATTR_NAMES,
+    m.DiagramType.PDFB: CONNECTOR_ATTR_NAMES + PHYSICAL_CONNECTOR_ATTR_NAMES,
 }
 """Supported diagram types mapping to the attribute name of connectors."""
 MARKER_SIZE = 3
@@ -135,19 +134,26 @@ def exchange_data_collector(
     # Remove simple render parameters from params
     no_edgelabels: bool = params.pop("no_edgelabels", False)
     params.pop("transparent_background", False)
+    params.pop("context_groups", False)
     _ = params.pop("font_family", "Open Sans")
     _ = params.pop("font_size", 12)
+    _ = params.pop("params", None)
+
+    invalid_params = [
+        name for name in params if name not in filters.RENDER_ADJUSTERS
+    ]
+    if invalid_params:
+        logger.warning(
+            "There are no render parameter solvers labelled: %s "
+            "in filters.RENDER_ADJUSTERS",
+            invalid_params,
+        )
+        for name in invalid_params:
+            params.pop(name)
 
     render_adj: dict[str, t.Any] = {}
     for name, value in params.items():
-        try:
-            filters.RENDER_ADJUSTERS[name](value, data.exchange, render_adj)
-        except KeyError:
-            logger.exception(
-                "There is no render parameter solver labelled: '%s' "
-                "in filters.RENDER_ADJUSTERS",
-                name,
-            )
+        filters.RENDER_ADJUSTERS[name](value, data.exchange, render_adj)
 
     data.elkdata.edges.append(
         _elkjs.ELKInputEdge(
@@ -244,7 +250,7 @@ def get_all_owners(obj: m.ModelElement) -> cabc.Iterator[str]:
 
 
 def port_collector(
-    target: m.ModelElement | m.ElementList, diagram_type: DT
+    target: m.ModelElement | m.ElementList, diagram_type: m.DiagramType
 ) -> tuple[dict[str, m.ModelElement], dict[str, m.ModelElement]]:
     """Collect ports from `target` savely."""
 
@@ -289,23 +295,25 @@ def _extract_edges(
     obj: m.ModelElement,
     attribute: str,
     filter: Filter,
-) -> cabc.Iterable[m.ModelElement]:
-    return filter(getattr(obj, attribute, []))
+) -> cabc.Iterable[fa.FunctionalExchange | fa.ComponentExchange]:
+    for i in filter(getattr(obj, attribute, [])):
+        assert isinstance(i, fa.FunctionalExchange | fa.ComponentExchange)
+        yield i
 
 
 def port_exchange_collector(
     ports: t.Iterable[m.ModelElement],
     filter: Filter = lambda i: i,
-) -> dict[str, list[fa.AbstractExchange]]:
+) -> dict[str, list[fa.FunctionalExchange | fa.ComponentExchange]]:
     """Collect exchanges from `ports` savely."""
-    edges: dict[str, list[fa.AbstractExchange]] = {}
+    edges: dict[str, list[fa.FunctionalExchange | fa.ComponentExchange]] = {}
 
     for port in ports:
         if exs := _extract_edges(port, "exchanges", filter):
-            edges[port.uuid] = t.cast(list[fa.AbstractExchange], exs)
+            edges[port.uuid] = list(exs)
             continue
 
         if links := _extract_edges(port, "links", filter):
-            edges[port.uuid] = t.cast(list[fa.AbstractExchange], links)
+            edges[port.uuid] = list(links)
 
     return edges

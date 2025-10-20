@@ -3,7 +3,7 @@
 
 site_name: Context diagrams for py-capellambse
 repo_name: capellambse-context-diagrams
-repo_url: https://github.com/DSD-DBS/capellambse-context-diagrams
+repo_url: https://github.com/dbinfrago/capellambse-context-diagrams
 docs_dir: docs
 watch: [src, docs]
 
@@ -68,7 +68,7 @@ plugins:
         python:
           paths: [src]
           import:
-            - https://dsd-dbs.github.io/py-capellambse/objects.inv
+            - https://dbinfrago.github.io/py-capellambse/objects.inv
           enable_inventory: yes
           options:
             docstring_style: numpy
@@ -117,6 +117,6 @@ extra:
       link: https://capellambse-context-diagrams.readthedocs.io/
     - icon: custom/db
       name: DB InfraGO AG - SET
-      link: https://github.com/DSD-DBS
+      link: https://github.com/dbinfrago
 
 copyright: Copyright &copy; DB InfraGO AG

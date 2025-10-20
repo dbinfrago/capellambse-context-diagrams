@@ -1,7 +1,7 @@
 version = 1
 SPDX-PackageName = "Capellambse Context Diagrams"
 SPDX-PackageSupplier = "Ernst Würger <ernst.wuerger@deutschebahn.com>"
-SPDX-PackageDownloadLocation = "https://github.com/DSD-DBS/capellambse-context-diagrams"
+SPDX-PackageDownloadLocation = "https://github.com/dbinfrago/capellambse-context-diagrams"
 
 [[annotations]]
 path = "tests/data/elk_input/**.json"

@@ -7,7 +7,7 @@ import typing as t
 import capellambse
 import pytest
 
-from .conftest import (  # type: ignore[import-untyped]
+from .conftest import (  # type: ignore[import-not-found]
     TEST_ELK_INPUT_ROOT,
     TEST_ELK_LAYOUT_ROOT,
     compare_elk_input_data,
@@ -30,6 +30,8 @@ TEST_SYS_FNC_UUID = "a5642060-c9cc-4d49-af09-defaa3024bae"
 TEST_DERIVATION_UUID = "4ec45aec-0d6a-411a-80ee-ebd3c1a53d2c"
 TEST_PHYSICAL_PORT_UUID = "c403d4f4-9633-42a2-a5d6-9e1df2655146"
 TEST_PC_NODE_UUID = "309296b1-cf37-45d7-b0f3-f7bc00422a59"
+TEST_PVMT_STYLING_UUID = "789f8316-17cf-4c32-a66f-354fe111c40e"
+
 TEST_CONTEXT_SET = [
     pytest.param(
         (
@@ -261,6 +263,7 @@ TEST_CONTEXT_SET = [
             {
                 "mode": "BLACKBOX",
                 "display_internal_relations": False,
+                "include_external_context": False,
                 "port_label_position": "OUTSIDE",
             },
         ),
@@ -274,6 +277,7 @@ TEST_CONTEXT_SET = [
                 "mode": "BLACKBOX",
                 "display_internal_relations": True,
                 "display_cyclic_relations": True,
+                "include_external_context": False,
                 "port_label_position": "OUTSIDE",
             },
         ),
@@ -283,7 +287,11 @@ TEST_CONTEXT_SET = [
         (
             TEST_PC_NODE_UUID,
             "blackbox_physical_context_diagram.json",
-            {"mode": "BLACKBOX", "port_label_position": "OUTSIDE"},
+            {
+                "mode": "BLACKBOX",
+                "include_external_context": False,
+                "port_label_position": "OUTSIDE",
+            },
         ),
         id="Blackbox Physical ContextDiagram",
     ),
@@ -306,6 +314,98 @@ TEST_CONTEXT_SET = [
         ),
         id="Whitebox Physical ContextDiagram without child context",
     ),
+    pytest.param(
+        (
+            "a07b7cb1-0424-4261-9980-504dd9c811d4",
+            "entity_sizing_context_diagram.json",
+            {"display_symbols_as_boxes": True},
+        ),
+        id="Entity sizing ContextDiagram",
+    ),
+    pytest.param(
+        (
+            TEST_CAP_SIZING_UUID,
+            "capability_sizing_context_diagram.json",
+            {"display_symbols_as_boxes": True},
+        ),
+        id="Capability sizing ContextDiagram",
+    ),
+    pytest.param(
+        (
+            "74af6883-25a0-446a-80f3-656f8a490b11",
+            "logical_component_sizing_context_diagram.json",
+            {"display_symbols_as_boxes": True},
+        ),
+        id="LogicalComponent sizing ContextDiagram",
+    ),
+    pytest.param(
+        (
+            "9f1e1875-9ead-4af2-b428-c390786a436a",
+            "logical_function_sizing_context_diagram.json",
+            {"display_symbols_as_boxes": True},
+        ),
+        id="LogicalFunction sizing ContextDiagram",
+    ),
+    pytest.param(
+        (
+            "230c4621-7e0a-4d0a-9db2-d4ba5e97b3df",
+            "system_component_sizing_context_diagram.json",
+            {"display_symbols_as_boxes": True},
+        ),
+        id="SystemComponent sizing ContextDiagram",
+    ),
+    pytest.param(
+        (
+            TEST_PVMT_STYLING_UUID,
+            "pvmt_styling_context_diagram.json",
+            {
+                "pvmt_styling": {
+                    "children_coloring": False,
+                    "value_groups": ["Test.Kind.Color"],
+                }
+            },
+        ),
+        id="LogicalComponent PVMT styling ContextDiagram",
+    ),
+    pytest.param(
+        (
+            TEST_PVMT_STYLING_UUID,
+            "pvmt_styling_with_children_coloring_context_diagram.json",
+            {
+                "pvmt_styling": {
+                    "children_coloring": True,
+                    "value_groups": ["Test.Kind.Color"],
+                }
+            },
+        ),
+        id="LogicalComponent PVMT with children styling ContextDiagram",
+    ),
+    pytest.param(
+        (
+            "1921eeeb-f2fd-4b8a-9f79-0e369e7cc29c",
+            "greybox_context_diagram.json",
+            {
+                "mode": "GREYBOX",
+                "display_derived_interfaces": False,
+                "include_external_context": False,
+            },
+        ),
+        id="LogicalComponent GREYBOX ContextDiagram",
+    ),
+    pytest.param(
+        (
+            TEST_PVMT_STYLING_UUID,
+            "child_shadow_context_diagram.json",
+            {
+                "pvmt_styling": {
+                    "children_coloring": True,
+                    "value_groups": ["Test.Kind.Color"],
+                },
+                "child_shadow": True,
+            },
+        ),
+        id="LogicalComponent white shadow for children ContextDiagram",
+    ),
 ]
 
 TEST_CONTEXT_DATA_ROOT = TEST_ELK_INPUT_ROOT / "context_diagrams"
@@ -323,7 +423,7 @@ class TestContextDiagrams:
             model, params, TEST_CONTEXT_DATA_ROOT, "context_diagram"
         )
 
-        assert compare_elk_input_data(result, expected)
+        compare_elk_input_data(result, expected)
 
     @staticmethod
     @pytest.mark.parametrize("params", TEST_CONTEXT_SET)
@@ -369,73 +469,6 @@ def test_context_diagrams_rerender_on_parameter_change(
     diag.render(None, **{parameter: False})
 
 
-@pytest.mark.parametrize(
-    "diagram_elements",
-    [
-        pytest.param(
-            [
-                ("e9a6fd43-88d2-4832-91d5-595b6fbf613d", 42, 42),
-                ("a4f69ce4-2f3f-40d4-af58-423388df449f", 72, 72),
-                ("a07b7cb1-0424-4261-9980-504dd9c811d4", 72, 72),
-            ],
-            id="Entity",
-        ),
-        pytest.param(
-            [
-                (TEST_ACTOR_SIZING_UUID, 40, 40),
-                (TEST_HUMAN_ACTOR_SIZING_UUID, 43, 43),
-                (TEST_CAP_SIZING_UUID, 140, 140),
-            ],
-            id="Capability",
-        ),
-        pytest.param(
-            [
-                ("e1e48763-7479-4f3a-8134-c82bb6705d58", 112, 187),
-                ("8df45b70-15cc-4d3a-99e4-593516392c5a", 140, 234),
-                ("74af6883-25a0-446a-80f3-656f8a490b11", 252, 412),
-            ],
-            id="LogicalComponent",
-        ),
-        pytest.param(
-            [
-                ("0c06cc88-8c77-46f2-8542-c08b1e8edd18", 98, 164),
-                ("9f1e1875-9ead-4af2-b428-c390786a436a", 98, 164),
-            ],
-            id="LogicalFunction",
-        ),
-        pytest.param(
-            [
-                ("6241d0c5-65d2-4c0b-b79c-a2a8ed7273f6", 36, 36),
-                ("344a405e-c7e5-4367-8a9a-41d3d9a27f81", 40, 40),
-                ("230c4621-7e0a-4d0a-9db2-d4ba5e97b3df", 42, 49),
-            ],
-            id="SystemComponent Root",
-        ),
-    ],
-)
-def test_context_diagrams_box_sizing(
-    model: capellambse.MelodyModel,
-    diagram_elements: list[tuple[str, int, int]],
-):
-    uuid, min_size, min_size_labels = diagram_elements.pop()
-    obj = model.by_uuid(uuid)
-
-    adiag = obj.context_diagram.render(
-        None, display_symbols_as_boxes=True, display_port_labels=False
-    )
-    bdiag = obj.context_diagram.render(
-        None, display_symbols_as_boxes=True, display_port_labels=True
-    )
-
-    assert adiag[uuid].size.y >= min_size
-    assert bdiag[uuid].size.y >= min_size_labels
-    for uuid, min_size, min_size_labels in diagram_elements:
-        obj = model.by_uuid(uuid)
-
-        assert adiag[uuid].size.y >= min_size
-        assert bdiag[uuid].size.y >= min_size_labels
-
-
 def test_context_diagrams_symbol_sizing(model: capellambse.MelodyModel):
     obj = model.by_uuid(TEST_CAP_SIZING_UUID)
 
@@ -468,10 +501,10 @@ def test_context_diagram_hide_direct_children(
 ):
     obj = model.by_uuid("eca84d5c-fdcd-4cbe-90d5-7d00a256c62b")
     expected_hidden_uuids = {
-        "6a557565-c9d4-4216-8e9e-03539c0e6095",
-        "32483de8-abd5-4e50-811b-407fad44defa",
-        "727b7d69-3cd2-45cc-b423-1e7b93c83f5b",
-        "3e66b559-eea0-40af-b18c-0328ee10add7",
+        "1508c5e1-b895-4287-9711-d2e803c82358",  # SysChild 1
+        "2069b6e3-40f2-4bd7-b16e-900e23bd8d19",  # SysChild 2
+        "de3d9413-5576-4841-bef0-e2e890a5ec22",  # SysChild3
+        "3e66b559-eea0-40af-b18c-0328ee10add7",  # Sys Interface
         "1b978e1e-1368-44a2-a9e6-12818614b23e",  # Port
     }
 
@@ -512,3 +545,72 @@ def test_serializer_handles_hierarchical_edges_correctly(
 
     assert (231.35, 94) <= adiag[f"{edge_uuid}_j0"].center <= (235, 94)
     assert (405.25, 122) <= adiag[f"{edge1_uuid}_j1"].center <= (410, 122)
+
+
+def test_pvmt_styling_shorthand_equivalence(model: capellambse.MelodyModel):
+    """Test that all shorthand syntax formats produce equivalent results."""
+    obj = model.by_uuid(TEST_PVMT_STYLING_UUID)
+
+    full_syntax = obj.context_diagram.render(
+        None,
+        pvmt_styling={
+            "value_groups": ["Test.Kind.Color"],
+            "children_coloring": False,
+        },
+    )
+
+    dict_shorthand = obj.context_diagram.render(
+        None, pvmt_styling={"value_groups": ["Test.Kind.Color"]}
+    )
+    list_shorthand = obj.context_diagram.render(
+        None, pvmt_styling=["Test.Kind.Color"]
+    )
+    string_shorthand = obj.context_diagram.render(
+        None, pvmt_styling="Test.Kind.Color"
+    )
+
+    assert (
+        len(full_syntax)
+        == len(dict_shorthand)
+        == len(list_shorthand)
+        == len(string_shorthand)
+    )
+
+
+def test_nodes_property_with_default_render_parameters(
+    model: capellambse.MelodyModel,
+):
+    diagram = model.la.all_components.by_uuid(
+        TEST_PVMT_STYLING_UUID
+    ).context_diagram
+    diagram.default_render_parameters |= {
+        "mode": "BLACKBOX",
+        "include_external_context": False,
+        "display_derived_interfaces": False,
+        "pvmt_styling": {
+            "children_coloring": True,
+            "value_groups": ["Test.Kind.Color"],
+        },
+    }
+    expected_uuids = {
+        "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
+        "efe61abb-2628-4065-9d54-89628027ea72",
+        "eefa305b-36c4-4797-96ef-2cb1d96ca409",
+        "59e22812-772b-4c00-868f-b70f240b01e2",
+        "46ec33df-8b98-47db-be0c-9a692c7f852e",
+        "2e1e8eca-acb5-464e-8c3b-77286d4b506c",
+        "73801908-6c04-4dbc-b648-1744e13e10df",
+        "789f8316-17cf-4c32-a66f-354fe111c40e",
+        "cb68eaf1-89ac-4259-8618-a1322bc17850",
+        "8ea5bc8b-8344-4f86-b8a7-dff291807ad0",
+        "d53fa277-f0aa-4498-b6cc-b8b2cf2504a8",
+        "e6f4d7ae-4358-4933-ab33-959ddf99479b",
+        "6aca8c81-6d6e-4bbc-84df-f564f57e2fc9",
+        "2dd292ce-3de1-4a86-8848-e9900d1f9c86",
+        "3d1a8880-c71d-46f7-bd16-57b06e460c68",
+        "c350bc4b-a3f9-4819-a6ab-fa00e08615c2",
+    }
+
+    nodes = diagram.nodes
+
+    assert set(nodes.by_uuid) == expected_uuids

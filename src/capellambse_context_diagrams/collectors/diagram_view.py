@@ -34,12 +34,12 @@ PackageTypes: tuple[type[m.ModelElement], ...] = (
 
 def is_function(node: m.ModelElement) -> bool:
     """Check if the ``node`` is a function."""
-    return isinstance(node, fa.Function)
+    return isinstance(node, fa.AbstractFunction)
 
 
 def is_part(node: m.ModelElement) -> bool:
     """Check if the ``node`` is a part."""
-    return node.xtype.endswith("Part")
+    return node.xtype is not None and node.xtype.endswith("Part")
 
 
 def is_exchange(node: m.ModelElement) -> bool:
@@ -49,12 +49,12 @@ def is_exchange(node: m.ModelElement) -> bool:
 
 def is_allocation(node: m.ModelElement) -> bool:
     """Check if the ``node`` is an allocation."""
-    return node.xtype.endswith("PortAllocation")
+    return node.xtype is not None and node.xtype.endswith("PortAllocation")
 
 
 def is_port(node: m.ModelElement) -> bool:
     """Check if the ``node`` is a port."""
-    return node.xtype.endswith("Port")
+    return node.xtype is not None and node.xtype.endswith("Port")
 
 
 class Collector:
@@ -72,7 +72,7 @@ class Collector:
         ] = {}
         self.made_boxes: dict[str, _elkjs.ELKInputChild] = {}
         self.made_ports: dict[str, _elkjs.ELKInputPort] = {}
-        self.exchanges: dict[str, fa.AbstractExchange] = {}
+        self.exchanges: dict[str, m.ModelElement] = {}
         self.global_boxes: dict[str, _elkjs.ELKInputChild] = {}
         self.ports: dict[str, PortTypes] = {}
         self.boxes_to_delete: set[str] = set()
@@ -91,7 +91,7 @@ class Collector:
             elif is_part(node):
                 self.make_all_owner_boxes(node.type)
             elif is_exchange(node) and not is_allocation(node):
-                self.exchanges[node.uuid] = node  # type: ignore[assignment]
+                self.exchanges[node.uuid] = node
                 edge = _elkjs.ELKInputEdge(
                     id=node.uuid,
                     sources=[node.source.uuid],

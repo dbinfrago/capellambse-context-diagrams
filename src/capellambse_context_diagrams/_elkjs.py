@@ -323,7 +323,7 @@ class ELKManager:
         return package_version
 
     @property
-    def binary_name(self):
+    def binary_name(self) -> str:
         system = platform.system().lower()
         machine = platform.machine().lower()
 
@@ -342,11 +342,11 @@ class ELKManager:
         return f"elk-v{self.runtime_version}-{build}{'.exe' if system == 'windows' else ''}"
 
     @property
-    def binary_path(self):
+    def binary_path(self) -> pathlib.Path:
         cache_dir = platformdirs.user_cache_dir("capellambse_context_diagrams")
         return pathlib.Path(cache_dir) / self.binary_name
 
-    def download_binary(self, force=False):
+    def download_binary(self, force=False) -> None:
         if self.binary_path.exists() and not force:
             log.debug(
                 "elk.js helper binary already exists at %s", self.binary_path
@@ -355,7 +355,7 @@ class ELKManager:
 
         log.debug("Downloading elk.js helper binary")
         self.binary_path.parent.mkdir(parents=True, exist_ok=True)
-        url = f"https://github.com/DSD-DBS/capellambse-context-diagrams/releases/download/v{self.runtime_version}/{self.binary_name}"
+        url = f"https://github.com/dbinfrago/capellambse-context-diagrams/releases/download/v{self.runtime_version}/{self.binary_name}"
         response = requests.get(url)
         response.raise_for_status()
         with open(self.binary_path, "wb") as f:
@@ -365,9 +365,9 @@ class ELKManager:
         # Ensure the binary is executable on Unix-like systems
         system = platform.system().lower()
         if system != "windows":
-            self.binary_path.chmod(self.binary_path.stat().st_mode | 0o111)
+            self.binary_path.chmod(0o700)
 
-    def _spawn_process_binary(self):
+    def _spawn_process_binary(self) -> None:
         self.download_binary()
 
         log.debug("Spawning elk.js helper process at %s", self.binary_path)
@@ -375,7 +375,6 @@ class ELKManager:
             [self.binary_path],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
         )
@@ -388,7 +387,7 @@ class ELKManager:
             raise RuntimeError("Failed to start elk.js helper process")
         log.debug("Spawned elk.js helper process")
 
-    def _spawn_process_deno(self):
+    def _spawn_process_deno(self) -> None:
         log.debug("Spawning elk.js helper process using deno")
         deno_location = shutil.which("deno")
         script_location = pathlib.Path(__file__).parent / "interop" / "elk.ts"
@@ -408,7 +407,6 @@ class ELKManager:
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
         )
@@ -425,7 +423,7 @@ class ELKManager:
             )
         log.debug("Spawned elk.js helper process using deno")
 
-    def spawn_process(self):
+    def spawn_process(self) -> None:
         """Spawn the elk.js process.
 
         The preferenced order is:
@@ -437,10 +435,16 @@ class ELKManager:
         else:
             self._spawn_process_deno()
 
-    def terminate_process(self):
+    def terminate_process(self) -> None:
         log.debug("Terminating elk.js helper process")
         if self._proc is not None:
+            assert self._proc.stdin is not None
+            assert self._proc.stdout is not None
+            assert self._proc.stderr is None
+            self._proc.stdin.close()
             self._proc.terminate()
+            self._proc.wait(30)
+            self._proc.stdout.close()
             self._proc = None
             log.debug("Terminated elk.js helper process")
         else:
@@ -449,6 +453,9 @@ class ELKManager:
     @contextlib.contextmanager
     def get_process(self) -> cabc.Iterator[tuple[t.IO[str], t.IO[str]]]:
         with self._lock:
+            if self._proc is not None and (r := self._proc.poll()) is not None:
+                log.warning("Layouter coprocess died, return code: %s", r)
+                self._proc = None
             if self._proc is None:
                 self.spawn_process()
                 assert self._proc is not None
