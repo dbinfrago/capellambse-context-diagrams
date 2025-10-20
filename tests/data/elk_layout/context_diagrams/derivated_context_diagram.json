@@ -5,7 +5,7 @@
         {
             "id": "4ec45aec-0d6a-411a-80ee-ebd3c1a53d2c",
             "position": {
-                "x": 141,
+                "x": 126,
                 "y": 12
             },
             "size": {
@@ -93,7 +93,7 @@
         {
             "id": "__Derived-LogicalComponent:7cde329d-0f47-4eaa-a1ae-dc6ede90af57",
             "position": {
-                "x": 289,
+                "x": 259,
                 "y": 19
             },
             "size": {
@@ -139,7 +139,7 @@
                     "y": 37
                 },
                 {
-                    "x": 139,
+                    "x": 124,
                     "y": 37
                 }
             ]
@@ -151,11 +151,11 @@
             "targetId": "__Derived-CP_INOUT:2",
             "routingPoints": [
                 {
-                    "x": 267,
+                    "x": 252,
                     "y": 37
                 },
                 {
-                    "x": 287,
+                    "x": 257,
                     "y": 37
                 }
             ]

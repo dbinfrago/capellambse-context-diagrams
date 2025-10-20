@@ -64,6 +64,11 @@ LAYOUT_OPTIONS: ImmutableLayoutOptions = {
     "layered.edgeLabels.sideSelection": "ALWAYS_DOWN",
     "layered.nodePlacement.strategy": "BRANDES_KOEPF",
     "spacing.labelNode": "0.0",
+    "spacing.edgeNode": 10,
+    "spacing.edgeEdge": 10,
+    "spacing.nodeNodeBetweenLayers": 5,
+    "spacing.edgeNodeBetweenLayers": 5,
+    "spacing.edgeEdgeBetweenLayers": 5,
 }
 """Available (and possibly useful) Global Options to configure ELK layouting.
 
