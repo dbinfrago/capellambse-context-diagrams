@@ -9,8 +9,7 @@ The diagram view feature allows you to automatically layout existing Capella dia
 
 - Regenerate diagrams with consistent, automated layouts
 - Apply different layout algorithms to existing diagrams
-- Export diagrams from Capella with better spacing and organization
-- Generate SVG/PNG versions of Capella diagrams programmatically
+- Export diagrams from Capella with better spacing and organization via capellambse
 
 ## Overview
 
@@ -18,7 +17,7 @@ Instead of manually creating context diagrams from model elements, you can take 
 
 - Preserves all elements and connections from the original diagram
 - Applies ELK layout algorithms for optimal positioning
-- Supports all diagram types (SAB, LAB, PAB, etc.)
+- Supports these diagram types (SAB, SDFB, LAB, LDFB, PAB, PDFB)
 - Maintains proper component hierarchy
 - Supports PVMT styling
 - Allows customization of spacing and layout options
@@ -41,7 +40,7 @@ auto_diagram.render("svg").save("output.svg", pretty=True)
 
 ### System Architecture Diagram (SAB)
 
-The following example shows an auto-layouted System Architecture Blank diagram:
+The following example shows an automatically laid out System Architecture Blank diagram:
 
 !!! example "Code to generate SAB diagram"
 
@@ -56,12 +55,12 @@ The following example shows an auto-layouted System Architecture Blank diagram:
 
     <figure markdown>
       <img src="../assets/images/ELK Layout of [SAB] Example Interface Context.svg">
-      <figcaption>Auto-layouted SAB diagram showing system components and interfaces</figcaption>
+      <figcaption>Automatically laid out SAB diagram showing system components and interfaces</figcaption>
     </figure>
 
 ### Logical Architecture Diagram (LAB)
 
-Auto-layouted Logical Architecture Blank diagrams maintain component hierarchy:
+Automatically laid out Logical Architecture Blank diagrams maintain component hierarchy:
 
 !!! example "Code to generate LAB diagram"
 
@@ -76,7 +75,7 @@ Auto-layouted Logical Architecture Blank diagrams maintain component hierarchy:
 
     <figure markdown>
       ![Logical Architecture Diagram](assets/images/ELK Layout of [LAB] Hierarchy.svg)
-      <figcaption>Auto-layouted LAB diagram with proper component nesting</figcaption>
+      <figcaption>Automatically laid out LAB diagram with proper component nesting</figcaption>
     </figure>
 
 ### Physical Architecture Diagram (PAB)
@@ -96,7 +95,7 @@ Physical Architecture Blank diagrams show functions and their connections:
 
     <figure markdown>
       ![Physical Architecture Diagram](assets/images/ELK Layout of [PAB] Example Physical Function Context Diagram.svg)
-      <figcaption>Auto-layouted PAB diagram showing physical functions</figcaption>
+      <figcaption>Automatically laid out PAB diagram showing physical functions</figcaption>
     </figure>
 
 ## Render Parameters
@@ -106,7 +105,7 @@ The auto-layout feature supports several render parameters to customize the outp
 - Port Labels
 - PVMT Styling
 - Display Symbols as Boxes
-- Include Port Allocations (**currently not working!**)
+- Port Allocation handling
 
 ## Layout Spacing
 

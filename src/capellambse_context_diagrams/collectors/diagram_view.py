@@ -23,6 +23,9 @@ class DiagramElements:
     functions: list[m.ModelElement] = dataclasses.field(default_factory=list)
     exchanges: list[m.ModelElement] = dataclasses.field(default_factory=list)
     ports: list[m.ModelElement] = dataclasses.field(default_factory=list)
+    port_allocations: list[m.ModelElement] = dataclasses.field(
+        default_factory=list
+    )
 
 
 class Collector:
@@ -41,7 +44,9 @@ class Collector:
                 elements.functions.append(node)
             elif helpers.is_part(node):
                 elements.components.append(node.type)
-            elif helpers.is_exchange(node) and not helpers.is_allocation(node):
+            elif helpers.is_allocation(node):
+                elements.port_allocations.append(node)
+            elif helpers.is_exchange(node):
                 elements.exchanges.append(node)
             elif helpers.is_port(node):
                 elements.ports.append(node)

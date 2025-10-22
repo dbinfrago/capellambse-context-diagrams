@@ -288,11 +288,5 @@ def make_owner_boxes(
 
 
 def adjust_box_height_for_ports(box: _elkjs.ELKInputChild) -> None:
-    """Adjust box height based on number of ports.
-
-    Parameters
-    ----------
-    box
-        The box to adjust.
-    """
+    """Adjust box height based on number of ports."""
     box.height = (PORT_SIZE + 2 * PORT_PADDING) * (len(box.ports) + 1)

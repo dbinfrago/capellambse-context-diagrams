@@ -49,6 +49,10 @@ class DiagramViewBuilder:
         for exchange in elements.exchanges:
             self._make_exchange(exchange)
 
+        if self.diagram._include_port_allocations:
+            for port_alloc in elements.port_allocations:
+                self._make_port_allocation(port_alloc)
+
         for uuid in self.boxes_to_delete:
             del self.boxes[uuid]
 
@@ -131,6 +135,11 @@ class DiagramViewBuilder:
             _makers.adjust_box_height_for_ports(tgt_box)
 
         _generic.move_edges(self.boxes, [exchange], self.data)
+
+    def _make_port_allocation(self, port_alloc: m.ModelElement) -> None:
+        """Create edge for port allocation between function and component port."""
+        self._make_port_for_element(port_alloc.source)
+        self._make_port_for_element(port_alloc.target)
 
 
 def build_from_diagram(
