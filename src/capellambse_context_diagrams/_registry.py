@@ -159,3 +159,8 @@ FUNCTIONAL_CHAIN_CONTEXT_CLASSES: list[SupportedInterfaceContextClass] = [
         {},
     ),
 ]
+DIAGRAM_LAYOUT_PARAMS: dict[DiagramType, DefaultRenderParams] = {
+    m.DiagramType.SAB: {"display_symbols_as_boxes": True},
+    m.DiagramType.LAB: {"display_symbols_as_boxes": True},
+    m.DiagramType.PAB: {"display_port_labels": True},
+}

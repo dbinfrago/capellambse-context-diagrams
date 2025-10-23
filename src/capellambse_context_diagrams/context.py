@@ -17,11 +17,11 @@ import logging
 import typing as t
 
 from capellambse import diagram as cdiagram
-from capellambse import helpers
+from capellambse import helpers as chelpers
 from capellambse import model as m
 
-from . import _elkjs, enums, filters, serializers, styling
-from .builders import dataflow, fchain, interface
+from . import _elkjs, enums, filters, helpers, serializers, styling
+from .builders import dataflow, diagram_view, fchain, interface
 from .builders import default as db
 from .collectors import (
     _generic,
@@ -220,6 +220,46 @@ class CableTreeAccessor(ContextAccessor):
         return self._get(obj, CableTreeViewDiagram)
 
 
+class DiagramLayoutAccessor(m.Accessor):
+    """Provides access to an ELK layout of a diagram."""
+
+    def __init__(
+        self,
+        dgls_to_render_params: (
+            dict[m.DiagramType, dict[str, t.Any]] | None
+        ) = None,
+    ) -> None:
+        super().__init__()
+        self._dgls_to_render_params = dgls_to_render_params or {}
+
+    @t.overload
+    def __get__(
+        self, obj: None, objtype: type[t.Any]
+    ) -> DiagramLayoutAccessor: ...
+    @t.overload
+    def __get__(
+        self, obj: m.T, objtype: type[m.T] | None = None
+    ) -> ELKDiagram: ...
+    def __get__(
+        self, obj: m.T | None, objtype: type | None = None
+    ) -> m.Accessor | ELKDiagram:
+        del objtype
+        if obj is None:  # pragma: no cover
+            return self
+        assert isinstance(obj, m.Diagram)
+        return self._get(obj)
+
+    def _get(self, obj: m.Diagram) -> m.Accessor | ELKDiagram:
+        default_render_params = self._dgls_to_render_params.get(obj.type, {})
+        new_diagram = ELKDiagram(
+            obj.type.value,
+            obj,
+            default_render_parameters=default_render_params,
+        )
+        new_diagram.filters.add(filters.NO_UUID)
+        return new_diagram
+
+
 class FunctionalChainContextAccessor(InterfaceContextAccessor):
     """Provides access to the functional chain view diagrams."""
 
@@ -353,13 +393,13 @@ class ContextDiagram(m.AbstractDiagram):
     def __init__(
         self,
         class_: str,
-        obj: m.ModelElement,
+        obj: m.ModelElement | m.Diagram,
         *,
         render_styles: dict[str, styling.Styler] | None = None,
         default_render_parameters: dict[str, t.Any],
     ) -> None:
         super().__init__(obj._model)
-        self.target = obj
+        self.target = obj  # type: ignore[assignment]
         self.styleclass = class_
 
         self.render_styles = render_styles or {}
@@ -444,7 +484,7 @@ class ContextDiagram(m.AbstractDiagram):
         self._default_render_parameters = params
 
     @property
-    def nodes(self) -> m.MixedElementList:
+    def nodes(self) -> m.ElementList:
         """Return a list of all nodes visible in this diagram.
 
         See Also
@@ -479,7 +519,7 @@ class ContextDiagram(m.AbstractDiagram):
                 raise
 
             elems.append(elem._element)
-        return m.MixedElementList(self._model, elems, m.ModelElement)
+        return m.ElementList(self._model, elems, m.ModelElement)
 
     def elk_input_data(self, params: dict[str, t.Any]) -> CollectorOutputData:
         """Return the collected ELK input data."""
@@ -637,36 +677,11 @@ class InterfaceContextDiagram(ContextDiagram):
             context_groups=self._context_groups,
         )
 
-    def _find_node_in_layout(
-        self,
-        layout: _elkjs.ELKOutputData | _elkjs.ELKOutputNode,
-        uuid: str,
-        ref: cdiagram.Vector2D | None = None,
-    ) -> tuple[_elkjs.ELKOutputNode, cdiagram.Vector2D]:
-        if ref is None:
-            ref = cdiagram.Vector2D(0, 0)
-
-        for node in layout.children:
-            if node.type != "node":
-                continue
-
-            current_ref = cdiagram.Vector2D(
-                ref.x + node.position.x, ref.y + node.position.y
-            )
-            if node.id == uuid:
-                return node, current_ref
-            try:
-                return self._find_node_in_layout(node, uuid, ref=current_ref)
-            except ValueError:
-                pass
-
-        raise ValueError(f"Node with id {uuid!r} doesn't exist in layout.")
-
     def _add_port_allocations(self, layout: _elkjs.ELKOutputData) -> None:
         uuids = (self.target.source.owner.uuid, self.target.target.owner.uuid)
         port_uuids = (self.target.source.uuid, self.target.target.uuid)
         for i, _ in enumerate(port_uuids):
-            node, node_ref = self._find_node_in_layout(layout, uuids[i])
+            node, node_ref = _find_node_in_layout(layout, uuids[i])
             assert isinstance(node, _elkjs.ELKOutputNode)
             port = next((p for p in node.children if p.id in port_uuids), None)
             assert isinstance(port, _elkjs.ELKOutputPort)
@@ -690,7 +705,7 @@ class InterfaceContextDiagram(ContextDiagram):
             )
             styleclass = self.serializer.get_styleclass(port.id)
             if styleclass in {"FIP", "FOP"}:
-                yield _create_edge(
+                yield _create_port_allocation_edge(
                     styleclass,
                     port.id,
                     interface_port.id,
@@ -703,21 +718,114 @@ class InterfaceContextDiagram(ContextDiagram):
         return f"Interface Context of {self.target.name}"
 
 
-def _create_edge(
+def _find_node_in_layout(
+    layout: _elkjs.ELKOutputData | _elkjs.ELKOutputNode,
+    uuid: str,
+    ref: cdiagram.Vector2D | None = None,
+) -> tuple[_elkjs.ELKOutputNode, cdiagram.Vector2D]:
+    """Find a node in the layout by UUID and return with its position.
+
+    Parameters
+    ----------
+    layout
+        The layout data or node to search in.
+    uuid
+        The UUID of the node to find.
+    ref
+        The reference position (accumulated offset from parent nodes).
+
+    Returns
+    -------
+    tuple
+        The found node and its absolute position in the layout.
+
+    Raises
+    ------
+    ValueError
+        If the node with the given UUID is not found.
+    """
+    if ref is None:
+        ref = cdiagram.Vector2D(0, 0)
+
+    for node in layout.children:
+        if node.type != "node":
+            continue
+
+        current_ref = cdiagram.Vector2D(
+            ref.x + node.position.x, ref.y + node.position.y
+        )
+        if node.id == uuid:
+            return node, current_ref
+        try:
+            return _find_node_in_layout(node, uuid, ref=current_ref)
+        except ValueError:
+            pass
+
+    raise ValueError(f"Node with id {uuid!r} doesn't exist in layout.")
+
+
+def _find_port_in_node(
+    node: _elkjs.ELKOutputNode, port_uuid: str
+) -> _elkjs.ELKOutputPort | None:
+    """Find a port in a node's children by UUID.
+
+    Parameters
+    ----------
+    node
+        The node to search in.
+    port_uuid
+        The UUID of the port to find.
+
+    Returns
+    -------
+    _elkjs.ELKOutputPort | None
+        The found port or None if not found.
+    """
+    return next(
+        (
+            p
+            for p in node.children
+            if p.id == port_uuid and isinstance(p, _elkjs.ELKOutputPort)
+        ),
+        None,
+    )
+
+
+def _create_port_allocation_edge(
     styleclass: str,
-    port_id: str,
-    interface_id: str,
-    port_middle: _elkjs.ELKPoint,
-    interface_middle: _elkjs.ELKPoint,
+    function_port_id: str,
+    other_port_id: str,
+    function_port_middle: _elkjs.ELKPoint,
+    other_port_middle: _elkjs.ELKPoint,
 ) -> _elkjs.ELKOutputEdge:
+    """Create a port allocation edge between a function port and another port.
+
+    Parameters
+    ----------
+    styleclass
+        The style class of the function port (FIP or FOP).
+    function_port_id
+        UUID of the function port.
+    other_port_id
+        UUID of the other port (component or physical port).
+    function_port_middle
+        Center position of the function port.
+    other_port_middle
+        Center position of the other port.
+
+    Returns
+    -------
+    _elkjs.ELKOutputEdge
+        The port allocation edge with proper direction and routing.
+    """
     if styleclass == "FIP":
-        eid = f"__PortInputAllocation:{port_id}"
-        src_id, trg_id = port_id, interface_id
-        routing_points = [port_middle, interface_middle]
+        eid = f"__PortInputAllocation:{function_port_id}"
+        src_id, trg_id = function_port_id, other_port_id
+        routing_points = [function_port_middle, other_port_middle]
     else:
-        eid = f"__PortOutputAllocation:{port_id}"
-        src_id, trg_id = interface_id, port_id
-        routing_points = [interface_middle, port_middle]
+        eid = f"__PortOutputAllocation:{function_port_id}"
+        src_id, trg_id = other_port_id, function_port_id
+        routing_points = [other_port_middle, function_port_middle]
 
     return _elkjs.ELKOutputEdge(
         id=eid,
@@ -938,7 +1046,7 @@ class RealizationViewDiagram(ContextDiagram):
             _, layer_name = realization_view.find_layer(layer_obj)
             pos = layer.position.x, layer.position.y
             size = layer.size.width, layer.size.height
-            width, height = helpers.get_text_extent(layer_name)
+            width, height = chelpers.get_text_extent(layer_name)
             x, y, tspan_y = calculate_label_position(*pos, *size)
             label_box = _elkjs.ELKOutputLabel(
                 type="label",
@@ -1052,6 +1160,207 @@ class PhysicalPortContextDiagram(ContextDiagram):
             render_styles=render_styles,
             default_render_parameters=default_render_parameters,
         )
+
+
+class ELKDiagram(ContextDiagram):
+    """A former diagram layouted by ELKJS."""
+
+    _include_port_allocations: bool
+    _hide_elements: set[str]
+
+    def __init__(
+        self,
+        class_: str,
+        obj: m.Diagram,
+        *,
+        render_styles: dict[str, styling.Styler] | None = None,
+        default_render_parameters: dict[str, t.Any],
+    ) -> None:
+        default_render_parameters = {
+            "include_port_allocations": True,
+            "hide_elements": set(),
+            "pvmt_styling": None,
+            "display_port_labels": False,
+            "display_symbols_as_boxes": False,
+        } | default_render_parameters
+        super().__init__(
+            class_,
+            obj,
+            render_styles=render_styles,
+            default_render_parameters=default_render_parameters,
+        )
+
+        self.builder = diagram_view.build_from_diagram  # type: ignore[assignment]
+        self.target: m.Diagram = obj  # type: ignore[assignment]
+
+        self.__nodes: m.ElementList | None = None
+
+    @property
+    def uuid(self) -> str:
+        """Returns diagram UUID."""
+        return f"{self.target.uuid}_elk"
+
+    @property
+    def name(self) -> str:
+        """Returns the diagram name."""
+        return f"ELK Layout of {self.target.name.replace('/', '- or -')}"
+
+    @property
+    def nodes(self) -> m.ElementList:
+        """Return a list of all nodes visible in this diagram."""
+        if not self.__nodes:
+            self.__nodes = super().nodes
+        assert self.__nodes is not None
+        return self.__nodes
+
+    def _create_diagram(self, params: dict[str, t.Any]) -> cdiagram.Diagram:
+        data = self.elk_input_data(params)
+        assert not isinstance(data, tuple)
+        layout = try_to_layout(data)
+        if self._include_port_allocations:
+            self._add_port_allocations(layout)
+
+        add_context(layout)
+        return self.serializer.make_diagram(
+            layout, transparent_background=self._transparent_background
+        )
+
+    def _add_port_allocations(self, layout: _elkjs.ELKOutputData) -> None:
+        for node in self.target.nodes:
+            if helpers.is_allocation(node):
+                try:
+                    src_middle, tgt_middle = (
+                        self._find_port_positions_from_allocation(layout, node)
+                    )
+                except ValueError:
+                    continue
+
+                src_styleclass = self.serializer.get_styleclass(
+                    node.source.uuid
+                )
+                tgt_styleclass = self.serializer.get_styleclass(
+                    node.target.uuid
+                )
+
+                if src_styleclass in {"FIP", "FOP"}:
+                    layout.children.append(
+                        _create_port_allocation_edge(
+                            src_styleclass,
+                            node.source.uuid,
+                            node.target.uuid,
+                            src_middle,
+                            tgt_middle,
+                        )
+                    )
+                elif tgt_styleclass in {"FIP", "FOP"}:
+                    layout.children.append(
+                        _create_port_allocation_edge(
+                            tgt_styleclass,
+                            node.target.uuid,
+                            node.source.uuid,
+                            tgt_middle,
+                            src_middle,
+                        )
+                    )
+            elif helpers.is_port(node) and hasattr(
+                node, "allocated_function_ports"
+            ):
+                for fnc_port in node.allocated_function_ports:
+                    try:
+                        node_ref, port_ref = self._find_port_positions(
+                            layout, node, fnc_port
+                        )
+                    except ValueError:
+                        continue
+
+                    layout.children.extend(
+                        self._yield_port_allocations(
+                            node, fnc_port, node_ref, port_ref
+                        )
+                    )
+
+    def _find_port_positions_from_allocation(
+        self,
+        layout: _elkjs.ELKOutputData,
+        port_alloc: m.ModelElement,
+    ) -> tuple[_elkjs.ELKPoint, _elkjs.ELKPoint]:
+        src_node, src_ref = _find_node_in_layout(
+            layout, port_alloc.source.owner.uuid
+        )
+        tgt_node, tgt_ref = _find_node_in_layout(
+            layout, port_alloc.target.owner.uuid
+        )
+
+        src_port = _find_port_in_node(src_node, port_alloc.source.uuid)
+        tgt_port = _find_port_in_node(tgt_node, port_alloc.target.uuid)
+
+        if src_port is None or tgt_port is None:
+            raise ValueError("Port not found in layout")
+
+        src_middle = _calculate_middle(
+            src_port.position, src_port.size, src_ref
+        )
+        tgt_middle = _calculate_middle(
+            tgt_port.position, tgt_port.size, tgt_ref
+        )
+
+        return src_middle, tgt_middle
+
+    def _find_port_positions(
+        self,
+        layout: _elkjs.ELKOutputData,
+        component_port: m.ModelElement,
+        function_port: m.ModelElement,
+    ) -> tuple[cdiagram.Vector2D, cdiagram.Vector2D]:
+        comp_node, comp_ref = _find_node_in_layout(
+            layout, component_port.owner.uuid
+        )
+        comp_port = _find_port_in_node(comp_node, component_port.uuid)
+        if comp_port is None:
+            raise ValueError(f"Port {component_port.uuid} not found")
+
+        fnc_node, fnc_ref = _find_node_in_layout(
+            layout, function_port.owner.uuid
+        )
+        fnc_port = _find_port_in_node(fnc_node, function_port.uuid)
+        if fnc_port is None:
+            raise ValueError(f"Port {function_port.uuid} not found")
+
+        comp_port_pos = cdiagram.Vector2D(
+            comp_ref.x + comp_port.position.x,
+            comp_ref.y + comp_port.position.y,
+        )
+        fnc_port_pos = cdiagram.Vector2D(
+            fnc_ref.x + fnc_port.position.x,
+            fnc_ref.y + fnc_port.position.y,
+        )
+
+        comp_middle_pt = _calculate_middle(comp_port_pos, comp_port.size)
+        fnc_middle_pt = _calculate_middle(fnc_port_pos, fnc_port.size)
+
+        comp_middle = cdiagram.Vector2D(comp_middle_pt.x, comp_middle_pt.y)
+        fnc_middle = cdiagram.Vector2D(fnc_middle_pt.x, fnc_middle_pt.y)
+
+        return comp_middle, fnc_middle
+
+    def _yield_port_allocations(
+        self,
+        component_port: m.ModelElement,
+        function_port: m.ModelElement,
+        comp_middle: cdiagram.Vector2D,
+        fnc_middle: cdiagram.Vector2D,
+    ) -> cabc.Iterator[_elkjs.ELKOutputEdge]:
+        styleclass = self.serializer.get_styleclass(function_port.uuid)
+        if styleclass in {"FIP", "FOP"}:
+            comp_middle_pt = _elkjs.ELKPoint(x=comp_middle.x, y=comp_middle.y)
+            fnc_middle_pt = _elkjs.ELKPoint(x=fnc_middle.x, y=fnc_middle.y)
+            yield _create_port_allocation_edge(
+                styleclass,
+                function_port.uuid,
+                component_port.uuid,
+                fnc_middle_pt,
+                comp_middle_pt,
+            )
 
 
 class FunctionalChainContextDiagram(ContextDiagram):
@@ -1176,7 +1485,7 @@ def calculate_label_position(
 def _get_all_ports(
     node: _elkjs.ELKOutputNode, ref: cdiagram.Vector2D
 ) -> cabc.Iterator[tuple[cdiagram.Vector2D, _elkjs.ELKOutputPort]]:
-    """Yield all ports from."""
+    """Yield all ports from a given ``node`` and its children."""
     for child in node.children:
         if isinstance(child, _elkjs.ELKOutputPort):
             yield ref + (child.position.x, child.position.y), child

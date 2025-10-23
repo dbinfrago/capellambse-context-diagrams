@@ -7,7 +7,12 @@
         "hierarchyHandling": "INCLUDE_CHILDREN",
         "layered.edgeLabels.sideSelection": "ALWAYS_DOWN",
         "layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-        "spacing.labelNode": "0.0"
+        "spacing.labelNode": "0.0",
+        "spacing.edgeNode": 10,
+        "spacing.edgeEdge": 10,
+        "spacing.nodeNodeBetweenLayers": 5,
+        "spacing.edgeNodeBetweenLayers": 5,
+        "spacing.edgeEdgeBetweenLayers": 5
     },
     "children": [
         {
@@ -38,7 +43,7 @@
                             "height": 10,
                             "labels": [
                                 {
-                                    "text": "PP 1",
+                                    "text": "X CA",
                                     "layoutOptions": {
                                         "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
                                     },
@@ -207,11 +212,11 @@
                             "height": 10,
                             "labels": [
                                 {
-                                    "text": "P2",
+                                    "text": "X FSwitch",
                                     "layoutOptions": {
                                         "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
                                     },
-                                    "width": 38,
+                                    "width": 73,
                                     "height": 12
                                 }
                             ]
@@ -225,11 +230,11 @@
                             "height": 10,
                             "labels": [
                                 {
-                                    "text": "P3",
+                                    "text": "X Switch",
                                     "layoutOptions": {
                                         "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
                                     },
-                                    "width": 38,
+                                    "width": 68,
                                     "height": 12
                                 }
                             ]
@@ -243,11 +248,11 @@
                             "height": 10,
                             "labels": [
                                 {
-                                    "text": "P1",
+                                    "text": "X NSwitch",
                                     "layoutOptions": {
                                         "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
                                     },
-                                    "width": 38,
+                                    "width": 73,
                                     "height": 12
                                 }
                             ]

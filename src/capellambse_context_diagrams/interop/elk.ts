@@ -3,7 +3,7 @@
 
 import { createInterface } from "node:readline";
 import process from "node:process";
-import ELK from "npm:elkjs";
+import ELK from "npm:elkjs@0.11.0";
 import { ElkGraphJsonToSprotty } from "./elkgraph-to-sprotty.ts";
 
 // @ts-ignore Deno doesn't find this type for some reason

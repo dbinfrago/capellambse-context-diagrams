@@ -63,6 +63,7 @@ def init() -> None:
     register_realization_view()
     register_data_flow_view()
     register_cable_tree_view()
+    register_diagram_layout_accessor()
     register_functional_chain_view()
 
 
@@ -120,7 +121,7 @@ def register_interface_context() -> None:
         "stroke-dasharray": "2",
         "text_fill": COLORS["black"],
     }
-    for dt in (DiagramType.SAB, DiagramType.LAB, DiagramType.PAB):
+    for dt in (m.DiagramType.SAB, m.DiagramType.LAB, m.DiagramType.PAB):
         capstyle.STYLES[dt.value]["Edge.PortInputAllocation"] = (
             port_alloc_input_style
         )
@@ -192,6 +193,15 @@ def register_cable_tree_view() -> None:
     """Add the `cable_tree_view` attribute to `PhysicalLink`s."""
     cs.PhysicalLink.cable_tree = context.CableTreeAccessor(
         DiagramType.PAB.value, {}
+    )
+
+
+def register_diagram_layout_accessor() -> None:
+    """Add the `auto_layout` attribute to `Diagram`s."""
+    m.set_accessor(
+        m.Diagram,
+        "auto_layout",
+        context.DiagramLayoutAccessor(_registry.DIAGRAM_LAYOUT_PARAMS),
     )
 
 

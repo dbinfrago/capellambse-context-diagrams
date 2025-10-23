@@ -7,7 +7,12 @@
         "hierarchyHandling": "INCLUDE_CHILDREN",
         "layered.edgeLabels.sideSelection": "ALWAYS_DOWN",
         "layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-        "spacing.labelNode": "0.0"
+        "spacing.labelNode": "0.0",
+        "spacing.edgeNode": 10,
+        "spacing.edgeEdge": 10,
+        "spacing.nodeNodeBetweenLayers": 5,
+        "spacing.edgeNodeBetweenLayers": 5,
+        "spacing.edgeEdgeBetweenLayers": 5
     },
     "children": [
         {

@@ -52,6 +52,11 @@ derived_uuid = "47c3130b-ec39-4365-a77a-5ab6365d1e2e"
 cable_tree_uuid = "5c55b11b-4911-40fb-9c4c-f1363dad846e"
 blackbox_node_uuid = "309296b1-cf37-45d7-b0f3-f7bc00422a59"
 pvmt_styling_uuid = "789f8316-17cf-4c32-a66f-354fe111c40e"
+diagram_layout_uuids = {
+    "[SAB] Example Interface Context",
+    "[LAB] Hierarchy",
+    "[PAB] Example Physical Function Context Diagram",
+}
 
 
 def generate_index_images() -> None:
@@ -334,6 +339,14 @@ def generate_child_shadow_image():
         )
 
 
+def generate_diagram_images() -> None:
+    for diagram_name in diagram_layout_uuids:
+        diagram = model.diagrams.by_name(diagram_name)
+        diag: context.ContextDiagram = diagram.auto_layout
+        with mkdocs_gen_files.open(f"{dest / diag.name!s}.svg", "w") as fd:
+            print(diag.render("svg", transparent_background=False), file=fd)
+
+
 generate_index_images()
 generate_hierarchy_image()
 generate_symbol_images()
@@ -367,3 +380,4 @@ generate_modes_pc_image()
 generate_functional_chain_with_params_image()
 generate_pvmt_styling_images()
 generate_child_shadow_image()
+generate_diagram_images()
