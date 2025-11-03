@@ -1,0 +1,10 @@
+{
+  "name": "capellambse-context-diagrams-interop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dependencies for Deno interop layer",
+  "dependencies": {
+    "elkjs": "^0.11.0",
+    "sprotty": "^1.4.0"
+  }
+}

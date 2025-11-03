@@ -13,3 +13,14 @@ updates:
         patterns: ["*"]
     commit-message:
       prefix: chore
+
+  - package-ecosystem: npm
+    directory: /src/capellambse_context_diagrams/interop
+    schedule:
+      interval: weekly
+      day: wednesday
+    groups:
+      js-dependencies:
+        patterns: ["*"]
+    commit-message:
+      prefix: chore

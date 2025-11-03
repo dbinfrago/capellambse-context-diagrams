@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "elkjs": "npm:elkjs@^0.11.0",
+    "sprotty": "npm:sprotty@^1.4.0"
+  }
+}

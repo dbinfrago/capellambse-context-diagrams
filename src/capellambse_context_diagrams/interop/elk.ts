@@ -3,16 +3,18 @@
 
 import { createInterface } from "node:readline";
 import process from "node:process";
-import ELK from "npm:elkjs@^0.11.0";
+import ELK from "npm:elkjs";
 import { ElkGraphJsonToSprotty } from "./elkgraph-to-sprotty.ts";
-await import("npm:elkjs@^0.11.0/lib/elk-worker.min.js"); // initialize the ELK layout engine
+await import("npm:elkjs/lib/elk-worker.min.js"); // initialize the ELK layout engine
+
+interface Message {
+  id?: string;
+  cmd?: string;
+  [key: string]: any;
+}
 
 interface MessageEvent {
-  data: {
-    id?: string;
-    cmd?: string;
-    [key: string]: any;
-  };
+  data: Message;
 }
 
 /**
@@ -21,25 +23,22 @@ interface MessageEvent {
  */
 class FakeWorker {
   onmessage: ((event: MessageEvent) => void) | null = null;
-  private messageHandler: (event: MessageEvent) => void;
 
-  constructor() {
-    this.messageHandler = (event: MessageEvent) => {
-      const data = event.data;
-
+  postMessage(msg: Message): void {
+    setTimeout(() => {
       try {
         const globalSelf = globalThis as any;
 
         if (globalSelf.onmessage) {
           const originalPostMessage = globalSelf.postMessage;
 
-          globalSelf.postMessage = (msg: any) => {
+          globalSelf.postMessage = (responseMsg: Message) => {
             if (this.onmessage) {
-              this.onmessage({ data: msg });
+              this.onmessage({ data: responseMsg });
             }
           };
 
-          globalSelf.onmessage(event);
+          globalSelf.onmessage({ data: msg });
           globalSelf.postMessage = originalPostMessage;
         } else {
           throw new Error(
@@ -50,18 +49,12 @@ class FakeWorker {
         if (this.onmessage) {
           this.onmessage({
             data: {
-              id: data.id,
+              id: msg.id,
               error: err instanceof Error ? err.message : String(err),
             },
           });
         }
       }
-    };
-  }
-
-  postMessage(msg: any): void {
-    setTimeout(() => {
-      this.messageHandler({ data: msg });
     }, 0);
   }
 
