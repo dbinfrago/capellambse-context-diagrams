@@ -400,14 +400,18 @@ class ELKManager:
     def _spawn_process_deno(self) -> None:
         log.debug("Spawning elk.js helper process using deno")
         deno_location = shutil.which("deno")
-        script_location = pathlib.Path(__file__).parent / "interop" / "elk.ts"
         if deno_location is None:
             raise RuntimeError("Deno is not installed")
+
+        interop_dir = pathlib.Path(__file__).parent / "interop"
+        script_location = interop_dir / "elk.ts"
+        config_location = interop_dir / "deno.json"
 
         self._proc = subprocess.Popen(
             [
                 deno_location,
                 "run",
+                f"--config={config_location}",
                 "--allow-read",
                 "--allow-net",
                 "--allow-env",
