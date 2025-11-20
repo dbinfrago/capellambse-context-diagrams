@@ -105,7 +105,7 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: "2.3.6"
+          deno-version: "2.5.x"
       - name: Build for Windows x64
         run: |
           deno compile --target x86_64-pc-windows-msvc --allow-read --allow-net \
