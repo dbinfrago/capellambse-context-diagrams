@@ -5,7 +5,7 @@
 
 # Context Diagram extension for capellambse
 
-This extension of [py-capellambse](https://github.com/dbinfrago/py-capellambse) enables generation of views (diagrams) that describe an element context (from a user-defined perspective). This allows systems engineers to do less layouting work and at the same time get diagrams with optimal layouts into the model-derived documents.
+This extension of [py-capellambse](https://github.com/dbinfrago/py-capellambse) enables generation of views (diagrams) that describe an element context (from a user-defined perspective) and layouting of defined diagrams. This allows systems engineers to do less layouting work and at the same time get diagrams with optimal layouts into the model-derived documents.
 
 The contents of an element context (what elements make it to the context) depend on the element of interest and are selected based on a hand-picked set of rules. However in many cases end user can further customize what and how needs to be in the context view.
 
