@@ -28,7 +28,7 @@ import pytest
         ),
     ],
 )
-def test_capability_and_mission_context_diagrams(
+def test_diagram_auto_layout_diagrams(
     model: capellambse.MelodyModel, name: str
 ) -> None:
     obj = model.diagrams.by_name(name)
