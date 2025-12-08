@@ -204,6 +204,14 @@ def register_diagram_layout_accessor() -> None:
         context.DiagramLayoutAccessor(_registry.DIAGRAM_LAYOUT_PARAMS),
     )
 
+    redirected_exchange_style: dict[str, CSSdef] = {
+        "stroke-dasharray": "5",
+    }
+    for diagram_type in _registry.DIAGRAM_LAYOUT_PARAMS:
+        capstyle.STYLES.setdefault(diagram_type.name, {})[
+            "Edge.ComponentExchange"
+        ] = redirected_exchange_style
+
 
 def register_functional_chain_view() -> None:
     """Add the ``context_diagram`` attribute to ``FunctionalChain``s."""
