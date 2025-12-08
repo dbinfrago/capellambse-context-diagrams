@@ -152,6 +152,26 @@ class DiagramViewBuilder:
                 break
         return None
 
+    def _resolve_exchange_endpoint(
+        self, port: m.ModelElement
+    ) -> tuple[str, m.ModelElement, bool] | None:
+        owner_collected = port.owner.uuid in self.collected_elements
+
+        if owner_collected:
+            self._make_port_for_element(port)
+            return (port.uuid, port, True)
+
+        owner = self._find_highest_collected_owner(port.owner)
+        if owner:
+            return (owner.uuid, owner, False)
+        return None
+
+    def _track_redirected_edge(self, endpoint_id: str) -> None:
+        if endpoint_id in self.boxes:
+            self.redirected_edges_per_box[endpoint_id] = (
+                self.redirected_edges_per_box.get(endpoint_id, 0) + 1
+            )
+
     def _move_redirected_edge(
         self,
         edge: _elkjs.ELKInputEdge,
@@ -166,75 +186,42 @@ class DiagramViewBuilder:
         source_owners = list(_generic.get_all_owners(source_element))
         target_owners = list(_generic.get_all_owners(target_element))
 
-        # Find common owner
         common_owner_uuid = None
         for owner in source_owners:
             if owner in target_owners:
                 common_owner_uuid = owner
                 break
 
-        if common_owner_uuid and (
-            owner_box := self.boxes.get(common_owner_uuid)
+        if (
+            common_owner_uuid
+            and (owner_box := self.boxes.get(common_owner_uuid))
+            and edge in self.data.edges
         ):
-            if edge in self.data.edges:
-                self.data.edges.remove(edge)
-
+            self.data.edges.remove(edge)
             owner_box.edges.append(edge)
 
     def _make_exchange(self, exchange: m.ModelElement) -> None:
         """Create edge for exchange."""
-        label = _generic.collect_label(exchange)
+        source_result = self._resolve_exchange_endpoint(exchange.source)
+        if not source_result:
+            return
+        source_id, source_element, source_owner_collected = source_result
 
-        source_owner_collected = (
-            exchange.source.owner.uuid in self.collected_elements
-        )
-        target_owner_collected = (
-            exchange.target.owner.uuid in self.collected_elements
-        )
-
-        source_element: m.ModelElement
-        target_element: m.ModelElement
-        if source_owner_collected:
-            source_id = exchange.source.uuid
-            source_element = exchange.source
-            self._make_port_for_element(exchange.source)
-        else:
-            source_owner = self._find_highest_collected_owner(
-                exchange.source.owner
-            )
-            if source_owner:
-                source_id = source_owner.uuid
-                source_element = source_owner
-            else:
-                return
-
-        if target_owner_collected:
-            target_id = exchange.target.uuid
-            target_element = exchange.target
-            self._make_port_for_element(exchange.target)
-        else:
-            target_owner = self._find_highest_collected_owner(
-                exchange.target.owner
-            )
-            if target_owner:
-                target_id = target_owner.uuid
-                target_element = target_owner
-            else:
-                return
+        target_result = self._resolve_exchange_endpoint(exchange.target)
+        if not target_result:
+            return
+        target_id, target_element, target_owner_collected = target_result
 
         if not source_owner_collected or not target_owner_collected:
             edge_id = f"{_makers.STYLECLASS_PREFIX}-ComponentExchange:{exchange.uuid}"
-            if not source_owner_collected and source_id in self.boxes:
-                self.redirected_edges_per_box[source_id] = (
-                    self.redirected_edges_per_box.get(source_id, 0) + 1
-                )
-            if not target_owner_collected and target_id in self.boxes:
-                self.redirected_edges_per_box[target_id] = (
-                    self.redirected_edges_per_box.get(target_id, 0) + 1
-                )
+            if not source_owner_collected:
+                self._track_redirected_edge(source_id)
+            if not target_owner_collected:
+                self._track_redirected_edge(target_id)
         else:
             edge_id = exchange.uuid
 
+        label = _generic.collect_label(exchange)
         edge = _elkjs.ELKInputEdge(
             id=edge_id,
             sources=[source_id],
@@ -243,7 +230,6 @@ class DiagramViewBuilder:
             if label
             else [],
         )
-
         self.data.edges.append(edge)
 
         if source_owner_collected and (
