@@ -11,7 +11,7 @@ dynamic = ["version"]
 name = "capellambse-context-diagrams"
 description = "Extension for py-capellambse that adds automatically generated context diagrams for arbitrary model elements."
 readme = "README.md"
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.11,<3.15"
 license = { text = "Apache-2.0" }
 authors = [{ name = "DB InfraGO AG" }]
 keywords = ["capella", "mbse", "context", "diagram", "automatic diagrams"]
@@ -22,9 +22,9 @@ classifiers = [
   "Natural Language :: English",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Other/Nonlisted Topic",
   "Topic :: Scientific/Engineering",
   "Topic :: Software Development :: Libraries :: Python Modules",
@@ -94,7 +94,7 @@ show_error_codes = true
 warn_redundant_casts = true
 warn_unreachable = true
 warn_unused_ignores = true
-python_version = "3.11"
+python_version = "3.13"
 
 [[tool.mypy.overrides]]
 module = ["tests.*"]
