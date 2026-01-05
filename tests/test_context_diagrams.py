@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright DB InfraGO AG and the capellambse-context-diagrams contributors
 # SPDX-License-Identifier: Apache-2.0
 
-import sys
 import typing as t
 
 import capellambse
@@ -406,6 +405,14 @@ TEST_CONTEXT_SET = [
         ),
         id="LogicalComponent white shadow for children ContextDiagram",
     ),
+    pytest.param(
+        (
+            "b87dab3f-b44e-46ff-bfbe-fb96fbafe008",
+            "hierarchical_edge_context_diagram.json",
+            {},
+        ),
+        id="Hierarchical Edge ContextDiagram",
+    ),
 ]
 
 TEST_CONTEXT_DATA_ROOT = TEST_ELK_INPUT_ROOT / "context_diagrams"
@@ -528,23 +535,6 @@ def test_context_diagram_display_unused_ports(model: capellambse.MelodyModel):
 
     assert unused_port_uuid not in {element.uuid for element in adiag}
     assert unused_port_uuid in {element.uuid for element in bdiag}
-
-
-@pytest.mark.skipif(
-    sys.platform == "win32",
-    reason="Wrong coordinates on Windows for some reason",
-)
-def test_serializer_handles_hierarchical_edges_correctly(
-    model: capellambse.MelodyModel,
-):
-    obj = model.by_uuid("b87dab3f-b44e-46ff-bfbe-fb96fbafe008")
-    edge_uuid = "1a302a4a-9839-4ba4-8296-f54b470b4e59"
-    edge1_uuid = "43158e15-f8d1-49e3-bc01-7222edcbf839"
-
-    adiag = obj.context_diagram.render(None)
-
-    assert (231.35, 94) <= adiag[f"{edge_uuid}_j0"].center <= (235, 94)
-    assert (405.25, 122) <= adiag[f"{edge1_uuid}_j1"].center <= (410, 122)
 
 
 def test_pvmt_styling_shorthand_equivalence(model: capellambse.MelodyModel):
