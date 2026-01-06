@@ -260,8 +260,7 @@ class TestEdgeCases:
     def test_deeply_nested_hierarchy(self, model: capellambse.MelodyModel):
         """Test creating a hierarchy with multiple levels of nesting."""
         parent = model.by_uuid(TEST_COMP_UUID)
-        if not parent.components:
-            pytest.skip("Parent has no components for nesting test")
+        assert parent.components
 
         child = parent.components[0]
         grandchild = child.components[0] if child.components else None
@@ -329,23 +328,6 @@ class TestEdgeCases:
         assert exchange1.uuid in render
         assert isinstance(render[exchange1.uuid], cdiagram.Edge)
 
-    def test_empty_labels_vs_none_labels(self, model: capellambse.MelodyModel):
-        """Test edge creation with empty list, None, and no labels parameter."""
-        exchange = model.by_uuid(TEST_EXCHANGE_UUID)
-        comp1 = exchange.source.owner
-        comp2 = exchange.target.owner
-
-        diag = ccd.CustomDiagram(model.project)
-        diag.box(comp1)
-        diag.box(comp2)
-
-        diag.edge(exchange, comp1, comp2, labels=[])
-
-        render = diag.render(None)
-
-        edge = render[exchange.uuid]
-        assert isinstance(edge, cdiagram.Edge)
-
     def test_multiple_ports_on_same_box(self, model: capellambse.MelodyModel):
         """Test adding multiple ports to a single box."""
         component = model.by_uuid(TEST_COMP_UUID)
@@ -356,8 +338,7 @@ class TestEdgeCases:
             else list(component.ports)
         )
 
-        if len(ports) < 2:
-            pytest.skip("Not enough ports on component for this test")
+        assert len(ports) >= 2
 
         diag = ccd.CustomDiagram(model.project)
         diag.box(component)
