@@ -40,7 +40,8 @@ algorithm.
     cp_in = model.by_uuid("dc30be45-caa9-4acd-a85c-82f9e23c617b")   # ComponentPort IN
     cex = model.by_uuid("beaa5eb3-1b8f-49d2-8dfe-4b1c50b67f98")    # ComponentExchange 1
 
-    # Create the custom diagram with the first component as target
+    # Create the custom diagram with LAB styleclass for Logical Architecture styling
+    # The target (lc_1) determines the diagram context and default styling scope
     diag = ccd.CustomDiagram(lc_1, styleclass="LAB")
 
     # Add boxes for the logical components
@@ -90,6 +91,45 @@ diag = ccd.CustomDiagram(target_element, styleclass="Logical Architecture Blank"
 
 ### Adding Elements
 
+#### Element Addition Rules
+
+When building a custom diagram, follow these important rules:
+
+**Order Constraints:**
+
+- Parent boxes must be added before their child boxes
+- Owner boxes must be added before their ports
+- Source and target elements (boxes or ports) must be added before edges connecting them
+
+**Duplicate Handling:**
+
+- Adding the same box twice will log a warning and ignore the second addition
+- Adding the same port twice will log a warning and ignore the second addition
+- Adding the same edge twice will log a warning and ignore the duplicate
+- Element duplicates are detected by UUID - each UUID can only appear once in the diagram
+
+**Example of correct order:**
+
+```py
+# ✓ Correct: parent first, then child
+diag.box(parent)
+diag.box(child, parent=parent)
+
+# ✗ Incorrect: this will raise ValueError
+diag.box(child, parent=parent)  # parent doesn't exist yet!
+diag.box(parent)
+
+# ✓ Correct: owner box first, then port
+diag.box(component)
+diag.port(port, parent=component)
+
+# ✗ Incorrect: this will raise ValueError
+diag.port(port, parent=component)  # component doesn't exist yet!
+diag.box(component)
+```
+
+#### Building the Diagram
+
 **Boxes** represent components, functions, or other model elements that appear
 as rectangles in the diagram:
 
@@ -134,6 +174,39 @@ diag.edge(
     labels=["Label 1", "Label 2"],
 )
 ```
+
+### Rendering and Saving
+
+Once you've built your diagram, render it to visualize the result:
+
+```py
+# Render returns a dictionary mapping UUIDs to diagram elements
+elements = diag.render(None)
+
+# The dictionary maps element UUIDs (str) to diagram objects:
+# - capellambse.diagram.Box for boxes and ports
+# - capellambse.diagram.Edge for edges
+# - capellambse.diagram.Circle for certain element types
+
+# Save to SVG format
+diag.render("svgdiagram").save(pretty=True)
+
+# Or render to other formats supported by capellambse
+svg_output = diag.render("svg")
+```
+
+**Common Styleclass Values:**
+
+The `styleclass` parameter controls the visual styling (colors, icons) of diagram elements. It accepts:
+
+- `"OAB"` or `"Operational Architecture Blank"` - For operational entities and activities
+- `"SAB"` or `"System Architecture Blank"` - For system components and functions
+- `"LAB"` or `"Logical Architecture Blank"` - For logical components and functions (used in example above)
+- `"PAB"` or `"Physical Architecture Blank"` - For physical components
+- `"CDB"` or `"Class Diagram Blank"` - For class diagrams
+- Or use `capellambse.model.DiagramType` enum members directly
+
+If not specified, an empty styleclass is used with default styling.
 
 ## Custom collector function
 

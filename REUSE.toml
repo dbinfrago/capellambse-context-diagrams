@@ -14,3 +14,9 @@ path = "tests/data/elk_layout/**.json"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Copyright DB InfraGO AG and the capellambse-context-diagrams contributors"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "tests/data/custom_diagrams/**.json"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Copyright DB InfraGO AG and the capellambse-context-diagrams contributors"
+SPDX-License-Identifier = "CC0-1.0"

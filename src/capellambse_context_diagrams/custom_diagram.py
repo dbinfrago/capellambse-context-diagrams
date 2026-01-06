@@ -114,7 +114,7 @@ class CustomDiagram(context.ContextDiagram):
         )
 
         self.__boxes = collections.OrderedDict[str, _BoxSpec | _PortSpec]()
-        self.__edges: list[_EdgeSpec] = []
+        self.__edges = collections.OrderedDict[str, _EdgeSpec]()
 
     def box(
         self,
@@ -160,6 +160,8 @@ class CustomDiagram(context.ContextDiagram):
         Ports are attachment points on the sides of boxes, used to
         connect edges.
 
+        Adding the same element twice will be ignored with a warning.
+
         Parameters
         ----------
         port
@@ -178,6 +180,11 @@ class CustomDiagram(context.ContextDiagram):
             raise ValueError(
                 f"Owner element {parent.uuid} must be added via box() first"
             )
+
+        if port.uuid in self.__boxes:
+            logger.warning("Not adding duplicate port %r", port.uuid)
+            return
+
         self.invalidate_cache()
 
         owner_spec = self.__boxes[parent.uuid]
@@ -205,6 +212,8 @@ class CustomDiagram(context.ContextDiagram):
         Both source and target must be added to the diagram via
         :meth:`box()` or :meth:`port()` before creating the edge.
 
+        Adding the same element twice will be ignored with a warning.
+
         Parameters
         ----------
         edge
@@ -228,13 +237,19 @@ class CustomDiagram(context.ContextDiagram):
                 "source and target must be added via box() or port() first"
             )
 
+        if edge.uuid in self.__edges:
+            logger.warning("Not adding duplicate edge %r", edge.uuid)
+            return
+
+        self.invalidate_cache()
+
         spec = _EdgeSpec(
             obj=edge,
             source=source,
             target=target,
             labels=labels or [],
         )
-        self.__edges.append(spec)
+        self.__edges[edge.uuid] = spec
 
     def elk_input_data(
         self, params: dict[str, t.Any]
@@ -253,7 +268,7 @@ class CustomDiagram(context.ContextDiagram):
 
 def _build_elk_input(
     boxes: cabc.Mapping[str, _BoxSpec | _PortSpec],
-    edges: cabc.Sequence[_EdgeSpec],
+    edges: cabc.Mapping[str, _EdgeSpec],
     /,
 ) -> _elkjs.ELKInputData:
     elk_data = _elkjs.ELKInputData(
@@ -294,7 +309,7 @@ def _build_elk_input(
             case b:
                 te.assert_never(b)
 
-    for edge in edges:
+    for edge in edges.values():
         labels = []
         for label in edge.labels:
             labels.extend(
