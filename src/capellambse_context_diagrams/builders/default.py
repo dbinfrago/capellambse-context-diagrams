@@ -199,7 +199,9 @@ class DiagramBuilder:
             for uuid, box in self.boxes.items():
                 element = self.target._model.by_uuid(uuid)
                 if isinstance(element, fa.AbstractFunction) and (
-                    parent_box := self.boxes.get(element.parent.uuid)
+                    parent_box := self.boxes.get(
+                        t.cast(m.ModelElement, element.parent).uuid
+                    )
                 ):
                     if owner_box := self.boxes.get(element.owner.uuid):
                         owner_box.children.remove(box)

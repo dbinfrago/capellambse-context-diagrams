@@ -210,9 +210,9 @@ def find_layer(
       * ``Logical``
       * ``Physical``
     """
-    parent = obj
+    parent: m.ModelElement = obj
     while not isinstance(parent, cs.ComponentArchitecture):
-        parent = parent.parent
+        parent = t.cast(m.ModelElement, parent.parent)
     if not (match := RE_LAYER_PTRN.match(type(parent).__name__)):
         raise ValueError("No layer was found.")
     return parent, match.group(1)  # type:ignore[return-value]
