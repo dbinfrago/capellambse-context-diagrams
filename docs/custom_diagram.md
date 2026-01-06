@@ -5,12 +5,15 @@
 
 # Custom Diagrams
 
-There are two main ways of customizing diagram contents.
+There are two main ways of customizing diagram contents:
+
+1. **Procedural API** - Explicitly specify boxes, ports, edges, and their relationships
+2. **Custom collector function** - Override automatic content collection with custom logic
 
 ## Procedural custom diagrams
 
-The procedural API provides a simple interface for specifying the elements and
-their basic relationships:
+The procedural API provides a simple, declarative interface for building custom
+diagrams. You explicitly specify:
 
 - Which elements appear as boxes, ports and edges
 - How boxes nest inside each other
@@ -89,115 +92,7 @@ diag = ccd.CustomDiagram(target_element, styleclass="LAB")
 diag = ccd.CustomDiagram(target_element, styleclass="Logical Architecture Blank")
 ```
 
-### Adding Elements
-
-#### Element Addition Rules
-
-When building a custom diagram, follow these important rules:
-
-**Order Constraints:**
-
-- Parent boxes must be added before their child boxes
-- Owner boxes must be added before their ports
-- Source and target elements (boxes or ports) must be added before edges connecting them
-
-**Duplicate Handling:**
-
-- Adding the same box twice will log a warning and ignore the second addition
-- Adding the same port twice will log a warning and ignore the second addition
-- Adding the same edge twice will log a warning and ignore the duplicate
-- Element duplicates are detected by UUID - each UUID can only appear once in the diagram
-
-**Example of correct order:**
-
-```py
-# ✓ Correct: parent first, then child
-diag.box(parent)
-diag.box(child, parent=parent)
-
-# ✗ Incorrect: this will raise ValueError
-diag.box(child, parent=parent)  # parent doesn't exist yet!
-diag.box(parent)
-
-# ✓ Correct: owner box first, then port
-diag.box(component)
-diag.port(port, parent=component)
-
-# ✗ Incorrect: this will raise ValueError
-diag.port(port, parent=component)  # component doesn't exist yet!
-diag.box(component)
-```
-
-#### Building the Diagram
-
-**Boxes** represent components, functions, or other model elements that appear
-as rectangles in the diagram:
-
-```py
-diag.box(element)
-```
-
-Boxes can be nested by providing the optional `parent=` argument. Note that
-parents must always be added before their children:
-
-```py
-diag.box(child_element, parent=parent_element)
-```
-
-**Ports** are attachment points on the sides of boxes. They may be used to
-connect edges to specific sides of a box.
-
-Like before, the parent box must be added first.
-
-```py
-diag.box(box_element)
-diag.port(port_element, parent=box_element)
-```
-
-**Edges** connect boxes or ports together:
-
-```py
-diag.edge(exchange_element, source=source_port, target=target_port)
-# Edges don't necessarily require ports:
-diag.edge(exchange_element, source=source_element, target=target_element)
-# You can also mix and match boxes and ports:
-diag.edge(exchange_element, source=source_box, target=target_port)
-```
-
-You can optionally add custom labels to edges:
-
-```py
-diag.edge(
-    exchange_element,
-    source_port,
-    target_port,
-    labels=["Label 1", "Label 2"],
-)
-```
-
-### Rendering and Saving
-
-Once you've built your diagram, render it to visualize the result:
-
-```py
-# Render returns a dictionary mapping UUIDs to diagram elements
-elements = diag.render(None)
-
-# The dictionary maps element UUIDs (str) to diagram objects:
-# - capellambse.diagram.Box for boxes and ports
-# - capellambse.diagram.Edge for edges
-# - capellambse.diagram.Circle for certain element types
-
-# Save to SVG format
-diag.render("svgdiagram").save(pretty=True)
-
-# Or render to other formats supported by capellambse
-svg_output = diag.render("svg")
-```
-
-**Common Styleclass Values:**
-
-The `styleclass` parameter controls the visual styling (colors, icons) of diagram elements. It accepts:
+It accepts:
 
 - `"OAB"` or `"Operational Architecture Blank"` - For operational entities and activities
 - `"SAB"` or `"System Architecture Blank"` - For system components and functions
@@ -207,6 +102,106 @@ The `styleclass` parameter controls the visual styling (colors, icons) of diagra
 - Or use `capellambse.model.DiagramType` enum members directly
 
 If not specified, an empty styleclass is used with default styling.
+
+### Building the Diagram
+
+Custom diagrams are built by adding elements in a specific order. Understanding
+the ordering constraints is essential for successful diagram construction.
+
+!!! important "Element Ordering Rules"
+    - **Parent before child**: Parent boxes must be added before their nested children
+    - **Owner before port**: Boxes must be added before their ports
+    - **Endpoints before edge**: Source and target elements must exist before connecting them with edges
+
+    Attempting to add an element that references a non-existent parent, owner, or endpoint will result in an error.
+
+!!! note "Duplicate Handling"
+    Elements are identified by their UUID. Adding the same element multiple times will be ignored.
+
+#### Boxes
+
+**Boxes** represent components, functions, or other model elements that appear
+as rectangles in the diagram:
+
+```py
+diag.box(element)
+```
+
+Boxes can be nested by providing the optional `parent=` argument to create
+hierarchical structures:
+
+```py
+# Add parent first
+diag.box(parent_element)
+# Then add children
+diag.box(child_element, parent=parent_element)
+```
+
+#### Ports
+
+**Ports** are attachment points on the sides of boxes that allow edges to
+connect to specific locations. The parent box must be added before its ports:
+
+```py
+# Add the box first
+diag.box(box_element)
+# Then add its port
+diag.port(port_element, parent=box_element)
+```
+
+#### Edges
+
+**Edges** connect boxes or ports together. Both the source and target must be
+added to the diagram before creating the edge:
+
+```py
+# Connect two ports
+diag.edge(exchange_element, source=source_port, target=target_port)
+
+# Connect boxes directly (edges don't require ports)
+diag.edge(exchange_element, source=source_element, target=target_element)
+
+# Mix boxes and ports
+diag.edge(exchange_element, source=source_box, target=target_port)
+```
+
+You can optionally add custom labels to edges:
+
+```py
+diag.edge(
+    exchange_element,
+    source=source_port,
+    target=target_port,
+    labels=["Label 1", "Label 2"],
+)
+```
+
+### Rendering and Saving
+
+Once you've built your diagram, render it to visualize the result.
+
+The `render()` method accepts a format string and returns the diagram in that
+format. When called with `None`, it returns a
+[`capellambse.diagram.Diagram`][capellambse.diagram.Diagram]
+object for programmatic access:
+
+```py
+# Get the Diagram object
+diagram = diag.render(None)
+```
+
+For most use cases, render directly to a specific format:
+
+```py
+# Save to SVG file
+diag.render("svgdiagram").save(pretty=True)
+
+# Or get the SVG as a string
+svg_output = diag.render("svg")
+
+# Other formats supported by capellambse
+png_output = diag.render("png")
+```
 
 ## Custom collector function
 
