@@ -1,0 +1,18 @@
+{
+  "0d2edb8f-fa34-4e73-89ec-fb9a63001440": {
+    "type": "Box",
+    "uuid": "0d2edb8f-fa34-4e73-89ec-fb9a63001440"
+  },
+  "20a83ab5-be44-4271-a7c5-b41142fc1f18": {
+    "type": "Box",
+    "uuid": "20a83ab5-be44-4271-a7c5-b41142fc1f18"
+  },
+  "a900a6e0-c994-42e8-ae94-2b61a7fabc18": {
+    "type": "Edge",
+    "uuid": "a900a6e0-c994-42e8-ae94-2b61a7fabc18"
+  },
+  "d461d616-c8a1-444b-8043-864e7c6a350a": {
+    "type": "Box",
+    "uuid": "d461d616-c8a1-444b-8043-864e7c6a350a"
+  }
+}

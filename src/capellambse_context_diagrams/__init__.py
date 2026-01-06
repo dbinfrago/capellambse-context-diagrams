@@ -18,6 +18,12 @@ them.
 
 from __future__ import annotations
 
+__all__ = [
+    "CustomDiagram",
+    "init",
+    "install_elk",
+]
+
 import logging
 import shutil
 from importlib import metadata
@@ -28,6 +34,7 @@ from capellambse.metamodel import cs, information
 from capellambse.model import DiagramType
 
 from . import _elkjs, _registry, context
+from .custom_diagram import CustomDiagram
 
 try:
     __version__ = metadata.version("capellambse-context-diagrams")
