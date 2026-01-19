@@ -31,9 +31,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "capellambse>=0.7.10,<0.8",
+  "capellambse>=0.8.0,<0.9",
   "platformdirs>=4.3.7",
-  "typing_extensions",
+  "typing_extensions>=4.15.0",
   "pydantic>=2.8.0",
 ]
 
