@@ -37,6 +37,9 @@ dependencies = [
   "pydantic>=2.8.0",
 ]
 
+[tool.uv.sources]
+capellambse = { git = "https://github.com/dbinfrago/py-capellambse.git", tag = "v0.8.0" }
+
 [project.urls]
 Homepage = "https://github.com/dbinfrago/capellambse-context-diagrams"
 Documentation = "https://capellambse-context-diagrams.readthedocs.io"
