@@ -40,25 +40,30 @@ class DiagramBuilder(default.DiagramBuilder):
         self._self_loop: bool = self.left.owner == self.right.owner
 
     def _handle_boxeable_target(self) -> None:
+        if not (
+            self.diagram._include_interface or self.diagram._hide_functions
+        ):
+            return
+
+        self.data.layoutOptions["layered.nodePlacement.strategy"] = (
+            "NETWORK_SIMPLEX"
+        )
         if self._self_loop:
             self._make_box(
                 self.left.owner,
                 layout_options=_makers.CENTRIC_LABEL_LAYOUT_OPTIONS,
             )
-            edge_data = self._collect_edge_data(self.target)
-            self.edge_data[self.target.uuid] = edge_data
-            self._update_edge_common(edge_data)
+            if self.diagram._include_interface:
+                edge_data = self._collect_edge_data(self.target)
+                self.edge_data[self.target.uuid] = edge_data
+                self._update_edge_common(edge_data)
             return
 
-        if self.diagram._include_interface or self.diagram._hide_functions:
-            self.data.layoutOptions["layered.nodePlacement.strategy"] = (
-                "NETWORK_SIMPLEX"
-            )
-            edge = self._make_edge_and_ports(self.target)
-            assert edge is not None
-            edge.layoutOptions = (
-                _elkjs.EDGE_STRAIGHTENING_LAYOUT_OPTIONS.copy()  # type: ignore[attr-defined]
-            )
+        edge = self._make_edge_and_ports(self.target)
+        assert edge is not None
+        edge.layoutOptions = (
+            _elkjs.EDGE_STRAIGHTENING_LAYOUT_OPTIONS.copy()  # type: ignore[attr-defined]
+        )
 
     def _make_edge_and_ports(
         self,
