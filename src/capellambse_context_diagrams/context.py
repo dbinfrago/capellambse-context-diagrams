@@ -680,7 +680,11 @@ class InterfaceContextDiagram(ContextDiagram):
     def _add_port_allocations(self, layout: _elkjs.ELKOutputData) -> None:
         uuids = (self.target.source.owner.uuid, self.target.target.owner.uuid)
         port_uuids = (self.target.source.uuid, self.target.target.uuid)
+        seen_nodes: set[str] = set()
         for i, _ in enumerate(port_uuids):
+            if uuids[i] in seen_nodes:
+                continue
+            seen_nodes.add(uuids[i])
             node, node_ref = _find_node_in_layout(layout, uuids[i])
             assert isinstance(node, _elkjs.ELKOutputNode)
             port = next((p for p in node.children if p.id in port_uuids), None)

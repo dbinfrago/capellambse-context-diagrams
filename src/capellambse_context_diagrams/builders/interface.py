@@ -12,7 +12,7 @@ import typing as t
 import capellambse.model as m
 from capellambse.metamodel import cs
 
-from .. import _elkjs, _registry, context, errors
+from .. import _elkjs, _registry, context
 from . import _makers, default
 
 SUPPORTED_CLASSES: tuple[type[m.ModelElement], ...] = tuple(
@@ -37,23 +37,33 @@ class DiagramBuilder(default.DiagramBuilder):
 
         self.left: m.ModelElement = self.target.source
         self.right: m.ModelElement = self.target.target
+        self._self_loop: bool = self.left.owner == self.right.owner
 
     def _handle_boxeable_target(self) -> None:
-        if self.left.owner == self.right.owner:
-            raise errors.CycleError(
-                "The interface is a cycle, connecting the same "
-                "source and target."
-            )
+        if not (
+            self.diagram._include_interface or self.diagram._hide_functions
+        ):
+            return
 
-        if self.diagram._include_interface or self.diagram._hide_functions:
-            self.data.layoutOptions["layered.nodePlacement.strategy"] = (
-                "NETWORK_SIMPLEX"
+        self.data.layoutOptions["layered.nodePlacement.strategy"] = (
+            "NETWORK_SIMPLEX"
+        )
+        if self._self_loop:
+            self._make_box(
+                self.left.owner,
+                layout_options=_makers.CENTRIC_LABEL_LAYOUT_OPTIONS,
             )
-            edge = self._make_edge_and_ports(self.target)
-            assert edge is not None
-            edge.layoutOptions = (
-                _elkjs.EDGE_STRAIGHTENING_LAYOUT_OPTIONS.copy()  # type: ignore[attr-defined]
-            )
+            if self.diagram._include_interface:
+                edge_data = self._collect_edge_data(self.target)
+                self.edge_data[self.target.uuid] = edge_data
+                self._update_edge_common(edge_data)
+            return
+
+        edge = self._make_edge_and_ports(self.target)
+        assert edge is not None
+        edge.layoutOptions = (
+            _elkjs.EDGE_STRAIGHTENING_LAYOUT_OPTIONS.copy()  # type: ignore[attr-defined]
+        )
 
     def _make_edge_and_ports(
         self,
@@ -90,19 +100,19 @@ class DiagramBuilder(default.DiagramBuilder):
             )
             assert left_box is not None
             left_box.children = []
-            assert self.right is not None
-            right_box = next(
-                self.yield_box_from_children(self.right.owner.uuid),
-                None,
-            )
-            assert right_box is not None
-            right_box.children = []
-
             for label in left_box.labels:
                 label.layoutOptions = _makers.CENTRIC_LABEL_LAYOUT_OPTIONS
 
-            for label in right_box.labels:
-                label.layoutOptions = _makers.CENTRIC_LABEL_LAYOUT_OPTIONS
+            if not self._self_loop:
+                assert self.right is not None
+                right_box = next(
+                    self.yield_box_from_children(self.right.owner.uuid),
+                    None,
+                )
+                assert right_box is not None
+                right_box.children = []
+                for label in right_box.labels:
+                    label.layoutOptions = _makers.CENTRIC_LABEL_LAYOUT_OPTIONS
 
         for edge in self.data.edges:
             if edge.id == self.target.uuid:
@@ -119,6 +129,9 @@ class DiagramBuilder(default.DiagramBuilder):
 
     def __call__(self) -> _elkjs.ELKInputData:
         super().__call__()
+        if self._self_loop:
+            return self._get_data()
+
         if len(self.data.children) > 2:
             for child in self.data.children[2:]:
                 child_obj = self.target._model.by_uuid(child.id)
