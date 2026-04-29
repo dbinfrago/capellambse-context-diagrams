@@ -82,7 +82,7 @@ def test_EX_ITEMS_is_applied(model: MelodyModel, uuid: str):
 
     for edge in edges:
         aedge = aird_diag[edge.uuid]
-        expected = [ex.name for ex in edge.exchange_items]
+        expected = [ex.name for ex in filters._get_exchange_items(edge)]
 
         assert isinstance(aedge, diagram.Edge)
         if aedge.labels:
@@ -116,7 +116,9 @@ def test_context_diagrams_SHOW_EX_ITEMS_is_applied(
     for edge in edges:
         aedge = aird_diag[edge.uuid]
         expected_label = edge.name
-        eitems = ", ".join(exi.name for exi in edge.exchange_items)
+        eitems = ", ".join(
+            exi.name for exi in filters._get_exchange_items(edge)
+        )
         if eitems:
             expected_label += f" [{eitems}]"
 
@@ -136,14 +138,13 @@ def test_context_diagrams_FEX_OR_EX_ITEMS_is_applied(
 
     for edge in edges:
         aedge = aird_diag[edge.uuid]
+        exchange_items = filters._get_exchange_items(edge)
 
         assert isinstance(aedge, diagram.Edge)
 
         label = aedge.labels[0].label
-        if edge.exchange_items:
-            eitem_label_frag = ", ".join(
-                exi.name for exi in edge.exchange_items
-            )
+        if exchange_items:
+            eitem_label_frag = ", ".join(exi.name for exi in exchange_items)
 
             assert label == f"[{eitem_label_frag}]"
         else:

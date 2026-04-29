@@ -3047,7 +3047,8 @@ The predator is far away</bodies>
               id="ec1ecf8b-d58b-4468-9742-6fdfd6cff702" name="Context">
             <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementLink"
                 id="ebacf052-fe7c-492f-9564-679c0d835bce" involved="#8beae0b8-b0a6-426a-b0c4-b9e3580df0e8"
-                source="#c8cea935-4e8a-46dd-8c43-2502855bbf7c" target="#d3ea33f8-4ab7-4337-9a22-4167c17b5a88"/>
+                exchangedItems="#8f8ba7de-a7e6-4b5c-bd5d-11fba313b444" source="#c8cea935-4e8a-46dd-8c43-2502855bbf7c"
+                target="#d3ea33f8-4ab7-4337-9a22-4167c17b5a88"/>
             <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementFunction"
                 id="d3ea33f8-4ab7-4337-9a22-4167c17b5a88" involved="#75662c2c-8b0e-49fd-b390-d6528e3b97b0"/>
             <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementFunction"
@@ -3673,7 +3674,7 @@ The predator is far away</bodies>
               target="#7a172077-0ece-4ce8-a415-29d0375de6e8" source="#bdd60d80-a0e0-44d9-8fcf-9c5f80ec84f3"/>
           <ownedFunctionalExchanges xsi:type="org.polarsys.capella.core.data.fa:FunctionalExchange"
               id="8beae0b8-b0a6-426a-b0c4-b9e3580df0e8" name="weather" target="#d3911dcc-4932-4a65-bde0-8f3f1de6ee7b"
-              source="#62a357ec-d61c-4737-90fc-dcfd2bd629a4"/>
+              source="#62a357ec-d61c-4737-90fc-dcfd2bd629a4" exchangedItems="#8f8ba7de-a7e6-4b5c-bd5d-11fba313b444 #e6b13a92-4ea7-4d4a-9738-d03d2291b0c5"/>
           <ownedFunctionalExchanges xsi:type="org.polarsys.capella.core.data.fa:FunctionalExchange"
               id="85ae91a1-6190-4372-8f17-7bf1bb55d41c" name="FC Fex" target="#3ea9f583-a37c-432f-99d0-cc1cc7b82761"
               source="#621abc4c-6ebd-4c39-b4a3-9d5efdca2816"/>

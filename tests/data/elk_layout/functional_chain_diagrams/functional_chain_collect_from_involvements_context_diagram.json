@@ -1,0 +1,264 @@
+{
+    "id": "ec1ecf8b-d58b-4468-9742-6fdfd6cff702_context",
+    "type": "graph",
+    "children": [
+        {
+            "id": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+            "position": {
+                "x": 289,
+                "y": 68
+            },
+            "size": {
+                "width": 94,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "position": {
+                        "x": 3,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 88,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Make weather"
+                }
+            ]
+        },
+        {
+            "id": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "position": {
+                "x": 526,
+                "y": 18
+            },
+            "size": {
+                "width": 134,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "position": {
+                        "x": 3,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 128,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Acquire weather data"
+                }
+            ]
+        },
+        {
+            "id": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+            "position": {
+                "x": 234,
+                "y": 12
+            },
+            "size": {
+                "width": 149,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "position": {
+                        "x": 3,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 143,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Launch Data acquisition"
+                }
+            ]
+        },
+        {
+            "id": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+            "position": {
+                "x": 12,
+                "y": 12
+            },
+            "size": {
+                "width": 154,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "position": {
+                        "x": 3,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 148,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Activate weather station"
+                }
+            ]
+        },
+        {
+            "id": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+            "position": {
+                "x": 808,
+                "y": 18
+            },
+            "size": {
+                "width": 169,
+                "height": 36
+            },
+            "type": "node",
+            "children": [
+                {
+                    "position": {
+                        "x": 3,
+                        "y": 12
+                    },
+                    "size": {
+                        "width": 163,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "Elaborate current situation"
+                }
+            ]
+        },
+        {
+            "id": "ebacf052-fe7c-492f-9564-679c0d835bce",
+            "type": "edge",
+            "sourceId": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+            "targetId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "routingPoints": [
+                {
+                    "x": 383,
+                    "y": 86
+                },
+                {
+                    "x": 521,
+                    "y": 86
+                },
+                {
+                    "x": 521,
+                    "y": 42
+                },
+                {
+                    "x": 526,
+                    "y": 42
+                }
+            ],
+            "children": [
+                {
+                    "position": {
+                        "x": 420.5,
+                        "y": 89
+                    },
+                    "size": {
+                        "width": 63,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "weather"
+                }
+            ]
+        },
+        {
+            "id": "acecaf47-12f5-46ee-87f7-aee388750f76",
+            "type": "edge",
+            "sourceId": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+            "targetId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "routingPoints": [
+                {
+                    "x": 383,
+                    "y": 30
+                },
+                {
+                    "x": 526,
+                    "y": 30
+                }
+            ],
+            "children": [
+                {
+                    "position": {
+                        "x": 388,
+                        "y": 33
+                    },
+                    "size": {
+                        "width": 128,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "weather data request"
+                }
+            ]
+        },
+        {
+            "id": "84da7369-bd7e-4e77-bf05-0e4b25e512a7",
+            "type": "edge",
+            "sourceId": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+            "targetId": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+            "routingPoints": [
+                {
+                    "x": 166,
+                    "y": 30
+                },
+                {
+                    "x": 234,
+                    "y": 30
+                }
+            ],
+            "children": [
+                {
+                    "position": {
+                        "x": 171,
+                        "y": 33
+                    },
+                    "size": {
+                        "width": 58,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "FC Fex"
+                }
+            ]
+        },
+        {
+            "id": "19da43ce-26fc-47f9-b602-06f6c0f0a356",
+            "type": "edge",
+            "sourceId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "targetId": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+            "routingPoints": [
+                {
+                    "x": 660,
+                    "y": 36
+                },
+                {
+                    "x": 808,
+                    "y": 36
+                }
+            ],
+            "children": [
+                {
+                    "position": {
+                        "x": 665,
+                        "y": 39
+                    },
+                    "size": {
+                        "width": 138,
+                        "height": 12
+                    },
+                    "type": "label",
+                    "text": "collected weather data"
+                }
+            ]
+        }
+    ]
+}
