@@ -54,6 +54,20 @@ LABEL_CONVERSION: t.Final[dict[str, str]] = {
     "MissionInvolvement": "involves",
 }
 """A map that for relabelling specific ModelObject types."""
+_SUPPORTED_EXCHANGE_TYPES = (
+    fa.FunctionalExchange
+    | fa.ComponentExchange
+    | fa.FunctionalChainInvolvementLink,
+)
+
+
+def _get_exchange_items(
+    obj: m.ModelElement,
+) -> cabc.Collection[m.ModelElement]:
+    assert isinstance(obj, _SUPPORTED_EXCHANGE_TYPES)
+    if isinstance(obj, fa.ComponentExchange):
+        return obj.exchange_items
+    return obj.exchanged_items
 
 
 def exchange_items(obj: m.ModelElement) -> str:
@@ -61,8 +75,8 @@ def exchange_items(obj: m.ModelElement) -> str:
 
     The returned string is wrapped in [E1,...] and separated by ','.
     """
-    assert isinstance(obj, fa.FunctionalExchange | fa.ComponentExchange)
-    if items := ", ".join(item.name for item in obj.exchange_items):
+    assert isinstance(obj, _SUPPORTED_EXCHANGE_TYPES)
+    if items := ", ".join(item.name for item in _get_exchange_items(obj)):
         return f"[{items}]"
     return ""
 
@@ -71,6 +85,9 @@ def exchange_name_and_items(
     obj: m.ModelElement, label: str | None = None
 ) -> str:
     """Return ``obj``'s name and ``ExchangeItem``s if there are any."""
+    if isinstance(obj, fa.FunctionalChainInvolvementLink):
+        return exchange_items(obj) or (label or "")
+
     label = label or obj.name
     if ex_items := exchange_items(obj):
         label += " " + ex_items
@@ -98,9 +115,7 @@ FILTER_LABEL_ADJUSTERS: dict[
     EX_ITEMS: lambda obj, _: exchange_items(obj),
     SHOW_EX_ITEMS: exchange_name_and_items,
     EX_ITEMS_OR_EXCH: lambda obj, label: (
-        exchange_items(obj)
-        if getattr(obj, "exchange_items", "")
-        else label or obj.name
+        exchange_items(obj) if _get_exchange_items(obj) else label or obj.name
     ),
     NO_UUID: uuid_filter,
     SYSTEM_EX_RELABEL: relabel_system_exchange,
@@ -114,7 +129,7 @@ def sort_exchange_items_label(
     adjustments: dict[str, t.Any],
 ) -> None:
     """Sort the exchange items in the exchange label if value is true."""
-    items = [item.name for item in exchange.exchange_items]
+    items = [item.name for item in _get_exchange_items(exchange)]
     if value:
         items = sorted(items)
     adjustments["labels_text"] = ", ".join(items)

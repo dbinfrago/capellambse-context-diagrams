@@ -196,6 +196,10 @@ def collect_label(obj: m.ModelElement) -> str | None:
         return "« e »"
     if isinstance(obj, interaction.AbstractCapabilityInclude):
         return "« i »"
+    if isinstance(obj, fa.FunctionalChainInvolvementLink):
+        if obj.involved is not None:
+            return collect_label(obj.involved)
+        return "" if obj.name.startswith("(Unnamed") else obj.name
     return "" if obj.name.startswith("(Unnamed") else obj.name
 
 

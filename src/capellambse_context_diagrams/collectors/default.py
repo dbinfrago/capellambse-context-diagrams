@@ -159,7 +159,10 @@ def functional_chain_collector(
     if not isinstance(diagram.target, fa.FunctionalChain):
         return
 
-    yield from diagram.target.involved
+    if diagram._collect_from_involvements:
+        yield from diagram.target.involvements
+    else:
+        yield from diagram.target.involved
 
 
 def physical_port_context_collector(

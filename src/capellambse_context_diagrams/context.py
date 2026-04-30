@@ -1213,7 +1213,10 @@ class ELKDiagram(ContextDiagram):
     def nodes(self) -> m.ElementList:
         """Return a list of all nodes visible in this diagram."""
         if not self.__nodes:
-            self.__nodes = super().nodes
+            self.__nodes = t.cast(
+                m.ElementList,
+                ContextDiagram.nodes.__get__(self, type(self)),
+            )
         assert self.__nodes is not None
         return self.__nodes
 
@@ -1368,7 +1371,20 @@ class ELKDiagram(ContextDiagram):
 
 
 class FunctionalChainContextDiagram(ContextDiagram):
-    """A custom Context Diagram exclusively for FunctionalChains."""
+    """A custom Context Diagram exclusively for FunctionalChains.
+
+    The diagram shows the context of a FunctionalChain, i.e. all involved elements.
+
+    Notes
+    -----
+    The following render parameters are supported:
+    * collect_from_involvements: Boolean flag to enable collecting the context
+      from the involvements instead of involved of the FunctionalChain instead of the owned
+      exchanges. This leads to exchange items collected from the involvements (local)
+      instead of the involved exchanges (global).
+    """
+
+    _collect_from_involvements: bool
 
     def __init__(
         self,
@@ -1379,6 +1395,7 @@ class FunctionalChainContextDiagram(ContextDiagram):
         default_render_parameters: dict[str, t.Any],
     ) -> None:
         default_render_parameters = {
+            "collect_from_involvements": False,
             "display_symbols_as_boxes": True,
             "display_parent_relation": True,
             "edge_direction": enums.EDGE_DIRECTION.SMART,

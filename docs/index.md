@@ -239,6 +239,16 @@ and with the following rendering parameters:
             <figcaption>FunctionalChainContextDiagram of Context without Component Allocation [LAB]</figcaption>
         </figure>
 
+- ??? example "`collect_from_involvements=True`"
+
+        ``` py
+        import capellambse
+
+        model = capellambse.MelodyModel("tests/data/ContextDiagram.aird")
+        diag = model.by_uuid("ec1ecf8b-d58b-4468-9742-6fdfd6cff702").context_diagram
+        diag.render("svgdiagram", collect_from_involvements=True).save(pretty=True)
+        ```
+
 ### OperationalProcess
 
 ??? example "[`oa.OperationalProcess`][capellambse.metamodel.oa.OperationalProcess]"
