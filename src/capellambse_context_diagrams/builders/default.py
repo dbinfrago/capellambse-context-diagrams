@@ -399,18 +399,9 @@ class DiagramBuilder:
             if self.diagram._display_port_labels:
                 text = port_obj.name or "UNKNOWN"
                 port.labels = _makers.make_label(text)
-                if isinstance(plp := self.diagram._port_label_position, str):
-                    try:
-                        plp = _elkjs.PORT_LABEL_POSITION[plp]
-                    except KeyError:
-                        raise ValueError(
-                            f"Invalid port label position '{plp}'."
-                        ) from None
-                elif not isinstance(plp, _elkjs.PORT_LABEL_POSITION):
-                    raise ValueError(f"Invalid port label position: {plp!r}")
-
-                assert isinstance(plp, _elkjs.PORT_LABEL_POSITION)
-                box.layoutOptions["portLabels.placement"] = plp.name
+                _makers.set_port_label_placement(
+                    box, self.diagram._port_label_position
+                )
             box.ports.append(port)
             self.ports[port_obj.uuid] = port
         self._update_min_heights(owner_obj.uuid, side, port)

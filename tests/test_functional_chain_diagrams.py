@@ -21,6 +21,9 @@ from .conftest import (  # type: ignore[import-not-found]
 TEST_FNC_CHAIN_UUID = "ec1ecf8b-d58b-4468-9742-6fdfd6cff702"
 TEST_OA_PROCESS_UUID = "bec38a21-cc4b-4c06-8acf-067bd5f44824"
 TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID = "ebacf052-fe7c-492f-9564-679c0d835bce"
+TEST_LOCAL_EX_ITEMS_EDGE_UUID = (
+    f"__FunctionalExchange:{TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID}"
+)
 TEST_CONTEXT_SET = [
     pytest.param(
         (TEST_FNC_CHAIN_UUID, "functional_chain_context_diagram.json", {}),
@@ -41,6 +44,17 @@ TEST_CONTEXT_SET = [
             {"collect_from_involvements": True},
         ),
         id="FunctionalChain from involvements",
+    ),
+    pytest.param(
+        (
+            TEST_FNC_CHAIN_UUID,
+            "functional_chain_collect_from_involvements_no_parent_relation_context_diagram.json",
+            {
+                "collect_from_involvements": True,
+                "display_parent_relation": False,
+            },
+        ),
+        id="FunctionalChain from involvements with hidden owners",
     ),
     pytest.param(
         (TEST_OA_PROCESS_UUID, "operational_process_context_diagram.json", {}),
@@ -98,8 +112,39 @@ class TestContextDiagrams:
         diag.filters.add(filters.SHOW_EX_ITEMS)
 
         rendered = diag.render(None, collect_from_involvements=True)
-        edge = rendered[TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID]
+        edge = rendered[TEST_LOCAL_EX_ITEMS_EDGE_UUID]
 
         assert isinstance(edge, diagram.Edge)
+        assert edge.styleclass == "FunctionalExchange"
+        assert edge.source is not None
+        assert edge.target is not None
+        assert edge.source.port
+        assert edge.target.port
         assert len(edge.labels) == 1
         assert edge.labels[0].label == "[Water]"
+
+    @staticmethod
+    def test_collect_from_involvements_displays_port_labels(
+        model: capellambse.MelodyModel,
+    ):
+        diag = model.by_uuid(TEST_FNC_CHAIN_UUID).context_diagram
+
+        data = diag.elk_input_data(
+            {
+                "collect_from_involvements": True,
+                "display_parent_relation": False,
+                "display_port_labels": True,
+            }
+        )
+        edge = data.edges[0]
+        boxes = [
+            child
+            for child in data.children
+            if edge.sources[0] in {port.id for port in child.ports}
+            or edge.targets[0] in {port.id for port in child.ports}
+        ]
+
+        assert len(boxes) == 2
+        for box in boxes:
+            assert box.layoutOptions["portLabels.placement"] == "OUTSIDE"
+            assert box.ports[0].labels

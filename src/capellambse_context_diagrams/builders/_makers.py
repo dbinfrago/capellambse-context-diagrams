@@ -245,20 +245,34 @@ def make_owner_box(
     boxes: dict[str, _elkjs.ELKInputChild],
     boxes_to_delete: set[str],
 ) -> m.ModelElement:
+    """Create an owner box and move ``obj`` into it."""
+    assert (obj_box := boxes.get(obj.uuid))
+    return move_box_into_owner(
+        obj, obj_box, obj.uuid, make_box_func, boxes_to_delete
+    )
+
+
+def move_box_into_owner(
+    obj: m.ModelElement,
+    obj_box: _elkjs.ELKInputChild,
+    obj_box_key: str,
+    make_box_func: cabc.Callable,
+    boxes_to_delete: set[str],
+) -> m.ModelElement:
+    """Create an owner box and move an already-created ``obj_box`` into it."""
     parent_box = make_box_func(
         obj.owner,
         layout_options=DEFAULT_LABEL_LAYOUT_OPTIONS,
     )
-    assert (obj_box := boxes.get(obj.uuid))
     for box in (children := parent_box.children):
-        if box.id == obj.uuid:
+        if box.id == obj_box.id:
             break
     else:
         children.append(obj_box)
         obj_box.width = max(obj_box.width, parent_box.width)
         for label in parent_box.labels:
             label.layoutOptions = DEFAULT_LABEL_LAYOUT_OPTIONS
-    boxes_to_delete.add(obj.uuid)
+    boxes_to_delete.add(obj_box_key)
     return obj.owner
 
 
@@ -285,6 +299,28 @@ def make_owner_boxes(
         )
         depth += 1
     return current.uuid
+
+
+def set_port_label_placement(
+    box: _elkjs.ELKInputChild,
+    port_label_position: _elkjs.PORT_LABEL_POSITION | str,
+) -> None:
+    """Validate and set the port-label placement on ``box``."""
+    if isinstance(port_label_position, str):
+        try:
+            port_label_position = _elkjs.PORT_LABEL_POSITION[
+                port_label_position
+            ]
+        except KeyError:
+            raise ValueError(
+                f"Invalid port label position '{port_label_position}'."
+            ) from None
+    elif not isinstance(port_label_position, _elkjs.PORT_LABEL_POSITION):
+        raise ValueError(
+            f"Invalid port label position: {port_label_position!r}"
+        )
+
+    box.layoutOptions["portLabels.placement"] = port_label_position.name
 
 
 def adjust_box_height_for_ports(box: _elkjs.ELKInputChild) -> None:

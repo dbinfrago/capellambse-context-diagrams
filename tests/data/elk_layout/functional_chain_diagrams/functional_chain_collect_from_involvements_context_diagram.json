@@ -3,260 +3,512 @@
     "type": "graph",
     "children": [
         {
-            "id": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
-            "position": {
-                "x": 289,
-                "y": 68
-            },
-            "size": {
-                "width": 94,
-                "height": 36
-            },
-            "type": "node",
-            "children": [
-                {
-                    "position": {
-                        "x": 3,
-                        "y": 12
-                    },
-                    "size": {
-                        "width": 88,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "Make weather"
-                }
-            ]
-        },
-        {
-            "id": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
-            "position": {
-                "x": 526,
-                "y": 18
-            },
-            "size": {
-                "width": 134,
-                "height": 36
-            },
-            "type": "node",
-            "children": [
-                {
-                    "position": {
-                        "x": 3,
-                        "y": 12
-                    },
-                    "size": {
-                        "width": 128,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "Acquire weather data"
-                }
-            ]
-        },
-        {
-            "id": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
-            "position": {
-                "x": 234,
-                "y": 12
-            },
-            "size": {
-                "width": 149,
-                "height": 36
-            },
-            "type": "node",
-            "children": [
-                {
-                    "position": {
-                        "x": 3,
-                        "y": 12
-                    },
-                    "size": {
-                        "width": 143,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "Launch Data acquisition"
-                }
-            ]
-        },
-        {
-            "id": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+            "id": "0d2edb8f-fa34-4e73-89ec-fb9a63001440",
             "position": {
                 "x": 12,
                 "y": 12
             },
             "size": {
-                "width": 154,
-                "height": 36
+                "width": 1204,
+                "height": 254
             },
             "type": "node",
             "children": [
                 {
+                    "id": "d370f3b5-fbfc-4b09-abef-444e14c81aa0",
                     "position": {
-                        "x": 3,
-                        "y": 12
+                        "x": 352,
+                        "y": 173
                     },
                     "size": {
-                        "width": 148,
+                        "width": 121,
+                        "height": 69
+                    },
+                    "type": "node",
+                    "children": [
+                        {
+                            "id": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+                            "position": {
+                                "x": 13,
+                                "y": 29
+                            },
+                            "size": {
+                                "width": 94,
+                                "height": 28
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "__FOP:62a357ec-d61c-4737-90fc-dcfd2bd629a4_c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+                                    "position": {
+                                        "x": 86,
+                                        "y": 9
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "position": {
+                                        "x": -1,
+                                        "y": 8
+                                    },
+                                    "size": {
+                                        "width": 88,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "Make weather"
+                                }
+                            ]
+                        },
+                        {
+                            "position": {
+                                "x": 19,
+                                "y": 5
+                            },
+                            "size": {
+                                "width": 83,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "Environment"
+                        }
+                    ]
+                },
+                {
+                    "id": "a43560f6-ed60-4907-bf24-3afa4678f77c",
+                    "position": {
+                        "x": 651,
+                        "y": 47
+                    },
+                    "size": {
+                        "width": 541,
+                        "height": 112
+                    },
+                    "type": "node",
+                    "children": [
+                        {
+                            "id": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                            "position": {
+                                "x": 14,
+                                "y": 44
+                            },
+                            "size": {
+                                "width": 134,
+                                "height": 56
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "__FIP:d3911dcc-4932-4a65-bde0-8f3f1de6ee7b_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                                    "position": {
+                                        "x": -2,
+                                        "y": 34
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "__FIP:7a172077-0ece-4ce8-a415-29d0375de6e8_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                                    "position": {
+                                        "x": -2,
+                                        "y": 12
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "id": "__FOP:ae235f06-52d1-4b3c-b257-622c755e4e21_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                                    "position": {
+                                        "x": 126,
+                                        "y": 23
+                                    },
+                                    "size": {
+                                        "width": 10,
+                                        "height": 10
+                                    },
+                                    "type": "port"
+                                },
+                                {
+                                    "position": {
+                                        "x": 3,
+                                        "y": 22
+                                    },
+                                    "size": {
+                                        "width": 128,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "Acquire weather data"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "8d087293-a2e9-4762-b2f0-1f418ca0a54a",
+                            "position": {
+                                "x": 333,
+                                "y": 29
+                            },
+                            "size": {
+                                "width": 196,
+                                "height": 69
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+                                    "position": {
+                                        "x": 14,
+                                        "y": 29
+                                    },
+                                    "size": {
+                                        "width": 169,
+                                        "height": 28
+                                    },
+                                    "type": "node",
+                                    "children": [
+                                        {
+                                            "id": "__FIP:7a0581f8-71ce-44e8-98fe-02ea9dc4ff70_2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+                                            "position": {
+                                                "x": -2,
+                                                "y": 9
+                                            },
+                                            "size": {
+                                                "width": 10,
+                                                "height": 10
+                                            },
+                                            "type": "port"
+                                        },
+                                        {
+                                            "position": {
+                                                "x": 7,
+                                                "y": 8
+                                            },
+                                            "size": {
+                                                "width": 163,
+                                                "height": 12
+                                            },
+                                            "type": "label",
+                                            "text": "Elaborate current situation"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "position": {
+                                        "x": 59,
+                                        "y": 5
+                                    },
+                                    "size": {
+                                        "width": 78,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "Elaborator"
+                                }
+                            ]
+                        },
+                        {
+                            "position": {
+                                "x": 219,
+                                "y": 5
+                            },
+                            "size": {
+                                "width": 103,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "Weather station"
+                        },
+                        {
+                            "id": "__FunctionalExchange:19da43ce-26fc-47f9-b602-06f6c0f0a356",
+                            "type": "edge",
+                            "sourceId": "__FOP:ae235f06-52d1-4b3c-b257-622c755e4e21_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                            "targetId": "__FIP:7a0581f8-71ce-44e8-98fe-02ea9dc4ff70_2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+                            "routingPoints": [
+                                {
+                                    "x": 150,
+                                    "y": 72
+                                },
+                                {
+                                    "x": 345,
+                                    "y": 72
+                                }
+                            ],
+                            "children": [
+                                {
+                                    "position": {
+                                        "x": 170,
+                                        "y": 75
+                                    },
+                                    "size": {
+                                        "width": 138,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "collected weather data"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "1ec85995-5fc1-42d2-8bf0-8eccb34aeff4",
+                    "position": {
+                        "x": 12,
+                        "y": 29
+                    },
+                    "size": {
+                        "width": 461,
+                        "height": 124
+                    },
+                    "type": "node",
+                    "children": [
+                        {
+                            "id": "d513d32f-6bfa-4a2b-b22e-b32df9bfbfa9",
+                            "position": {
+                                "x": 12,
+                                "y": 29
+                            },
+                            "size": {
+                                "width": 432,
+                                "height": 83
+                            },
+                            "type": "node",
+                            "children": [
+                                {
+                                    "id": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+                                    "position": {
+                                        "x": 269,
+                                        "y": 29
+                                    },
+                                    "size": {
+                                        "width": 149,
+                                        "height": 42
+                                    },
+                                    "type": "node",
+                                    "children": [
+                                        {
+                                            "id": "__FOP:bdd60d80-a0e0-44d9-8fcf-9c5f80ec84f3_daba869e-b748-4578-be1c-74936c5dd6cb",
+                                            "position": {
+                                                "x": 141,
+                                                "y": 16
+                                            },
+                                            "size": {
+                                                "width": 10,
+                                                "height": 10
+                                            },
+                                            "type": "port"
+                                        },
+                                        {
+                                            "id": "__FIP:3ea9f583-a37c-432f-99d0-cc1cc7b82761_daba869e-b748-4578-be1c-74936c5dd6cb",
+                                            "position": {
+                                                "x": -2,
+                                                "y": 16
+                                            },
+                                            "size": {
+                                                "width": 10,
+                                                "height": 10
+                                            },
+                                            "type": "port"
+                                        },
+                                        {
+                                            "position": {
+                                                "x": 3,
+                                                "y": 15
+                                            },
+                                            "size": {
+                                                "width": 143,
+                                                "height": 12
+                                            },
+                                            "type": "label",
+                                            "text": "Launch Data acquisition"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+                                    "position": {
+                                        "x": 13,
+                                        "y": 36
+                                    },
+                                    "size": {
+                                        "width": 154,
+                                        "height": 28
+                                    },
+                                    "type": "node",
+                                    "children": [
+                                        {
+                                            "id": "__FOP:621abc4c-6ebd-4c39-b4a3-9d5efdca2816_cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+                                            "position": {
+                                                "x": 146,
+                                                "y": 9
+                                            },
+                                            "size": {
+                                                "width": 10,
+                                                "height": 10
+                                            },
+                                            "type": "port"
+                                        },
+                                        {
+                                            "position": {
+                                                "x": -1,
+                                                "y": 8
+                                            },
+                                            "size": {
+                                                "width": 148,
+                                                "height": 12
+                                            },
+                                            "type": "label",
+                                            "text": "Activate weather station"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "position": {
+                                        "x": 182,
+                                        "y": 5
+                                    },
+                                    "size": {
+                                        "width": 68,
+                                        "height": 12
+                                    },
+                                    "type": "label",
+                                    "text": "Launcher"
+                                },
+                                {
+                                    "id": "__FunctionalExchange:84da7369-bd7e-4e77-bf05-0e4b25e512a7",
+                                    "type": "edge",
+                                    "sourceId": "__FOP:621abc4c-6ebd-4c39-b4a3-9d5efdca2816_cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+                                    "targetId": "__FIP:3ea9f583-a37c-432f-99d0-cc1cc7b82761_daba869e-b748-4578-be1c-74936c5dd6cb",
+                                    "routingPoints": [
+                                        {
+                                            "x": 169,
+                                            "y": 50
+                                        },
+                                        {
+                                            "x": 267,
+                                            "y": 50
+                                        }
+                                    ],
+                                    "children": [
+                                        {
+                                            "position": {
+                                                "x": 189,
+                                                "y": 53
+                                            },
+                                            "size": {
+                                                "width": 58,
+                                                "height": 12
+                                            },
+                                            "type": "label",
+                                            "text": "FC Fex"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "position": {
+                                "x": 174,
+                                "y": 5
+                            },
+                            "size": {
+                                "width": 113,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "Weather Datahouse"
+                        }
+                    ]
+                },
+                {
+                    "position": {
+                        "x": 568,
+                        "y": 5
+                    },
+                    "size": {
+                        "width": 68,
                         "height": 12
                     },
                     "type": "label",
-                    "text": "Activate weather station"
-                }
-            ]
-        },
-        {
-            "id": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
-            "position": {
-                "x": 808,
-                "y": 18
-            },
-            "size": {
-                "width": 169,
-                "height": 36
-            },
-            "type": "node",
-            "children": [
-                {
-                    "position": {
-                        "x": 3,
-                        "y": 12
-                    },
-                    "size": {
-                        "width": 163,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "Elaborate current situation"
-                }
-            ]
-        },
-        {
-            "id": "ebacf052-fe7c-492f-9564-679c0d835bce",
-            "type": "edge",
-            "sourceId": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
-            "targetId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
-            "routingPoints": [
-                {
-                    "x": 383,
-                    "y": 86
+                    "text": "Hogwarts"
                 },
                 {
-                    "x": 521,
-                    "y": 86
+                    "id": "__FunctionalExchange:ebacf052-fe7c-492f-9564-679c0d835bce",
+                    "type": "edge",
+                    "sourceId": "__FOP:62a357ec-d61c-4737-90fc-dcfd2bd629a4_c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+                    "targetId": "__FIP:d3911dcc-4932-4a65-bde0-8f3f1de6ee7b_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                    "routingPoints": [
+                        {
+                            "x": 461,
+                            "y": 216
+                        },
+                        {
+                            "x": 636,
+                            "y": 216
+                        },
+                        {
+                            "x": 636,
+                            "y": 130
+                        },
+                        {
+                            "x": 663,
+                            "y": 130
+                        }
+                    ],
+                    "children": [
+                        {
+                            "position": {
+                                "x": 530.5,
+                                "y": 219
+                            },
+                            "size": {
+                                "width": 63,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "weather"
+                        }
+                    ]
                 },
                 {
-                    "x": 521,
-                    "y": 42
-                },
-                {
-                    "x": 526,
-                    "y": 42
-                }
-            ],
-            "children": [
-                {
-                    "position": {
-                        "x": 420.5,
-                        "y": 89
-                    },
-                    "size": {
-                        "width": 63,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "weather"
-                }
-            ]
-        },
-        {
-            "id": "acecaf47-12f5-46ee-87f7-aee388750f76",
-            "type": "edge",
-            "sourceId": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
-            "targetId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
-            "routingPoints": [
-                {
-                    "x": 383,
-                    "y": 30
-                },
-                {
-                    "x": 526,
-                    "y": 30
-                }
-            ],
-            "children": [
-                {
-                    "position": {
-                        "x": 388,
-                        "y": 33
-                    },
-                    "size": {
-                        "width": 128,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "weather data request"
-                }
-            ]
-        },
-        {
-            "id": "84da7369-bd7e-4e77-bf05-0e4b25e512a7",
-            "type": "edge",
-            "sourceId": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
-            "targetId": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
-            "routingPoints": [
-                {
-                    "x": 166,
-                    "y": 30
-                },
-                {
-                    "x": 234,
-                    "y": 30
-                }
-            ],
-            "children": [
-                {
-                    "position": {
-                        "x": 171,
-                        "y": 33
-                    },
-                    "size": {
-                        "width": 58,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "FC Fex"
-                }
-            ]
-        },
-        {
-            "id": "19da43ce-26fc-47f9-b602-06f6c0f0a356",
-            "type": "edge",
-            "sourceId": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
-            "targetId": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
-            "routingPoints": [
-                {
-                    "x": 660,
-                    "y": 36
-                },
-                {
-                    "x": 808,
-                    "y": 36
-                }
-            ],
-            "children": [
-                {
-                    "position": {
-                        "x": 665,
-                        "y": 39
-                    },
-                    "size": {
-                        "width": 138,
-                        "height": 12
-                    },
-                    "type": "label",
-                    "text": "collected weather data"
+                    "id": "__FunctionalExchange:acecaf47-12f5-46ee-87f7-aee388750f76",
+                    "type": "edge",
+                    "sourceId": "__FOP:bdd60d80-a0e0-44d9-8fcf-9c5f80ec84f3_daba869e-b748-4578-be1c-74936c5dd6cb",
+                    "targetId": "__FIP:7a172077-0ece-4ce8-a415-29d0375de6e8_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                    "routingPoints": [
+                        {
+                            "x": 444,
+                            "y": 108
+                        },
+                        {
+                            "x": 663,
+                            "y": 108
+                        }
+                    ],
+                    "children": [
+                        {
+                            "position": {
+                                "x": 498,
+                                "y": 93
+                            },
+                            "size": {
+                                "width": 128,
+                                "height": 12
+                            },
+                            "type": "label",
+                            "text": "weather data request"
+                        }
+                    ]
                 }
             ]
         }
