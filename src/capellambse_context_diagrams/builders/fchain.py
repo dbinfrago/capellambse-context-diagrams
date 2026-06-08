@@ -19,6 +19,16 @@ SUPPORTED_CLASSES: tuple[type[m.ModelElement], ...] = tuple(
 )
 
 
+def collect_involved_exchange_endpoints(
+    exchange: m.ModelElement,
+) -> _generic.SourceAndTarget:
+    """Collect endpoints from an involvement link's involved exchange."""
+    involved = getattr(exchange, "involved", None)
+    if isinstance(involved, m.ModelElement):
+        return _generic.collect_exchange_endpoints(involved)
+    return _generic.collect_exchange_endpoints(exchange)
+
+
 class DiagramBuilder(default.DiagramBuilder):
     """Collect the data context for a DataFlow diagram."""
 
@@ -44,6 +54,13 @@ class DiagramBuilder(default.DiagramBuilder):
             return obj.uuid
         return f"__{involved._get_styleclass()}:{obj.uuid}"
 
+    def _get_involvement_port_id(
+        self,
+        involvement: fa.FunctionalChainInvolvement,
+        port: m.ModelElement,
+    ) -> str:
+        return f"__{port._get_styleclass()}:{port.uuid}_{involvement.uuid}"
+
     def _make_involvement_box(
         self,
         obj: fa.FunctionalChainInvolvement,
@@ -67,7 +84,65 @@ class DiagramBuilder(default.DiagramBuilder):
             )
 
         self.boxes[obj.uuid] = box
+        if self.diagram._display_parent_relation and isinstance(
+            involved, m.ModelElement
+        ):
+            self.common_owners.add(
+                self._make_involvement_owner_boxes(obj, involved)
+            )
         return box
+
+    def _make_involvement_port(
+        self,
+        involvement: fa.FunctionalChainInvolvement,
+        port_obj: m.ModelElement,
+    ) -> str:
+        box = self._make_involvement_box(involvement)
+        port_id = self._get_involvement_port_id(involvement, port_obj)
+        if port_id not in self.ports:
+            label = ""
+            if self.diagram._display_port_labels:
+                label = port_obj.name or "UNKNOWN"
+                _makers.set_port_label_placement(
+                    box, self.diagram._port_label_position
+                )
+            port = _makers.make_port(port_id, label=label)
+            box.ports.append(port)
+            self.ports[port_id] = port
+            _makers.adjust_box_height_for_ports(box)
+        return port_id
+
+    def _make_involvement_owner_boxes(
+        self,
+        involvement: fa.FunctionalChainInvolvement,
+        involved: m.ModelElement,
+    ) -> str:
+        current = involved
+        depth = 0
+        while (
+            current
+            and current.uuid not in self.diagram_target_owners
+            and getattr(current, "owner", None) is not None
+            and not isinstance(current.owner, _makers.PackageTypes)
+            and depth < self.max_depth
+        ):
+            if current is involved:
+                current = _makers.move_box_into_owner(
+                    current,
+                    self.boxes[involvement.uuid],
+                    involvement.uuid,
+                    self._make_box,
+                    self.boxes_to_delete,
+                )
+            else:
+                current = _makers.make_owner_box(
+                    current,
+                    self._make_box,
+                    self.boxes,
+                    self.boxes_to_delete,
+                )
+            depth += 1
+        return current.uuid
 
     def _make_involvement_edge(
         self,
@@ -83,6 +158,7 @@ class DiagramBuilder(default.DiagramBuilder):
         self._make_involvement_box(source)
         self._make_involvement_box(target)
 
+        involved = getattr(obj, "involved", None)
         edge_data = _generic.ExchangeData(
             obj,
             self.data,
@@ -91,14 +167,50 @@ class DiagramBuilder(default.DiagramBuilder):
         )
         _generic.exchange_data_collector(
             edge_data,
-            endpoint_collector=lambda _: (source, target),
+            endpoint_collector=collect_involved_exchange_endpoints,
         )
         edge = self.data.edges.pop()
-        edge.id = obj.uuid
-        edge.sources = [self._get_involvement_node_id(source)]
-        edge.targets = [self._get_involvement_node_id(target)]
+        if isinstance(involved, m.ModelElement):
+            edge.id = f"__{involved._get_styleclass()}:{obj.uuid}"
+            edge.sources = [
+                self._make_involvement_port(source, involved.source)
+            ]
+            edge.targets = [
+                self._make_involvement_port(target, involved.target)
+            ]
+        else:
+            edge.id = obj.uuid
+            edge.sources = [self._get_involvement_node_id(source)]
+            edge.targets = [self._get_involvement_node_id(target)]
         self.edges[obj.uuid] = edge
+        if self.diagram._display_parent_relation:
+            self._store_involvement_edge_owner(obj, source, target)
         return edge
+
+    def _store_involvement_edge_owner(
+        self,
+        obj: fa.FunctionalChainInvolvementLink,
+        source: fa.FunctionalChainInvolvement,
+        target: fa.FunctionalChainInvolvement,
+    ) -> None:
+        source_involved = getattr(source, "involved", None)
+        target_involved = getattr(target, "involved", None)
+        if not isinstance(source_involved, m.ModelElement) or not isinstance(
+            target_involved, m.ModelElement
+        ):
+            return
+
+        source_owners = list(_generic.get_all_owners(source_involved))
+        target_owners = list(_generic.get_all_owners(target_involved))
+        if source_involved.owner == target_involved.owner:
+            common_owner = getattr(source_involved.owner, "uuid", None)
+        else:
+            common_owner = next(
+                (owner for owner in source_owners if owner in target_owners),
+                None,
+            )
+        if common_owner:
+            self.edge_owners[obj.uuid] = common_owner
 
     def _make_whitebox_target(
         self,

@@ -1,0 +1,246 @@
+{
+    "id": "ec1ecf8b-d58b-4468-9742-6fdfd6cff702_context",
+    "layoutOptions": {
+        "algorithm": "layered",
+        "edgeRouting": "ORTHOGONAL",
+        "elk.direction": "RIGHT",
+        "hierarchyHandling": "INCLUDE_CHILDREN",
+        "layered.edgeLabels.sideSelection": "ALWAYS_DOWN",
+        "layered.nodePlacement.strategy": "BRANDES_KOEPF",
+        "spacing.labelNode": "0.0",
+        "spacing.edgeNode": 10,
+        "spacing.edgeEdge": 10,
+        "spacing.nodeNodeBetweenLayers": 5,
+        "spacing.edgeNodeBetweenLayers": 5,
+        "spacing.edgeEdgeBetweenLayers": 5
+    },
+    "children": [
+        {
+            "id": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+            "labels": [
+                {
+                    "text": "Make weather",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 88,
+                    "height": 12
+                }
+            ],
+            "ports": [
+                {
+                    "id": "__FOP:62a357ec-d61c-4737-90fc-dcfd2bd629a4_c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                }
+            ],
+            "width": 94,
+            "height": 28
+        },
+        {
+            "id": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "labels": [
+                {
+                    "text": "Acquire weather data",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 128,
+                    "height": 12
+                }
+            ],
+            "ports": [
+                {
+                    "id": "__FIP:d3911dcc-4932-4a65-bde0-8f3f1de6ee7b_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                },
+                {
+                    "id": "__FIP:7a172077-0ece-4ce8-a415-29d0375de6e8_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                },
+                {
+                    "id": "__FOP:ae235f06-52d1-4b3c-b257-622c755e4e21_d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                }
+            ],
+            "width": 134,
+            "height": 56
+        },
+        {
+            "id": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+            "labels": [
+                {
+                    "text": "Launch Data acquisition",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 143,
+                    "height": 12
+                }
+            ],
+            "ports": [
+                {
+                    "id": "__FOP:bdd60d80-a0e0-44d9-8fcf-9c5f80ec84f3_daba869e-b748-4578-be1c-74936c5dd6cb",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                },
+                {
+                    "id": "__FIP:3ea9f583-a37c-432f-99d0-cc1cc7b82761_daba869e-b748-4578-be1c-74936c5dd6cb",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                }
+            ],
+            "width": 149,
+            "height": 42
+        },
+        {
+            "id": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+            "labels": [
+                {
+                    "text": "Activate weather station",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 148,
+                    "height": 12
+                }
+            ],
+            "ports": [
+                {
+                    "id": "__FOP:621abc4c-6ebd-4c39-b4a3-9d5efdca2816_cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                }
+            ],
+            "width": 154,
+            "height": 28
+        },
+        {
+            "id": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+            "labels": [
+                {
+                    "text": "Elaborate current situation",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 163,
+                    "height": 12
+                }
+            ],
+            "ports": [
+                {
+                    "id": "__FIP:7a0581f8-71ce-44e8-98fe-02ea9dc4ff70_2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+                    "layoutOptions": {
+                        "borderOffset": -8
+                    },
+                    "width": 10,
+                    "height": 10
+                }
+            ],
+            "width": 169,
+            "height": 28
+        }
+    ],
+    "edges": [
+        {
+            "id": "__FunctionalExchange:ebacf052-fe7c-492f-9564-679c0d835bce",
+            "sources": [
+                "__FOP:62a357ec-d61c-4737-90fc-dcfd2bd629a4_c8cea935-4e8a-46dd-8c43-2502855bbf7c"
+            ],
+            "targets": [
+                "__FIP:d3911dcc-4932-4a65-bde0-8f3f1de6ee7b_d3ea33f8-4ab7-4337-9a22-4167c17b5a88"
+            ],
+            "labels": [
+                {
+                    "text": "weather",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 63,
+                    "height": 12
+                }
+            ]
+        },
+        {
+            "id": "__FunctionalExchange:acecaf47-12f5-46ee-87f7-aee388750f76",
+            "sources": [
+                "__FOP:bdd60d80-a0e0-44d9-8fcf-9c5f80ec84f3_daba869e-b748-4578-be1c-74936c5dd6cb"
+            ],
+            "targets": [
+                "__FIP:7a172077-0ece-4ce8-a415-29d0375de6e8_d3ea33f8-4ab7-4337-9a22-4167c17b5a88"
+            ],
+            "labels": [
+                {
+                    "text": "weather data request",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 128,
+                    "height": 12
+                }
+            ]
+        },
+        {
+            "id": "__FunctionalExchange:84da7369-bd7e-4e77-bf05-0e4b25e512a7",
+            "sources": [
+                "__FOP:621abc4c-6ebd-4c39-b4a3-9d5efdca2816_cab6a166-8cae-41fb-ba94-6fafb8e2e1d9"
+            ],
+            "targets": [
+                "__FIP:3ea9f583-a37c-432f-99d0-cc1cc7b82761_daba869e-b748-4578-be1c-74936c5dd6cb"
+            ],
+            "labels": [
+                {
+                    "text": "FC Fex",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 58,
+                    "height": 12
+                }
+            ]
+        },
+        {
+            "id": "__FunctionalExchange:19da43ce-26fc-47f9-b602-06f6c0f0a356",
+            "sources": [
+                "__FOP:ae235f06-52d1-4b3c-b257-622c755e4e21_d3ea33f8-4ab7-4337-9a22-4167c17b5a88"
+            ],
+            "targets": [
+                "__FIP:7a0581f8-71ce-44e8-98fe-02ea9dc4ff70_2f4d34d9-0bf0-4613-9086-c37ef0f2f149"
+            ],
+            "labels": [
+                {
+                    "text": "collected weather data",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 138,
+                    "height": 12
+                }
+            ]
+        }
+    ]
+}
