@@ -19,6 +19,7 @@ from .conftest import (  # type: ignore[import-not-found]
 )
 
 TEST_FNC_CHAIN_UUID = "ec1ecf8b-d58b-4468-9742-6fdfd6cff702"
+TEST_FNC_CHAIN_DUPLICATE_UUID = "22b9c1d6-a754-4614-9fcb-fa4f53837d9a"
 TEST_OA_PROCESS_UUID = "bec38a21-cc4b-4c06-8acf-067bd5f44824"
 TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID = "ebacf052-fe7c-492f-9564-679c0d835bce"
 TEST_LOCAL_EX_ITEMS_EDGE_UUID = (
@@ -44,6 +45,17 @@ TEST_CONTEXT_SET = [
             {"collect_from_involvements": True},
         ),
         id="FunctionalChain from involvements",
+    ),
+    pytest.param(
+        (
+            TEST_FNC_CHAIN_DUPLICATE_UUID,
+            "functional_chain_duplicate_involvements_context_diagram.json",
+            {
+                "collect_from_involvements": True,
+                "display_parent_relation": False,
+            },
+        ),
+        id="FunctionalChain with duplicate involvements",
     ),
     pytest.param(
         (

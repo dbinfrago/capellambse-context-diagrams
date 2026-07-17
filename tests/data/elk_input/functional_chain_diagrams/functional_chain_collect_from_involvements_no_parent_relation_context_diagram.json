@@ -16,7 +16,7 @@
     },
     "children": [
         {
-            "id": "__LogicalFunction:c8cea935-4e8a-46dd-8c43-2502855bbf7c",
+            "id": "__LogicalFunction:7ce379ea-3b77-4087-b955-b6e5a3df627a",
             "labels": [
                 {
                     "text": "Make weather",
@@ -38,10 +38,10 @@
                 }
             ],
             "width": 94,
-            "height": 28
+            "height": 36
         },
         {
-            "id": "__LogicalFunction:d3ea33f8-4ab7-4337-9a22-4167c17b5a88",
+            "id": "__LogicalFunction:75662c2c-8b0e-49fd-b390-d6528e3b97b0",
             "labels": [
                 {
                     "text": "Acquire weather data",
@@ -82,7 +82,7 @@
             "height": 56
         },
         {
-            "id": "__LogicalFunction:daba869e-b748-4578-be1c-74936c5dd6cb",
+            "id": "__LogicalFunction:627791b9-ceba-49d2-aa97-01303c1ea113",
             "labels": [
                 {
                     "text": "Launch Data acquisition",
@@ -115,7 +115,7 @@
             "height": 42
         },
         {
-            "id": "__LogicalFunction:cab6a166-8cae-41fb-ba94-6fafb8e2e1d9",
+            "id": "__LogicalFunction:ad1a44c6-48ab-4923-a14d-ab2cf09cead9",
             "labels": [
                 {
                     "text": "Activate weather station",
@@ -137,10 +137,10 @@
                 }
             ],
             "width": 154,
-            "height": 28
+            "height": 36
         },
         {
-            "id": "__LogicalFunction:2f4d34d9-0bf0-4613-9086-c37ef0f2f149",
+            "id": "__LogicalFunction:9ebc0a92-06cc-41f3-adfd-cd53de02dddd",
             "labels": [
                 {
                     "text": "Elaborate current situation",
@@ -162,7 +162,7 @@
                 }
             ],
             "width": 169,
-            "height": 28
+            "height": 36
         }
     ],
     "edges": [
