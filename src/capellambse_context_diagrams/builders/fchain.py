@@ -52,7 +52,16 @@ class DiagramBuilder(default.DiagramBuilder):
         involved = getattr(obj, "involved", None)
         if not isinstance(involved, m.ModelElement):
             return obj.uuid
-        return f"__{involved._get_styleclass()}:{obj.uuid}"
+        return f"__{involved._get_styleclass()}:{involved.uuid}"
+
+    def _get_involvement_box_key(
+        self,
+        obj: fa.FunctionalChainInvolvement,
+    ) -> str:
+        involved = getattr(obj, "involved", None)
+        if isinstance(involved, m.ModelElement):
+            return involved.uuid
+        return obj.uuid
 
     def _get_involvement_port_id(
         self,
@@ -65,7 +74,8 @@ class DiagramBuilder(default.DiagramBuilder):
         self,
         obj: fa.FunctionalChainInvolvement,
     ) -> _elkjs.ELKInputChild:
-        if box := self.boxes.get(obj.uuid):
+        box_key = self._get_involvement_box_key(obj)
+        if box := self.boxes.get(box_key):
             return box
 
         involved = getattr(obj, "involved", None)
@@ -83,7 +93,7 @@ class DiagramBuilder(default.DiagramBuilder):
                 slim_width=self.diagram._slim_center_box,
             )
 
-        self.boxes[obj.uuid] = box
+        self.boxes[box_key] = box
         if self.diagram._display_parent_relation and isinstance(
             involved, m.ModelElement
         ):
@@ -117,6 +127,8 @@ class DiagramBuilder(default.DiagramBuilder):
         involvement: fa.FunctionalChainInvolvement,
         involved: m.ModelElement,
     ) -> str:
+        box_key = self._get_involvement_box_key(involvement)
+        owner_box = self.boxes[box_key]
         current = involved
         depth = 0
         while (
@@ -129,8 +141,8 @@ class DiagramBuilder(default.DiagramBuilder):
             if current is involved:
                 current = _makers.move_box_into_owner(
                     current,
-                    self.boxes[involvement.uuid],
-                    involvement.uuid,
+                    owner_box,
+                    box_key,
                     self._make_box,
                     self.boxes_to_delete,
                 )

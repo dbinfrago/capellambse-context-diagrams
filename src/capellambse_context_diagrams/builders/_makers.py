@@ -325,4 +325,7 @@ def set_port_label_placement(
 
 def adjust_box_height_for_ports(box: _elkjs.ELKInputChild) -> None:
     """Adjust box height based on number of ports."""
-    box.height = (PORT_SIZE + 2 * PORT_PADDING) * (len(box.ports) + 1)
+    box.height = max(
+        box.height,
+        (PORT_SIZE + 2 * PORT_PADDING) * (len(box.ports) + 1),
+    )
