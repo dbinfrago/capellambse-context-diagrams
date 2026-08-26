@@ -277,6 +277,21 @@
             ],
             "width": 139,
             "height": 36
+        },
+        {
+            "id": "__FunctionalChainReference:61481368-f397-4a1d-8ecc-b6f596ad82da",
+            "labels": [
+                {
+                    "text": "Review orchard protocol",
+                    "layoutOptions": {
+                        "nodeLabels.placement": "INSIDE, V_CENTER, H_CENTER"
+                    },
+                    "width": 143,
+                    "height": 12
+                }
+            ],
+            "width": 149,
+            "height": 36
         }
     ],
     "edges": [

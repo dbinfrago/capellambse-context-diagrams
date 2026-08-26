@@ -25,6 +25,13 @@ TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID = "ebacf052-fe7c-492f-9564-679c0d835bce"
 TEST_LOCAL_EX_ITEMS_EDGE_UUID = (
     f"__FunctionalExchange:{TEST_LOCAL_EX_ITEMS_INVOLVEMENT_UUID}"
 )
+TEST_DUPLICATE_EXCHANGE_INVOLVEMENT_UUID = (
+    "b0ef207a-cde6-41bc-8692-3c8eff09e650"
+)
+TEST_DUPLICATE_EXCHANGE_EDGE_UUID = (
+    f"__FunctionalExchange:{TEST_DUPLICATE_EXCHANGE_INVOLVEMENT_UUID}"
+)
+TEST_FUNCTIONAL_CHAIN_REFERENCE_UUID = "61481368-f397-4a1d-8ecc-b6f596ad82da"
 TEST_CONTEXT_SET = [
     pytest.param(
         (TEST_FNC_CHAIN_UUID, "functional_chain_context_diagram.json", {}),
@@ -160,3 +167,57 @@ class TestContextDiagrams:
         for box in boxes:
             assert box.layoutOptions["portLabels.placement"] == "OUTSIDE"
             assert box.ports[0].labels
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("filter_name", "render_params", "expected_label"),
+        [
+            pytest.param(
+                filters.EX_ITEMS,
+                {},
+                "[Water, Vitamin D]",
+                id="exchange-items",
+            ),
+            pytest.param(
+                filters.SHOW_EX_ITEMS,
+                {},
+                "[Water, Vitamin D]",
+                id="exchange-name-and-items",
+            ),
+            pytest.param(
+                filters.EX_ITEMS_OR_EXCH,
+                {},
+                "[Water, Vitamin D]",
+                id="exchange-items-or-name",
+            ),
+            pytest.param(
+                filters.SHOW_EX_ITEMS,
+                {"sorted_exchangedItems": True},
+                "[Vitamin D, Water]",
+                id="sorted-exchange-items",
+            ),
+        ],
+    )
+    def test_collect_from_involvements_collapses_exchanges_and_references(
+        model: capellambse.MelodyModel,
+        filter_name: str,
+        render_params: dict[str, bool],
+        expected_label: str,
+    ):
+        diag = model.by_uuid(TEST_FNC_CHAIN_DUPLICATE_UUID).context_diagram
+        diag.filters.add(filter_name)
+
+        rendered = diag.render(
+            None,
+            collect_from_involvements=True,
+            display_parent_relation=False,
+            **render_params,
+        )
+        edge = rendered[TEST_DUPLICATE_EXCHANGE_EDGE_UUID]
+        box = rendered[TEST_FUNCTIONAL_CHAIN_REFERENCE_UUID]
+
+        assert isinstance(edge, diagram.Edge)
+        assert len(edge.labels) == 1
+        assert edge.labels[0].label == expected_label
+        assert isinstance(box, diagram.Box)
+        assert box.styleclass == "FunctionalChainReference"

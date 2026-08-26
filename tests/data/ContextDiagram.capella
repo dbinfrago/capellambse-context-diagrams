@@ -3035,7 +3035,18 @@ The predator is far away</bodies>
                 id="39429cb1-d9a9-45a2-87d0-fff8846a0e5a" involved="#0e71a0d3-0a18-4671-bba0-71b5f88f95dd"/>
             <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementLink"
                 id="b0ef207a-cde6-41bc-8692-3c8eff09e650" involved="#96a0cf4c-adfe-4490-92d1-bcf75ee77004"
-                source="#49a7171a-4610-430f-bd82-af92b61b4f78" target="#a5940470-8bc3-4472-a197-93c6122a8d47"/>
+                exchangedItems="#8f8ba7de-a7e6-4b5c-bd5d-11fba313b444" source="#49a7171a-4610-430f-bd82-af92b61b4f78" target="#a5940470-8bc3-4472-a197-93c6122a8d47"/>
+            <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementFunction"
+                id="0d1a993f-4ebd-47be-b3f8-9313c44a3b2e" involved="#7f2936ab-0b54-4e92-9f0c-85a9f0981959"/>
+            <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementFunction"
+                id="ca215a7b-b7d1-44b8-9eea-8a090c5ec647" involved="#edbd1ad4-31c0-4d53-b856-3ffa60e0e99b"/>
+            <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementLink"
+                id="8b3d3217-6d2a-4f7c-926d-8f2c80bc9b65" involved="#96a0cf4c-adfe-4490-92d1-bcf75ee77004"
+                exchangedItems="#e6b13a92-4ea7-4d4a-9738-d03d2291b0c5 #8f8ba7de-a7e6-4b5c-bd5d-11fba313b444" source="#0d1a993f-4ebd-47be-b3f8-9313c44a3b2e" target="#ca215a7b-b7d1-44b8-9eea-8a090c5ec647"/>
+            <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainReference"
+                id="584f57f6-bb34-433c-bf5a-72905cf1b4f5" involved="#61481368-f397-4a1d-8ecc-b6f596ad82da"/>
+            <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainReference"
+                id="2b7f55a0-0e11-4253-a534-57b71c26f784" involved="#61481368-f397-4a1d-8ecc-b6f596ad82da"/>
             <ownedSequenceNodes xsi:type="org.polarsys.capella.core.data.fa:ControlNode"
                 id="fba3c7af-4e20-4ddc-82bb-c0f856ca1af8" kind="AND"/>
             <ownedSequenceNodes xsi:type="org.polarsys.capella.core.data.fa:ControlNode"
@@ -3043,8 +3054,10 @@ The predator is far away</bodies>
             <ownedSequenceNodes xsi:type="org.polarsys.capella.core.data.fa:ControlNode"
                 id="0e564b44-4d0f-41b3-bb3c-833fb57323d5" kind="ITERATE"/>
           </ownedFunctionalChains>
-          <ownedFunctionalChains xsi:type="org.polarsys.capella.core.data.fa:FunctionalChain"
-              id="ec1ecf8b-d58b-4468-9742-6fdfd6cff702" name="Context">
+            <ownedFunctionalChains xsi:type="org.polarsys.capella.core.data.fa:FunctionalChain"
+                id="61481368-f397-4a1d-8ecc-b6f596ad82da" name="Review orchard protocol"/>
+            <ownedFunctionalChains xsi:type="org.polarsys.capella.core.data.fa:FunctionalChain"
+                id="ec1ecf8b-d58b-4468-9742-6fdfd6cff702" name="Context">
             <ownedFunctionalChainInvolvements xsi:type="org.polarsys.capella.core.data.fa:FunctionalChainInvolvementLink"
                 id="ebacf052-fe7c-492f-9564-679c0d835bce" involved="#8beae0b8-b0a6-426a-b0c4-b9e3580df0e8"
                 exchangedItems="#8f8ba7de-a7e6-4b5c-bd5d-11fba313b444" source="#c8cea935-4e8a-46dd-8c43-2502855bbf7c"

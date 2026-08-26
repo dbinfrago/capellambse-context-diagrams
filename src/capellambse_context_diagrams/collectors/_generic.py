@@ -95,6 +95,8 @@ class ExchangeData(t.NamedTuple):
     """
     params: dict[str, t.Any] | None = None
     """Optional dictionary of additional render params."""
+    exchange_items: cabc.Collection[m.ModelElement] | None = None
+    """Optional local exchange items to use for label filters."""
     is_hierarchical: bool = False
     """True if exchange isn't global, i.e. nested inside a box."""
 
@@ -166,9 +168,17 @@ def exchange_data_collector(
     label = collect_label(data.exchange)
     for filter in data.filter_iterable:
         try:
-            label = filters.FILTER_LABEL_ADJUSTERS[filter](
-                data.exchange, label
-            )
+            if data.exchange_items is not None:
+                items = data.exchange_items
+                if params.get("sorted_exchangedItems"):
+                    items = tuple(sorted(items, key=lambda item: item.name))
+                label = filters.adjust_exchange_items_label(
+                    filter, data.exchange, label, items
+                )
+            else:
+                label = filters.FILTER_LABEL_ADJUSTERS[filter](
+                    data.exchange, label
+                )
         except KeyError:
             logger.exception(
                 "There is no filter labelled: '%s' in "
@@ -177,8 +187,11 @@ def exchange_data_collector(
             )
 
     if label and not no_edgelabels:
+        labels_text = render_adj.get("labels_text", label)
+        if data.exchange_items is not None:
+            labels_text = label
         data.elkdata.edges[-1].labels = _makers.make_label(
-            render_adj.get("labels_text", label),
+            labels_text,
             max_width=_makers.MAX_LABEL_WIDTH,
         )
 

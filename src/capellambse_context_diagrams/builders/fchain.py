@@ -40,6 +40,26 @@ class DiagramBuilder(default.DiagramBuilder):
         super().__init__(diagram, params)
 
         self.diagram_target_owners = []
+        collection = list(self.collection)
+        self.collection = iter(collection)
+        self.involvement_exchange_items: dict[
+            str, tuple[m.ModelElement, ...]
+        ] = {}
+        for obj in collection:
+            if not isinstance(obj, fa.FunctionalChainInvolvementLink):
+                continue
+            involved = getattr(obj, "involved", None)
+            if not isinstance(involved, m.ModelElement):
+                continue
+            items = list(
+                self.involvement_exchange_items.setdefault(involved.uuid, ())
+            )
+            known = {item.uuid for item in items}
+            for item in obj.exchanged_items:
+                if item.uuid not in known:
+                    items.append(item)
+                    known.add(item.uuid)
+            self.involvement_exchange_items[involved.uuid] = tuple(items)
 
     def _handle_boxeable_target(self) -> None:
         """Do nothing."""
@@ -52,6 +72,8 @@ class DiagramBuilder(default.DiagramBuilder):
         involved = getattr(obj, "involved", None)
         if not isinstance(involved, m.ModelElement):
             return obj.uuid
+        if isinstance(obj, fa.FunctionalChainReference):
+            return f"__FunctionalChainReference:{involved.uuid}"
         return f"__{involved._get_styleclass()}:{involved.uuid}"
 
     def _get_involvement_box_key(
@@ -160,7 +182,11 @@ class DiagramBuilder(default.DiagramBuilder):
         self,
         obj: fa.FunctionalChainInvolvementLink,
     ) -> _elkjs.ELKInputEdge | None:
-        if self.edges.get(obj.uuid):
+        involved = getattr(obj, "involved", None)
+        edge_key = (
+            involved.uuid if isinstance(involved, m.ModelElement) else obj.uuid
+        )
+        if self.edges.get(edge_key):
             return None
         source = obj.source
         target = obj.target
@@ -170,12 +196,12 @@ class DiagramBuilder(default.DiagramBuilder):
         self._make_involvement_box(source)
         self._make_involvement_box(target)
 
-        involved = getattr(obj, "involved", None)
         edge_data = _generic.ExchangeData(
             obj,
             self.data,
             self.diagram.filters,
             self.params,
+            self.involvement_exchange_items.get(edge_key),
         )
         _generic.exchange_data_collector(
             edge_data,
@@ -194,14 +220,14 @@ class DiagramBuilder(default.DiagramBuilder):
             edge.id = obj.uuid
             edge.sources = [self._get_involvement_node_id(source)]
             edge.targets = [self._get_involvement_node_id(target)]
-        self.edges[obj.uuid] = edge
+        self.edges[edge_key] = edge
         if self.diagram._display_parent_relation:
-            self._store_involvement_edge_owner(obj, source, target)
+            self._store_involvement_edge_owner(edge_key, source, target)
         return edge
 
     def _store_involvement_edge_owner(
         self,
-        obj: fa.FunctionalChainInvolvementLink,
+        edge_key: str,
         source: fa.FunctionalChainInvolvement,
         target: fa.FunctionalChainInvolvement,
     ) -> None:
@@ -222,7 +248,7 @@ class DiagramBuilder(default.DiagramBuilder):
                 None,
             )
         if common_owner:
-            self.edge_owners[obj.uuid] = common_owner
+            self.edge_owners[edge_key] = common_owner
 
     def _make_whitebox_target(
         self,
@@ -231,7 +257,10 @@ class DiagramBuilder(default.DiagramBuilder):
         if self.diagram._collect_from_involvements:
             if isinstance(obj, fa.FunctionalChainInvolvementLink):
                 return self._make_involvement_edge(obj)
-            if isinstance(obj, fa.FunctionalChainInvolvement):
+            if isinstance(
+                obj,
+                fa.FunctionalChainInvolvement | fa.FunctionalChainReference,
+            ):
                 return self._make_involvement_box(obj)
 
         return super()._make_whitebox_target(obj)

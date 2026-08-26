@@ -70,15 +70,38 @@ def _get_exchange_items(
     return obj.exchanged_items
 
 
+def format_exchange_items(items: cabc.Collection[m.ModelElement]) -> str:
+    """Return ``items``' names formatted as an exchange-item label."""
+    if names := ", ".join(item.name for item in items):
+        return f"[{names}]"
+    return ""
+
+
 def exchange_items(obj: m.ModelElement) -> str:
     """Return ``obj``'s ``ExchangeItem``s names.
 
     The returned string is wrapped in [E1,...] and separated by ','.
     """
     assert isinstance(obj, _SUPPORTED_EXCHANGE_TYPES)
-    if items := ", ".join(item.name for item in _get_exchange_items(obj)):
-        return f"[{items}]"
-    return ""
+    return format_exchange_items(_get_exchange_items(obj))
+
+
+def adjust_exchange_items_label(
+    filter_name: str,
+    obj: m.ModelElement,
+    label: str | None,
+    items: cabc.Collection[m.ModelElement],
+) -> str:
+    """Apply an item-label filter using explicit local items."""
+    if filter_name == EX_ITEMS:
+        return format_exchange_items(items)
+    if filter_name == SHOW_EX_ITEMS:
+        if isinstance(obj, fa.FunctionalChainInvolvementLink):
+            return format_exchange_items(items) or (label or "")
+        return f"{label or obj.name} {format_exchange_items(items)}".rstrip()
+    if filter_name == EX_ITEMS_OR_EXCH:
+        return format_exchange_items(items) or label or obj.name
+    return FILTER_LABEL_ADJUSTERS[filter_name](obj, label)
 
 
 def exchange_name_and_items(

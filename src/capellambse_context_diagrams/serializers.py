@@ -335,6 +335,11 @@ class DiagramSerializer:
             element = parent
         elif child.type == "junction":
             uuid = uuid.rsplit("_", maxsplit=1)[0]
+            edge_id = child.id.rsplit("_", maxsplit=1)[0]
+            if edge_id.startswith("__"):
+                styleclass = edge_id[2:].split(":", 1)[0]
+            else:
+                styleclass = self.get_styleclass(uuid)
             pos = cdiagram.Vector2D(child.position.x, child.position.y)
             styleoverrides = self._apply_pvmt_styling(
                 uuid, styling.PVMTObjectType.JUNCTION, styleoverrides
@@ -343,7 +348,7 @@ class DiagramSerializer:
                 ref + pos,
                 5,
                 uuid=child.id,
-                styleclass=self.get_styleclass(uuid),
+                styleclass=styleclass,
                 styleoverrides=styleoverrides,
                 context=getattr(child, "context", {}),
             )
